@@ -30,3 +30,34 @@ struct Baby_AffinityApp: App {
         .modelContainer(sharedModelContainer)
     }
 }
+
+
+#if DEBUG
+let previewModelContainer: ModelContainer = {
+    do {
+        let container = try ModelContainer(for: Name.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        
+        Task { @MainActor in
+            let context = container.mainContext
+            
+            let names = DefaultBabyNames()
+            
+            /// Add girl names.
+            for (sex, name) in names.girlNames {
+                let n = Name(name, sex: .female)
+                context.insert(n)
+            }
+            
+            /// Add boy names.
+            for (sex, name) in names.boyNames {
+                let n = Name(name, sex: .male)
+                context.insert(n)
+            }
+        }
+        
+        return container
+    } catch {
+        fatalError("Failed to create container with error: \(error.localizedDescription)")
+    }
+}()
+#endif
