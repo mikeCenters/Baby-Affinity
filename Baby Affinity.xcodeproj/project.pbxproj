@@ -1,0 +1,597 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BACC30302C48A977003CEC7C /* Baby_AffinityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC302F2C48A977003CEC7C /* Baby_AffinityApp.swift */; };
+		BACC30322C48A977003CEC7C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC30312C48A977003CEC7C /* ContentView.swift */; };
+		BACC30342C48A977003CEC7C /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC30332C48A977003CEC7C /* Item.swift */; };
+		BACC30362C48A978003CEC7C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BACC30352C48A978003CEC7C /* Assets.xcassets */; };
+		BACC30392C48A978003CEC7C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BACC30382C48A978003CEC7C /* Preview Assets.xcassets */; };
+		BACC30432C48A979003CEC7C /* Baby_AffinityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC30422C48A979003CEC7C /* Baby_AffinityTests.swift */; };
+		BACC304D2C48A979003CEC7C /* Baby_AffinityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC304C2C48A979003CEC7C /* Baby_AffinityUITests.swift */; };
+		BACC304F2C48A979003CEC7C /* Baby_AffinityUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC304E2C48A979003CEC7C /* Baby_AffinityUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BACC303F2C48A979003CEC7C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BACC30242C48A976003CEC7C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BACC302B2C48A976003CEC7C;
+			remoteInfo = "Baby Affinity";
+		};
+		BACC30492C48A979003CEC7C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BACC30242C48A976003CEC7C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BACC302B2C48A976003CEC7C;
+			remoteInfo = "Baby Affinity";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		BACC302C2C48A976003CEC7C /* Baby Affinity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Baby Affinity.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BACC302F2C48A977003CEC7C /* Baby_AffinityApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Baby_AffinityApp.swift; sourceTree = "<group>"; };
+		BACC30312C48A977003CEC7C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		BACC30332C48A977003CEC7C /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		BACC30352C48A978003CEC7C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		BACC30382C48A978003CEC7C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		BACC303E2C48A979003CEC7C /* Baby AffinityTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Baby AffinityTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BACC30422C48A979003CEC7C /* Baby_AffinityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Baby_AffinityTests.swift; sourceTree = "<group>"; };
+		BACC30482C48A979003CEC7C /* Baby AffinityUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Baby AffinityUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BACC304C2C48A979003CEC7C /* Baby_AffinityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Baby_AffinityUITests.swift; sourceTree = "<group>"; };
+		BACC304E2C48A979003CEC7C /* Baby_AffinityUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Baby_AffinityUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BACC30292C48A976003CEC7C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BACC303B2C48A979003CEC7C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BACC30452C48A979003CEC7C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		BACC30232C48A976003CEC7C = {
+			isa = PBXGroup;
+			children = (
+				BACC302E2C48A977003CEC7C /* Baby Affinity */,
+				BACC30412C48A979003CEC7C /* Baby AffinityTests */,
+				BACC304B2C48A979003CEC7C /* Baby AffinityUITests */,
+				BACC302D2C48A976003CEC7C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BACC302D2C48A976003CEC7C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BACC302C2C48A976003CEC7C /* Baby Affinity.app */,
+				BACC303E2C48A979003CEC7C /* Baby AffinityTests.xctest */,
+				BACC30482C48A979003CEC7C /* Baby AffinityUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BACC302E2C48A977003CEC7C /* Baby Affinity */ = {
+			isa = PBXGroup;
+			children = (
+				BACC302F2C48A977003CEC7C /* Baby_AffinityApp.swift */,
+				BACC30312C48A977003CEC7C /* ContentView.swift */,
+				BACC30332C48A977003CEC7C /* Item.swift */,
+				BACC30352C48A978003CEC7C /* Assets.xcassets */,
+				BACC30372C48A978003CEC7C /* Preview Content */,
+			);
+			path = "Baby Affinity";
+			sourceTree = "<group>";
+		};
+		BACC30372C48A978003CEC7C /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				BACC30382C48A978003CEC7C /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		BACC30412C48A979003CEC7C /* Baby AffinityTests */ = {
+			isa = PBXGroup;
+			children = (
+				BACC30422C48A979003CEC7C /* Baby_AffinityTests.swift */,
+			);
+			path = "Baby AffinityTests";
+			sourceTree = "<group>";
+		};
+		BACC304B2C48A979003CEC7C /* Baby AffinityUITests */ = {
+			isa = PBXGroup;
+			children = (
+				BACC304C2C48A979003CEC7C /* Baby_AffinityUITests.swift */,
+				BACC304E2C48A979003CEC7C /* Baby_AffinityUITestsLaunchTests.swift */,
+			);
+			path = "Baby AffinityUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BACC302B2C48A976003CEC7C /* Baby Affinity */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BACC30522C48A979003CEC7C /* Build configuration list for PBXNativeTarget "Baby Affinity" */;
+			buildPhases = (
+				BACC30282C48A976003CEC7C /* Sources */,
+				BACC30292C48A976003CEC7C /* Frameworks */,
+				BACC302A2C48A976003CEC7C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Baby Affinity";
+			productName = "Baby Affinity";
+			productReference = BACC302C2C48A976003CEC7C /* Baby Affinity.app */;
+			productType = "com.apple.product-type.application";
+		};
+		BACC303D2C48A979003CEC7C /* Baby AffinityTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BACC30552C48A979003CEC7C /* Build configuration list for PBXNativeTarget "Baby AffinityTests" */;
+			buildPhases = (
+				BACC303A2C48A979003CEC7C /* Sources */,
+				BACC303B2C48A979003CEC7C /* Frameworks */,
+				BACC303C2C48A979003CEC7C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BACC30402C48A979003CEC7C /* PBXTargetDependency */,
+			);
+			name = "Baby AffinityTests";
+			productName = "Baby AffinityTests";
+			productReference = BACC303E2C48A979003CEC7C /* Baby AffinityTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		BACC30472C48A979003CEC7C /* Baby AffinityUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BACC30582C48A979003CEC7C /* Build configuration list for PBXNativeTarget "Baby AffinityUITests" */;
+			buildPhases = (
+				BACC30442C48A979003CEC7C /* Sources */,
+				BACC30452C48A979003CEC7C /* Frameworks */,
+				BACC30462C48A979003CEC7C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BACC304A2C48A979003CEC7C /* PBXTargetDependency */,
+			);
+			name = "Baby AffinityUITests";
+			productName = "Baby AffinityUITests";
+			productReference = BACC30482C48A979003CEC7C /* Baby AffinityUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BACC30242C48A976003CEC7C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					BACC302B2C48A976003CEC7C = {
+						CreatedOnToolsVersion = 15.0.1;
+					};
+					BACC303D2C48A979003CEC7C = {
+						CreatedOnToolsVersion = 15.0.1;
+						TestTargetID = BACC302B2C48A976003CEC7C;
+					};
+					BACC30472C48A979003CEC7C = {
+						CreatedOnToolsVersion = 15.0.1;
+						TestTargetID = BACC302B2C48A976003CEC7C;
+					};
+				};
+			};
+			buildConfigurationList = BACC30272C48A976003CEC7C /* Build configuration list for PBXProject "Baby Affinity" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = BACC30232C48A976003CEC7C;
+			productRefGroup = BACC302D2C48A976003CEC7C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BACC302B2C48A976003CEC7C /* Baby Affinity */,
+				BACC303D2C48A979003CEC7C /* Baby AffinityTests */,
+				BACC30472C48A979003CEC7C /* Baby AffinityUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BACC302A2C48A976003CEC7C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BACC30392C48A978003CEC7C /* Preview Assets.xcassets in Resources */,
+				BACC30362C48A978003CEC7C /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BACC303C2C48A979003CEC7C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BACC30462C48A979003CEC7C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BACC30282C48A976003CEC7C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BACC30322C48A977003CEC7C /* ContentView.swift in Sources */,
+				BACC30342C48A977003CEC7C /* Item.swift in Sources */,
+				BACC30302C48A977003CEC7C /* Baby_AffinityApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BACC303A2C48A979003CEC7C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BACC30432C48A979003CEC7C /* Baby_AffinityTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BACC30442C48A979003CEC7C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BACC304F2C48A979003CEC7C /* Baby_AffinityUITestsLaunchTests.swift in Sources */,
+				BACC304D2C48A979003CEC7C /* Baby_AffinityUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BACC30402C48A979003CEC7C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BACC302B2C48A976003CEC7C /* Baby Affinity */;
+			targetProxy = BACC303F2C48A979003CEC7C /* PBXContainerItemProxy */;
+		};
+		BACC304A2C48A979003CEC7C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BACC302B2C48A976003CEC7C /* Baby Affinity */;
+			targetProxy = BACC30492C48A979003CEC7C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		BACC30502C48A979003CEC7C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		BACC30512C48A979003CEC7C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		BACC30532C48A979003CEC7C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Baby Affinity/Preview Content\"";
+				DEVELOPMENT_TEAM = 56NNYWF83R;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.MichaelCenters.Baby-Affinity";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BACC30542C48A979003CEC7C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Baby Affinity/Preview Content\"";
+				DEVELOPMENT_TEAM = 56NNYWF83R;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.MichaelCenters.Baby-Affinity";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		BACC30562C48A979003CEC7C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 56NNYWF83R;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.MichaelCenters.Baby-AffinityTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Baby Affinity.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Baby Affinity";
+			};
+			name = Debug;
+		};
+		BACC30572C48A979003CEC7C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 56NNYWF83R;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.MichaelCenters.Baby-AffinityTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Baby Affinity.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Baby Affinity";
+			};
+			name = Release;
+		};
+		BACC30592C48A979003CEC7C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 56NNYWF83R;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.MichaelCenters.Baby-AffinityUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Baby Affinity";
+			};
+			name = Debug;
+		};
+		BACC305A2C48A979003CEC7C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 56NNYWF83R;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.MichaelCenters.Baby-AffinityUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Baby Affinity";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BACC30272C48A976003CEC7C /* Build configuration list for PBXProject "Baby Affinity" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BACC30502C48A979003CEC7C /* Debug */,
+				BACC30512C48A979003CEC7C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BACC30522C48A979003CEC7C /* Build configuration list for PBXNativeTarget "Baby Affinity" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BACC30532C48A979003CEC7C /* Debug */,
+				BACC30542C48A979003CEC7C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BACC30552C48A979003CEC7C /* Build configuration list for PBXNativeTarget "Baby AffinityTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BACC30562C48A979003CEC7C /* Debug */,
+				BACC30572C48A979003CEC7C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BACC30582C48A979003CEC7C /* Build configuration list for PBXNativeTarget "Baby AffinityUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BACC30592C48A979003CEC7C /* Debug */,
+				BACC305A2C48A979003CEC7C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BACC30242C48A976003CEC7C /* Project object */;
+}
