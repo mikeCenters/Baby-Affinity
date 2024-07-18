@@ -34,9 +34,15 @@ struct Baby_AffinityApp: App {
 
 #if DEBUG
 let previewModelContainer: ModelContainer = {
+    let schema = Schema([
+        Name.self,
+    ])
+    let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    
     do {
-        let container = try ModelContainer(for: Name.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
         
+        /// Load preview data.
         Task { @MainActor in
             let context = container.mainContext
             
@@ -57,7 +63,7 @@ let previewModelContainer: ModelContainer = {
         
         return container
     } catch {
-        fatalError("Failed to create container with error: \(error.localizedDescription)")
+        fatalError("Could not create ModelContainer: \(error)")
     }
 }()
 #endif
