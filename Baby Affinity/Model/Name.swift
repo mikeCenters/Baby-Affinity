@@ -25,6 +25,9 @@ final class Name {
     private(set) var affinityRating: Int16
     
     
+    private(set) var isFavorite: Bool
+    
+    
     // MARK: - Init
     
     /// Initialize a `Name` object with the provided attriibutes. These are the `Names` a user would consider for naming their child.
@@ -37,6 +40,7 @@ final class Name {
         self.sex = sex
         self.affinityRating = affinityRating
         self.evaluated = 0
+        self.isFavorite = false
     }
 }
 
@@ -53,5 +57,10 @@ extension Name {
     /// Set the affinityRating attribute to the provided rating.
     func setAffinity(_ rating: Int16) {
         self.affinityRating = rating
+    }
+    
+    /// Toggle the `.isFavorite` attribute.
+    func toggleFavorite() {
+        self.isFavorite.toggle()
     }
 }

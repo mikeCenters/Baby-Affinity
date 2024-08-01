@@ -33,6 +33,10 @@ struct Baby_AffinityApp: App {
 
 
 #if DEBUG
+
+// MARK: -- Preview Model Container
+
+/// `Model Container` used for testing and previews.
 let previewModelContainer: ModelContainer = {
     let schema = Schema([
         Name.self,

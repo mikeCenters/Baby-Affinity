@@ -11,29 +11,34 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var names: [Name]
-
+    
+    
     var body: some View {
         List {
-            ForEach(names) { name in
-                Text(name.text)
+            
+            
+            
+            HStack {
+                
+                Text("1")
+                    .font(.title)
+                
+                Text("Michael")
+                    .font(.headline)
+                
+                Spacer()
+                
+                Image(systemName: "star.fill")
+                    .foregroundColor(.yellow)
             }
+            
+            
+            
+//            ForEach(names) { name in
+//                Text(name.text)
+//            }
         }
     }
-
-//    private func addItem() {
-//        withAnimation {
-//            let newItem = Item(timestamp: Date())
-//            modelContext.insert(newItem)
-//        }
-//    }
-//
-//    private func deleteItems(offsets: IndexSet) {
-//        withAnimation {
-//            for index in offsets {
-//                modelContext.delete(items[index])
-//            }
-//        }
-//    }
 }
 
 #Preview {
