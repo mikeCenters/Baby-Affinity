@@ -10,27 +10,13 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var names: [Name]
-    
     
     var body: some View {
         List {
             
             
-            
-            HStack {
-                
-                Text("1")
-                    .font(.title)
-                
-                Text("Michael")
-                    .font(.headline)
-                
-                Spacer()
-                
-                Image(systemName: "star.fill")
-                    .foregroundColor(.yellow)
-            }
+            TopNamesView()
+                .modelContext(modelContext)
             
             
             

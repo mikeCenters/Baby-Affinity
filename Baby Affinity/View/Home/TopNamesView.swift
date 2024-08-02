@@ -8,13 +8,19 @@
 import SwiftUI
 import SwiftData
 
+/// A list view of the top 10 `Name`s based on the Affinity Rating attribute.
 struct TopNamesView: View {
     
     // MARK: - Fetch Descriptor
+    
     /// The `FetchDescriptor` used to return the top 10 names of the user.
-    static private var fetchDescriptor: FetchDescriptor<Name> {
-        var descriptor = FetchDescriptor<Name>()
-        descriptor.sortBy = [SortDescriptor(\Name.affinityRating, order: .reverse)]
+    static private func fetchDescriptor(for sex: Sex) -> FetchDescriptor<Name> {
+        var descriptor = FetchDescriptor<Name>(
+            predicate: #Predicate { $0.sexRawValue == sex.rawValue },
+            sortBy: [
+                .init(\.affinityRating, order: .reverse)
+            ]
+        )
         descriptor.fetchLimit = 10
         
         return descriptor
@@ -25,13 +31,28 @@ struct TopNamesView: View {
 
     @Environment(\.modelContext) private var modelContext
     
-    @Query(Self.fetchDescriptor)
-    private var names: [Name]
+    /// The names of the selected `Sex` that are sorted via the Affinity Rating attribute in a descending order.
+    @Query private var names: [Name]
     
+    /// The sex of the names provided.
+    private let selectedSex: Sex
+    
+    /// The title text used for the section header.
+    private let headerTitle: String = "Your Top Names"
+    
+    
+    // MARK: - Controls
     
     @State private var showMore: Bool = false
     
-    private let headerTitle: String = "Your Top Names"
+    
+    // MARK: - Init
+    
+    init(show sex: Sex = .male) {
+        self.selectedSex = sex
+        _names = Query(Self.fetchDescriptor(for: sex))
+    }
+    
     
     
     // MARK: - Body
@@ -88,6 +109,8 @@ struct TopNamesView: View {
                 Text("Rating: \(name.affinityRating)")
                     .foregroundStyle(.secondary)
                     .font(.caption)
+                
+                Text(name.sex?.alternateName ?? "Unknown")
             }
             .frame(maxWidth: .infinity, alignment: .center)
             
