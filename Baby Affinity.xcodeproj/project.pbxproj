@@ -17,6 +17,7 @@
 		BACC305D2C48A9C1003CEC7C /* Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC305C2C48A9C1003CEC7C /* Name.swift */; };
 		BACC305F2C48A9FF003CEC7C /* Sex.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC305E2C48A9FF003CEC7C /* Sex.swift */; };
 		BACC30632C48C34A003CEC7C /* DefaultBabyNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC30622C48C34A003CEC7C /* DefaultBabyNames.swift */; };
+		BACC30662C5C7B7B003CEC7C /* TopNamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC30652C5C7B7A003CEC7C /* TopNamesView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +51,7 @@
 		BACC305C2C48A9C1003CEC7C /* Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Name.swift; sourceTree = "<group>"; };
 		BACC305E2C48A9FF003CEC7C /* Sex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sex.swift; sourceTree = "<group>"; };
 		BACC30622C48C34A003CEC7C /* DefaultBabyNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultBabyNames.swift; sourceTree = "<group>"; };
+		BACC30652C5C7B7A003CEC7C /* TopNamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNamesView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +149,7 @@
 		BACC30602C48C1E8003CEC7C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				BACC30642C5C7B67003CEC7C /* Home */,
 				BACC30312C48A977003CEC7C /* ContentView.swift */,
 			);
 			path = View;
@@ -158,6 +161,14 @@
 				BACC30622C48C34A003CEC7C /* DefaultBabyNames.swift */,
 			);
 			path = "Default Names";
+			sourceTree = "<group>";
+		};
+		BACC30642C5C7B67003CEC7C /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				BACC30652C5C7B7A003CEC7C /* TopNamesView.swift */,
+			);
+			path = Home;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -291,6 +302,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BACC30632C48C34A003CEC7C /* DefaultBabyNames.swift in Sources */,
+				BACC30662C5C7B7B003CEC7C /* TopNamesView.swift in Sources */,
 				BACC30322C48A977003CEC7C /* ContentView.swift in Sources */,
 				BACC305F2C48A9FF003CEC7C /* Sex.swift in Sources */,
 				BACC305D2C48A9C1003CEC7C /* Name.swift in Sources */,

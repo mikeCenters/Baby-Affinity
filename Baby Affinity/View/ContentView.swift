@@ -11,18 +11,14 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     
+    @State private var selectedSex: Sex = .male
+    
     var body: some View {
         List {
             
-            
-            TopNamesView()
+            TopNamesView(show: selectedSex)
                 .modelContext(modelContext)
             
-            
-            
-//            ForEach(names) { name in
-//                Text(name.text)
-//            }
         }
     }
 }
