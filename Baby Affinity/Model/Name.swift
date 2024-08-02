@@ -15,7 +15,7 @@ final class Name {
     /// The sex of the name
     private(set) var sex: Sex
     
-    /// The text represation of the name.
+    /// The text representation of the name.
     private(set) var text: String
     
     /// The number of times the name has been evaluated via the user.
