@@ -13,7 +13,10 @@ final class Name {
     
     // MARK: - Attributes
     /// The sex of the name
-    private(set) var sex: Sex
+    var sex: Sex? { Sex(rawValue: self.sexRawValue) }
+    
+    /// The rawValue of the `Sex` attribute. This attribute is required for sorting.
+    private(set) var sexRawValue: Int16
     
     /// The text representation of the name.
     private(set) var text: String
@@ -37,7 +40,7 @@ final class Name {
     ///   - affinityRating: The rating that represents a user's fondness towards it. The default rating is 1200.
     init(_ text: String, sex: Sex, affinityRating: Int16 = 1200) {
         self.text = text
-        self.sex = sex
+        self.sexRawValue = sex.rawValue
         self.affinityRating = affinityRating
         self.evaluated = 0
         self.isFavorite = false
