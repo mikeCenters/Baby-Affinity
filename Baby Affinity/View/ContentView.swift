@@ -14,12 +14,35 @@ struct ContentView: View {
     @State private var selectedSex: Sex = .male
     
     var body: some View {
-        List {
+        
+        //FIXME: Work on navigation bar and toolbars.
+        
+        NavigationStack {
             
-            TopNamesView(show: selectedSex)
-                .modelContext(modelContext)
+            
+            // MARK: - Home Feed
+            List {
+                TopNamesView(show: selectedSex)
+                    .modelContext(modelContext)
+                
+                // FIXME: Create Favorites List
+                Section("Favorites") {
+                    ForEach(0..<5) { i in
+                        Text("Name \(i+1)")
+                    }
+                }
+                
+                // FIXME: Create Shared List
+                Section("Shared List") {
+                    ForEach(0..<5) { i in
+                        Text("Name \(i+1)")
+                    }
+                }
+            }
+            .navigationTitle("Baby Names")
             
         }
+        
     }
 }
 
