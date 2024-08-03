@@ -38,8 +38,8 @@ struct TopNamesView: View {
     private let selectedSex: Sex
     
     /// The title text used for the section header.
-    private let headerTitle: String = "Your Top Names"
-    
+//    private let headerTitle: String = "Your Top \(self.selectedSex)Names"
+//    
     
     // MARK: - Controls
     
@@ -58,7 +58,7 @@ struct TopNamesView: View {
     // MARK: - Body
     
     var body: some View {
-        Section(header: Text(headerTitle)) {
+        Section(header: Text("Top \(self.selectedSex.alternateName) Names")) {
             
             // MARK: - Cell View
             
