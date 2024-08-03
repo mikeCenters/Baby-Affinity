@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BA9BAFE72C5ED484008D88A2 /* FavoriteNamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9BAFE62C5ED484008D88A2 /* FavoriteNamesView.swift */; };
 		BACC30302C48A977003CEC7C /* Baby_AffinityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC302F2C48A977003CEC7C /* Baby_AffinityApp.swift */; };
 		BACC30322C48A977003CEC7C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC30312C48A977003CEC7C /* ContentView.swift */; };
 		BACC30362C48A978003CEC7C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BACC30352C48A978003CEC7C /* Assets.xcassets */; };
@@ -38,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		BA9BAFE62C5ED484008D88A2 /* FavoriteNamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteNamesView.swift; sourceTree = "<group>"; };
 		BACC302C2C48A976003CEC7C /* Baby Affinity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Baby Affinity.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BACC302F2C48A977003CEC7C /* Baby_AffinityApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Baby_AffinityApp.swift; sourceTree = "<group>"; };
 		BACC30312C48A977003CEC7C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 			isa = PBXGroup;
 			children = (
 				BACC30652C5C7B7A003CEC7C /* TopNamesView.swift */,
+				BA9BAFE62C5ED484008D88A2 /* FavoriteNamesView.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -301,6 +304,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA9BAFE72C5ED484008D88A2 /* FavoriteNamesView.swift in Sources */,
 				BACC30632C48C34A003CEC7C /* DefaultBabyNames.swift in Sources */,
 				BACC30662C5C7B7B003CEC7C /* TopNamesView.swift in Sources */,
 				BACC30322C48A977003CEC7C /* ContentView.swift in Sources */,

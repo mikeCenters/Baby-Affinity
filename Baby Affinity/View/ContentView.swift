@@ -32,11 +32,7 @@ struct ContentView: View {
                         .modelContext(modelContext)
                     
                     // FIXME: Create Favorites List
-                    Section("Favorites") {
-                        ForEach(0..<5) { i in
-                            Text("Name \(i+1)")
-                        }
-                    }
+                    FavoriteNamesView(show: selectedSex)
                     
                     // FIXME: Create Shared List
                     Section("Shared List") {
