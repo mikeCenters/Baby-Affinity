@@ -109,8 +109,6 @@ struct TopNamesView: View {
                 Text("Rating: \(name.affinityRating)")
                     .foregroundStyle(.secondary)
                     .font(.caption)
-                
-                Text(name.sex?.alternateName ?? "Unknown")
             }
             .frame(maxWidth: .infinity, alignment: .center)
             
