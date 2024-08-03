@@ -40,6 +40,8 @@ struct ContentView: View {
                             Text("Name \(i+1)")
                         }
                     }
+                    
+                    // FIXME: Add precurated top names as a banner to add names to your favorites. These could be pulled from the global list as rising names or top 10 global names.
                 }
                 .navigationTitle("Baby Affinity")
                 .toolbar {
