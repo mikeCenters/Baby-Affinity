@@ -77,7 +77,7 @@ struct ContentView: View {
             }
             .tabItem {
                 Label {
-                    Text("Pick Names")
+                    Text("Home")
                 } icon: {
                     Image(systemName: "house")
                 }
