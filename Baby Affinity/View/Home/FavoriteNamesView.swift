@@ -8,7 +8,6 @@
 import SwiftUI
 import SwiftData
 
-// FIXME: The ranks are not correct. The fetch reveals only favorite names. Will need to update to show all to find the correct rank.
 
 /// A list view of the favorite `Name`s.
 struct FavoriteNamesView: View {
@@ -69,7 +68,7 @@ struct FavoriteNamesView: View {
                         .padding()
                     
                 } else {                      // Favorites are available
-                    ForEach(presentedNames, id: \.self) { name in
+                    ForEach(self.presentedNames, id: \.self) { name in
                         CellView(name, rank: name.getRank(from: modelContext) ?? 0)
                     }
                 }
@@ -91,15 +90,18 @@ struct FavoriteNamesView: View {
                             .font(.headline)
                     }
                     .buttonStyle(.borderless)
-                    .sensoryFeedback(.impact, trigger: presentedNames)
+                    .sensoryFeedback(.impact, trigger: self.presentedNames)
                 }
             }
             .onAppear {
-                // MARK: - On Appear
-                
                 withAnimation {
                     self.loadNames()
                 }
+            }
+            .onChange(of: self.names) { oldValue, newValue in
+                guard self.presentedNames.isEmpty else { return }
+
+                self.loadNames()
             }
     }
 }
