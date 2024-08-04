@@ -66,4 +66,53 @@ extension Name {
     func toggleFavorite() {
         self.isFavorite.toggle()
     }
+    
+    /// Get the rank of the `Name`.
+    func getRank(from context: ModelContext) -> Int? {
+        let sex = self.sexRawValue
+        let descriptor = FetchDescriptor<Name>(
+            predicate: #Predicate { $0.sexRawValue == sex },
+            sortBy: [
+                .init(\.affinityRating, order: .reverse)
+            ]
+        )
+        
+        let names = try? context.fetch(descriptor)
+        
+        return names?.firstIndex(of: self).map { $0 + 1 }
+    }
+    
+    @MainActor
+    static func loadDefaultNames(_ context: ModelContext) {
+        let storedNames = try? context.fetch(FetchDescriptor<Name>())
+        
+        /// Load default data.
+        Task {
+            let names = DefaultBabyNames()
+            
+            /// Add girl names.
+            for (_, name) in names.girlNames {
+                let n = Name(name, sex: .female)
+                
+                if let stored = storedNames {
+                    if !stored.contains(n) {
+                        context.insert(n)
+                    } else {
+                        print("It was missed.")
+                    }
+                }
+            }
+            
+            /// Add boy names.
+            for (_, name) in names.boyNames {
+                let n = Name(name, sex: .male)
+                
+                if let stored = storedNames {
+                    if !stored.contains(n) {
+                        context.insert(n)
+                    }
+                }
+            }
+        }
+    }
 }
