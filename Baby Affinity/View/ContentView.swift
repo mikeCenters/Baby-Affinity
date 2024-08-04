@@ -17,6 +17,7 @@ struct ContentView: View {
     @State private var selectedSex: Sex = .male
     @State private var showSexSelection = false
     
+    
     // MARK: - View
     
     var body: some View {
@@ -33,6 +34,7 @@ struct ContentView: View {
                     
                     // FIXME: Create Favorites List
                     FavoriteNamesView(show: selectedSex)
+                        .modelContext(modelContext)
                     
                     // FIXME: Create Shared List
                     Section("Shared List") {
