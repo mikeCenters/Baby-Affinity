@@ -94,11 +94,15 @@ struct FavoriteNamesView: View {
                 }
             }
             .onAppear {
+                // MARK: - On Appear
+                
                 withAnimation {
                     self.loadNames()
                 }
             }
             .onChange(of: self.names) { oldValue, newValue in
+                // MARK: - On Change
+                
                 guard self.presentedNames.isEmpty else { return }
 
                 self.loadNames()
