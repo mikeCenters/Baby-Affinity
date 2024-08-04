@@ -45,6 +45,7 @@ struct TopNamesView: View {
     
     @State private var showMore: Bool = false
     
+    @State private var isLoading = false
     
     // MARK: - Init
     
@@ -54,7 +55,6 @@ struct TopNamesView: View {
     }
     
     
-    
     // MARK: - Body
     
     var body: some View {
@@ -62,9 +62,14 @@ struct TopNamesView: View {
             
             // MARK: - Cell View
             
-            // List of top names
-            ForEach(Array(names.enumerated()).prefix(showMore ? names.count : 5), id: \.element) { (index, name) in
-                CellView(name, rank: index + 1)
+            if self.names.isEmpty {         // Names are not loaded
+                self.loadingIndicator
+                
+                
+            } else {                        // Show the list of top names
+                ForEach(Array(names.enumerated()).prefix(showMore ? names.count : 5), id: \.element) { (index, name) in
+                    CellView(name, rank: index + 1)
+                }
             }
             
             
@@ -129,6 +134,28 @@ struct TopNamesView: View {
             .buttonStyle(.borderless)   /// Disable List cell tapping.
             .sensoryFeedback(.impact, trigger: name.isFavorite)
             .frame(maxWidth: .infinity, alignment: .trailing)
+        }
+    }
+    
+    
+    private var loadingIndicator: some View {
+        HStack() {
+            ForEach(0..<3) { index in
+                Circle()
+                    .frame(width: 40, height: 40)
+                    .foregroundColor(self.selectedSex == .male ? .blue : .pink)
+                    .scaleEffect(self.isLoading ? 0.9 : 0.5)
+                    .animation(
+                        Animation.easeInOut(duration: 0.6)
+                            .repeatForever(autoreverses: true)
+                            .delay(0.2 * Double(index)),
+                        value: self.isLoading
+                    )
+            }
+        }
+        .frame(maxWidth: .infinity, minHeight: 140, alignment: .center)
+        .onAppear {
+            self.isLoading = true
         }
     }
 }
