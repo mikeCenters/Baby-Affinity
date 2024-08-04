@@ -111,5 +111,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(previewModelContainer)
+        .modelContainer(previewModelContainer_WithFavorites)
 }

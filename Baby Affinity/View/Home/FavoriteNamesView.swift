@@ -14,10 +14,12 @@ struct FavoriteNamesView: View {
     
     // MARK: - Fetch Descriptor
     
-    /// The `FetchDescriptor` used to return the top 10 names of the user.
+    /// The `FetchDescriptor` used to return the favorite names of the user in descending order of the Affinity Rating.
     static private func fetchDescriptor(for sex: Sex) -> FetchDescriptor<Name> {
         return FetchDescriptor<Name>(
-            predicate: #Predicate { $0.sexRawValue == sex.rawValue && $0.isFavorite },
+            predicate: #Predicate {
+                $0.sexRawValue == sex.rawValue && $0.isFavorite
+            },
             sortBy: [
                 .init(\.affinityRating, order: .reverse)
             ]
@@ -26,7 +28,7 @@ struct FavoriteNamesView: View {
     
     
     // MARK: - Properties
-
+    
     @Environment(\.modelContext) private var modelContext
     
     /// The names of the selected `Sex` that are labeled as a favorite.
@@ -38,11 +40,10 @@ struct FavoriteNamesView: View {
     /// The sex of the names provided.
     private let selectedSex: Sex
     
-    /// The title text used for the section header.
-//    private let headerTitle: String = "Your Top \(self.selectedSex)Names"
-//
     
-    // MARK: - Controls
+    // MARK: - Controls and Constants
+    
+    private let maxPresentedNames = 5
     
     
     // MARK: - Init
@@ -58,53 +59,56 @@ struct FavoriteNamesView: View {
     var body: some View {
         Section(
             header: Text("Favorite \(self.selectedSex.alternateName) Names")) {
-            
-            // MARK: - Cell View
-            
-            
-            if presentedNames.isEmpty {     // No favorite names are available
                 
-                self.noFavoritesFound
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding()
+                // MARK: - Cell View
                 
-                
-            } else {                        // Favorites are available
-                
-                // List of favorite names
-                ForEach(Array(presentedNames.enumerated()), id: \.element) { (index, name) in
-                    CellView(name, rank: index + 1)
-                }
-            }
-            
-            
-            
-            // MARK: - Footer View
-            HStack {
-                Spacer()
-                
-                Button {
-                    withAnimation {
-                        // Reload names
-                        self.loadNames()
-                    }
+                if presentedNames.isEmpty {   // No favorite names are available
+                    self.noFavoritesFound
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding()
                     
-                } label: {
-                    Image(systemName: "arrow.clockwise")
-                        .font(.headline)
+                } else {                      // Favorites are available
+                    ForEach(presentedNames, id: \.self) { name in
+                        if let index = names.firstIndex(of: name) {
+                            CellView(name, rank: index + 1)
+                        }
+                    }
+                }
+                
+                
+                // MARK: - Footer View
+                
+                HStack {
+                    Spacer()
+                    
+                    // Reload names
+                    Button {
+                        withAnimation {
+                            self.loadNames()
+                        }
+                        
+                    } label: {
+                        Image(systemName: "arrow.clockwise")
+                            .font(.headline)
+                    }
+                    .buttonStyle(.borderless)
+                    .sensoryFeedback(.impact, trigger: presentedNames)
                 }
             }
-        }
+            .onAppear {
+                // MARK: - On Appear
+                
+                withAnimation {
+                    self.loadNames()
+                }
+            }
     }
-    
-    private func loadNames() {
-        self.presentedNames = self.names
-    }
-    
-    
-    
-    
-    // MARK: - View Components
+}
+
+
+// MARK: - View Components
+
+extension FavoriteNamesView {
     
     /// The view that displays the rank, name, rating, and favorite status of a `Name` object.
     private func CellView(_ name: Name, rank: Int) -> some View {
@@ -142,6 +146,7 @@ struct FavoriteNamesView: View {
                     .foregroundColor(name.isFavorite ? .yellow : .gray)
                     .font(.headline)
             }
+            .buttonStyle(.borderless)   /// Disable List cell tapping.
             .sensoryFeedback(.impact, trigger: name.isFavorite)
             .frame(maxWidth: .infinity, alignment: .trailing)
         }
@@ -161,8 +166,33 @@ struct FavoriteNamesView: View {
                 .multilineTextAlignment(.center)
         }
     }
+}
+
+
+// MARK: - Methods
+
+extension FavoriteNamesView {
     
-    
+    /// Load names to be presented in the view.
+    private func loadNames() {
+        let maxCount = min(self.maxPresentedNames, self.names.count)
+        
+        guard maxCount > 0 else {
+            self.presentedNames = []
+            return
+        }
+        
+        /// Set to track unique random indices.
+        var selectedIndices = Set<Int>()
+        
+        while selectedIndices.count < maxCount {
+            let randomIndex = Int.random(in: 0..<names.count)
+            selectedIndices.insert(randomIndex)
+        }
+
+        /// Use the selected indices to get the corresponding names.
+        self.presentedNames = selectedIndices.map { names[$0] }
+    }
 }
 
 
@@ -173,7 +203,7 @@ struct FavoriteNamesView: View {
 #Preview {
     List {
         FavoriteNamesView()
-            .modelContainer(previewModelContainer)
+            .modelContainer(previewModelContainer_WithFavorites)
     }
 }
 

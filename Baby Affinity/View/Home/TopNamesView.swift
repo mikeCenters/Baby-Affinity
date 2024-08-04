@@ -82,6 +82,7 @@ struct TopNamesView: View {
                     Image(systemName: showMore ? "chevron.up" : "chevron.down")
                         .font(.headline)
                 }
+                .buttonStyle(.borderless)   /// Disable List cell tapping.
             }
         }
     }
@@ -125,6 +126,7 @@ struct TopNamesView: View {
                     .foregroundColor(name.isFavorite ? .yellow : .gray)
                     .font(.headline)
             }
+            .buttonStyle(.borderless)   /// Disable List cell tapping.
             .sensoryFeedback(.impact, trigger: name.isFavorite)
             .frame(maxWidth: .infinity, alignment: .trailing)
         }
@@ -139,7 +141,7 @@ struct TopNamesView: View {
 #Preview {
     List {
         TopNamesView()
-            .modelContainer(previewModelContainer)
+            .modelContainer(previewModelContainer_WithFavorites)
     }
 }
 
