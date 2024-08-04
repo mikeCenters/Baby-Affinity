@@ -19,7 +19,7 @@ final class Name {
     private(set) var sexRawValue: Int16
     
     /// The text representation of the name.
-    private(set) var text: String
+    @Attribute(.unique) private(set) var text: String
     
     /// The number of times the name has been evaluated via the user.
     private(set) var evaluated: Int16
@@ -82,35 +82,29 @@ extension Name {
         return names?.firstIndex(of: self).map { $0 + 1 }
     }
     
-    @MainActor
+    
     static func loadDefaultNames(_ context: ModelContext) {
         let storedNames = try? context.fetch(FetchDescriptor<Name>())
+        let names = DefaultBabyNames()
         
-        /// Load default data.
-        Task {
-            let names = DefaultBabyNames()
+        /// Add girl names.
+        for (_, name) in names.girlNames {
+            let n = Name(name, sex: .female)
             
-            /// Add girl names.
-            for (_, name) in names.girlNames {
-                let n = Name(name, sex: .female)
-                
-                if let stored = storedNames {
-                    if !stored.contains(n) {
-                        context.insert(n)
-                    } else {
-                        print("It was missed.")
-                    }
+            if let stored = storedNames {
+                if !stored.contains(n) {
+                    context.insert(n)
                 }
             }
+        }
+        
+        /// Add boy names.
+        for (_, name) in names.boyNames {
+            let n = Name(name, sex: .male)
             
-            /// Add boy names.
-            for (_, name) in names.boyNames {
-                let n = Name(name, sex: .male)
-                
-                if let stored = storedNames {
-                    if !stored.contains(n) {
-                        context.insert(n)
-                    }
+            if let stored = storedNames {
+                if !stored.contains(n) {
+                    context.insert(n)
                 }
             }
         }
