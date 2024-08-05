@@ -38,7 +38,8 @@ struct ContentView: View {
             
             // MARK: - Pick Names
             
-            Text("Pick Names View")
+            NamePickerView()
+                .modelContext(self.modelContext)
                 .tabItem {
                     Label {
                         Text("Pick Names")

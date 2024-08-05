@@ -21,6 +21,7 @@
 		BACC30632C48C34A003CEC7C /* DefaultBabyNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC30622C48C34A003CEC7C /* DefaultBabyNames.swift */; };
 		BACC30662C5C7B7B003CEC7C /* TopNamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC30652C5C7B7A003CEC7C /* TopNamesView.swift */; };
 		BAE858952C6114CB00177BA8 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE858942C6114CB00177BA8 /* HomeView.swift */; };
+		BAE858982C6136AE00177BA8 /* NamePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE858972C6136AE00177BA8 /* NamePickerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		BACC30622C48C34A003CEC7C /* DefaultBabyNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultBabyNames.swift; sourceTree = "<group>"; };
 		BACC30652C5C7B7A003CEC7C /* TopNamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNamesView.swift; sourceTree = "<group>"; };
 		BAE858942C6114CB00177BA8 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		BAE858972C6136AE00177BA8 /* NamePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePickerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -165,6 +167,7 @@
 			isa = PBXGroup;
 			children = (
 				BACC30642C5C7B67003CEC7C /* Home */,
+				BAE858962C61369A00177BA8 /* NamePicker */,
 				BACC30312C48A977003CEC7C /* ContentView.swift */,
 			);
 			path = View;
@@ -186,6 +189,14 @@
 				BA9BAFE62C5ED484008D88A2 /* FavoriteNamesView.swift */,
 			);
 			path = Home;
+			sourceTree = "<group>";
+		};
+		BAE858962C61369A00177BA8 /* NamePicker */ = {
+			isa = PBXGroup;
+			children = (
+				BAE858972C6136AE00177BA8 /* NamePickerView.swift */,
+			);
+			path = NamePicker;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -319,6 +330,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BAE858952C6114CB00177BA8 /* HomeView.swift in Sources */,
+				BAE858982C6136AE00177BA8 /* NamePickerView.swift in Sources */,
 				BA9BAFE72C5ED484008D88A2 /* FavoriteNamesView.swift in Sources */,
 				BACC30632C48C34A003CEC7C /* DefaultBabyNames.swift in Sources */,
 				BACC30662C5C7B7B003CEC7C /* TopNamesView.swift in Sources */,
