@@ -14,15 +14,12 @@ struct FavoriteNamesView: View {
     
     // MARK: - Fetch Descriptor
     
-    /// The `FetchDescriptor` used to return the favorite names of the user in descending order of the Affinity Rating.
+    /// The `FetchDescriptor` used to return the favorite names of the user.
     static private func fetchDescriptor(for sex: Sex) -> FetchDescriptor<Name> {
         return FetchDescriptor<Name>(
             predicate: #Predicate {
                 $0.sexRawValue == sex.rawValue && $0.isFavorite
-            },
-            sortBy: [
-                .init(\.affinityRating, order: .reverse)
-            ]
+            }
         )
     }
     
@@ -45,6 +42,11 @@ struct FavoriteNamesView: View {
     
     private let maxPresentedNames = 5
     
+    /// Timestamp for last refresh.
+    @State private var lastRefresh: Date = .distantPast
+    /// The time between data refreshes.
+    private let refreshCooldown: TimeInterval = 1 // 1 second cooldown
+        
     
     // MARK: - Init
     
@@ -103,9 +105,14 @@ struct FavoriteNamesView: View {
             .onChange(of: self.names) { oldValue, newValue in
                 // MARK: - On Change
                 
-                guard self.presentedNames.isEmpty else { return }
-
-                self.loadNames()
+                guard self.presentedNames.count < self.maxPresentedNames
+                else { return }
+                
+                if self.presentedNames.count == self.maxPresentedNames {
+                    
+                } else {
+                    self.loadNames()
+                }
             }
     }
 }
@@ -180,6 +187,11 @@ extension FavoriteNamesView {
     
     /// Load names to be presented in the view.
     private func loadNames() {
+        /// Check if the cooldown period has passed
+        let currentTime = Date()
+        guard currentTime.timeIntervalSince(self.lastRefresh) >= self.refreshCooldown 
+        else { return }
+        
         let maxCount = min(self.maxPresentedNames, self.names.count)
         
         guard maxCount > 0 else {
@@ -187,16 +199,7 @@ extension FavoriteNamesView {
             return
         }
         
-        /// Set to track unique random indices.
-        var selectedIndices = Set<Int>()
-        
-        while selectedIndices.count < maxCount {
-            let randomIndex = Int.random(in: 0..<names.count)
-            selectedIndices.insert(randomIndex)
-        }
-
-        /// Use the selected indices to get the corresponding names.
-        self.presentedNames = selectedIndices.map { names[$0] }
+        self.presentedNames = self.names.randomElements(count: self.maxPresentedNames)
     }
 }
 
@@ -213,4 +216,3 @@ extension FavoriteNamesView {
 }
 
 #endif
-
