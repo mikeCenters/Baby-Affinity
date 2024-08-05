@@ -39,6 +39,7 @@ struct NamePickerView: View {
     
     private let maxSelections = 5
     private let numChoices = 10
+    private var title: String { "Pick \(self.maxSelections) Names" }
     @State private var showSexSelection = false
     @State private var showInstructions = true
     
@@ -51,7 +52,7 @@ struct NamePickerView: View {
                 
                 // Chosen Names
                 
-                if !chosenNames.isEmpty {
+                if !chosenNames.isEmpty {       /// Only show if names are chosen
                     Section(header: Text("Chosen Names")) {
                         ForEach(chosenNames) { name in
                             HStack {
@@ -72,18 +73,18 @@ struct NamePickerView: View {
                 
                 
                 // Presented Names
-                
-                ForEach(self.presentedNames) { name in
-                    Button {
-                        withAnimation {
-                            self.selectName(name)
+                Section {
+                    ForEach(self.presentedNames) { name in
+                        Button {
+                            withAnimation {
+                                self.selectName(name)
+                            }
+                            
+                        } label: {
+                            Text(name.text)
                         }
-                        
-                    } label: {
-                        Text(name.text)
                     }
                 }
-                
                 
             }
             .onAppear {
@@ -100,82 +101,102 @@ struct NamePickerView: View {
                     self.loadNames()
                 }
             })
-            .navigationTitle("Pick \(self.maxSelections) Names")
             .toolbar {
+                // MARK: - Toolbars
                 ToolbarItem(placement: .bottomBar) {
-                    Button {
-                        withAnimation {
-                            self.submitNames()
-                        }
-                        
-                    } label: {
-                        Text(self.chosenNames.isEmpty ? "New Names" : "Submit")
-                    }
-                    .buttonStyle(BorderedButtonStyle())
-                    
+                    self.submitNamesButton
                 }
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        withAnimation {
-                            self.showSexSelection.toggle()
-                        }
-                    } label: {
-                        Image(systemName: "switch.2")
-                    }
-                    .confirmationDialog("Show which names?", isPresented: self.$showSexSelection) {
-                        
-                        ForEach(Sex.allCases, id: \.self) { sex in
-                            Button {
-                                withAnimation {
-                                    self.selectedSex = sex
-                                }
-                                
-                            } label: {
-                                Text(sex.alternateName)
-                            }
-                        }
-                    }
+                    self.sexSelectionIcon
                 }
             }
             .sheet(isPresented: self.$showInstructions) {
-                VStack {
-                    Image(systemName: "checklist")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 90)
-                        .padding(.top, 40)
-                        .padding([.horizontal, .bottom])
-                        .foregroundStyle(.yellow)
-                    
-                    Text("Pick \(self.maxSelections) Names")
-                        .font(.largeTitle)
-                        .bold()
-                        .padding()
-                        .foregroundStyle(.tint)
-                    
-                    Text("Choose up to \(self.maxSelections) names from the list that are to your liking. While there may be other names that you would want to name your baby, pick among these that you like the most. \n\nIf you don't like the available names, simply select new names.")
-                        .font(.body)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                    
-                    Button {
-                        withAnimation {
-                            self.showInstructions = false
-                        }
-                    } label: {
-                        Text("Find Names!")
-                            .font(.headline)
+                // MARK: - Sheet
+                self.instructions
+            }
+            .navigationTitle(self.title)
+        }
+    }
+    
+    
+    // MARK: - View Components
+    
+    private var submitNamesButton: some View {
+        Button {
+            withAnimation {
+                self.submitNames()
+            }
+            
+        } label: {
+            Text(self.chosenNames.isEmpty ? "New Names" : "Submit")
+        }
+        .buttonStyle(BorderedButtonStyle())
+    }
+    
+    
+    private var sexSelectionIcon: some View {
+        Button {
+            withAnimation {
+                self.showSexSelection.toggle()
+            }
+        } label: {
+            Image(systemName: "switch.2")
+        }
+        .confirmationDialog("Show which names?", isPresented: self.$showSexSelection) {
+            
+            ForEach(Sex.allCases, id: \.self) { sex in
+                Button {
+                    withAnimation {
+                        self.selectedSex = sex
                     }
-                    .buttonStyle(BorderedButtonStyle())
-                    .padding(.top, 40)
-
                     
-                    
-                    Spacer()
+                } label: {
+                    Text(sex.alternateName)
                 }
             }
+        }
+    }
+    
+    
+    private var instructionsText: String { "Choose up to \(self.maxSelections) names from the list that are to your liking. While there may be other names that you would want to name your baby, pick among these that you like the most. \n\nIf you don't like the available names, simply select new names." }
+    
+    private var instructions: some View {
+        VStack {
+            Image(systemName: "checklist")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 90)
+                .padding(.top, 40)
+                .padding([.horizontal, .bottom])
+                .foregroundStyle(.yellow)
+            
+            Text("Pick \(self.maxSelections) Names")
+                .font(.largeTitle)
+                .bold()
+                .padding()
+                .foregroundStyle(.tint)
+            
+            Text(self.instructionsText)
+                .font(.body)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+            
+            Button {
+                withAnimation {
+                    self.showInstructions = false
+                }
+            } label: {
+                Text("Find Names!")
+                    .font(.headline)
+            }
+            .buttonStyle(BorderedButtonStyle())
+            .padding(.top, 40)
+
+            
+            
+            Spacer()
         }
     }
     
