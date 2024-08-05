@@ -83,30 +83,128 @@ extension Name {
     }
     
     
-    static func loadDefaultNames(_ context: ModelContext) {
-        let storedNames = try? context.fetch(FetchDescriptor<Name>())
+//    static func loadDefaultNames(_ context: ModelContext) async throws {
+////                let storedNames = try? context.fetch(FetchDescriptor<Name>())
+////                let names = DefaultBabyNames()
+////        
+////                /// Add girl names.
+////                for (_, name) in names.girlNames {
+////                    let n = Name(name, sex: .female)
+////        
+////                    if let stored = storedNames {
+////                        if !stored.contains(n) {
+////                            context.insert(n)
+////                        }
+////                    }
+////                }
+////        
+////                /// Add boy names.
+////                for (_, name) in names.boyNames {
+////                    let n = Name(name, sex: .male)
+////        
+////                    if let stored = storedNames {
+////                        if !stored.contains(n) {
+////                            context.insert(n)
+////                        }
+////                    }
+////                }
+//        
+//        do {
+//            // Fetch all stored names' text once and create a set for fast lookup
+//            let storedNames = try context.fetch(FetchDescriptor<Name>())
+//            let storedNamesSet = Set(storedNames.map { $0.text })
+//            
+//            // Access default names
+//            let names = DefaultBabyNames()
+//            
+//            // Prepare new names for insertion
+//            var newNames: [Name] = []
+//            
+//            // Add girl names if they don't exist in the stored names
+//            for (_, name) in names.girlNames {
+//                if !storedNamesSet.contains(name) {
+//                    newNames.append(Name(name, sex: .female))
+//                }
+//            }
+//            
+//            // Add boy names if they don't exist in the stored names
+//            for (_, name) in names.boyNames {
+//                if !storedNamesSet.contains(name) {
+//                    newNames.append(Name(name, sex: .male))
+//                }
+//            }
+//            
+//            // Batch size for insertion
+//            let batchSize = 1000
+//            let totalObjects = newNames.count
+//            
+//            for i in 0..<(totalObjects / batchSize + 1) {
+//                let startIndex = i * batchSize
+//                let endIndex = min(startIndex + batchSize, totalObjects)
+//                
+//                for j in startIndex..<endIndex {
+//                    context.insert(newNames[j])
+//                }
+//                
+//                do {
+//                    try context.save()
+//                    print("Saved batch \(i + 1)")
+//                } catch {
+//                    print("Failed to save batch \(i + 1): \(error)")
+//                    throw error
+//                }
+//            }
+//        } catch {
+//            print("Failed to fetch stored names: \(error)")
+//            throw error
+//        }
+//    }
+}
+
+
+extension Name {
+    static func prepareDefaultNames() async -> [Name] {
+        // Access default names
         let names = DefaultBabyNames()
         
-        /// Add girl names.
+        // Prepare new names for insertion
+        var newNames: [Name] = []
+
+        // Add girl names
         for (_, name) in names.girlNames {
-            let n = Name(name, sex: .female)
-            
-            if let stored = storedNames {
-                if !stored.contains(n) {
-                    context.insert(n)
-                }
-            }
+            newNames.append(Name(name, sex: .female))
+        }
+
+        // Add boy names
+        for (_, name) in names.boyNames {
+            newNames.append(Name(name, sex: .male))
         }
         
-        /// Add boy names.
-        for (_, name) in names.boyNames {
-            let n = Name(name, sex: .male)
+        return newNames
+    }
+    
+    @MainActor
+    static func insertNames(_ names: [Name], into context: ModelContext) async throws {
+        // Fetch stored names and create a set of existing names' texts for fast lookup
+        let storedNames: [Name] = try context.fetch(FetchDescriptor<Name>())
+        let storedNamesSet = Set(storedNames.map { $0.text })
+
+        // Filter out names that are already in the database
+        let newNames = names.filter { !storedNamesSet.contains($0.text) }
+
+        // Insert new names in batches
+        let batchSize = 1000
+        let totalObjects = newNames.count
+
+        for i in 0..<(totalObjects / batchSize + 1) {
+            let startIndex = i * batchSize
+            let endIndex = min(startIndex + batchSize, totalObjects)
             
-            if let stored = storedNames {
-                if !stored.contains(n) {
-                    context.insert(n)
-                }
+            for j in startIndex..<endIndex {
+                context.insert(newNames[j])
             }
+            
+            try context.save()
         }
     }
 }
