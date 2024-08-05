@@ -40,6 +40,7 @@ struct NamePickerView: View {
     private let maxSelections = 5
     private let numChoices = 10
     @State private var showSexSelection = false
+    @State private var showInstructions = true
     
     
     // MARK: - View
@@ -136,6 +137,43 @@ struct NamePickerView: View {
                             }
                         }
                     }
+                }
+            }
+            .sheet(isPresented: self.$showInstructions) {
+                VStack {
+                    Image(systemName: "checklist")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 90)
+                        .padding(.top, 40)
+                        .padding([.horizontal, .bottom])
+                        .foregroundStyle(.yellow)
+                    
+                    Text("Pick \(self.maxSelections) Names")
+                        .font(.largeTitle)
+                        .bold()
+                        .padding()
+                        .foregroundStyle(.tint)
+                    
+                    Text("Choose up to \(self.maxSelections) names from the list that are to your liking. While there may be other names that you would want to name your baby, pick among these that you like the most. \n\nIf you don't like the available names, simply select new names.")
+                        .font(.body)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                    
+                    Button {
+                        withAnimation {
+                            self.showInstructions = false
+                        }
+                    } label: {
+                        Text("Find Names!")
+                            .font(.headline)
+                    }
+                    .buttonStyle(BorderedButtonStyle())
+                    .padding(.top, 40)
+
+                    
+                    
+                    Spacer()
                 }
             }
         }
