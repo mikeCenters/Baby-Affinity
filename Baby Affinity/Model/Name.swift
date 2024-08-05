@@ -12,7 +12,7 @@ import SwiftData
 final class Name {
     
     // MARK: - Attributes
-    /// The sex of the name
+    /// The sex of the name.
     var sex: Sex? { Sex(rawValue: self.sexRawValue) }
     
     /// The rawValue of the `Sex` attribute. This attribute is required for sorting.
@@ -27,16 +27,16 @@ final class Name {
     /// The representation of the user's fondness of the name.
     private(set) var affinityRating: Int
     
-    
+    /// Indicates whether the name is marked as a favorite.
     private(set) var isFavorite: Bool
     
     // FIXME: - Add Tags to create categories.
-    // FIXME: - Add ability to reference the same name with varient spellings.
+    // FIXME: - Add ability to reference the same name with variant spellings.
     
     
     // MARK: - Init
     
-    /// Initialize a `Name` object with the provided attriibutes. These are the `Names` a user would consider for naming their child.
+    /// Initialize a `Name` object with the provided attributes. These are the `Names` a user would consider for naming their child.
     /// - Parameters:
     ///   - text: The description of the name.
     ///   - sex: The `Sex` of the name. `Male` or `Female`.
@@ -61,6 +61,7 @@ extension Name {
     }
     
     /// Set the affinityRating attribute to the provided rating.
+    /// - Parameter rating: The new affinity rating.
     func setAffinity(_ rating: Int) {
         self.affinityRating = rating
     }
@@ -70,7 +71,9 @@ extension Name {
         self.isFavorite.toggle()
     }
     
-    /// Get the rank of the `Name`.
+    /// Get the rank of the `Name` within its `Sex` category, based on affinityRating.
+    /// - Parameter context: The context to fetch the names from.
+    /// - Returns: The rank of the name, or `nil` if the name is not found.
     func getRank(from context: ModelContext) -> Int? {
         let sex = self.sexRawValue
         let descriptor = FetchDescriptor<Name>(
@@ -88,6 +91,8 @@ extension Name {
 
 
 extension Name {
+    /// Prepare the default names for insertion into the database.
+    /// - Returns: An array of `Name` objects.
     static func prepareDefaultNames() async -> [Name] {
         // Access default names
         let names = DefaultBabyNames()
@@ -108,6 +113,11 @@ extension Name {
         return newNames
     }
     
+    /// Insert names into the provided context in batches.
+    /// - Parameters:
+    ///   - names: An array of `Name` objects to be inserted.
+    ///   - context: The context to insert the names into.
+    /// - Throws: An error if the save operation fails.
     @MainActor
     static func insertNames(_ names: [Name], into context: ModelContext) async throws {
         // Fetch stored names and create a set of existing names' texts for fast lookup
