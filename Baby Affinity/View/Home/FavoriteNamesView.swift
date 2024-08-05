@@ -108,11 +108,7 @@ struct FavoriteNamesView: View {
                 guard self.presentedNames.count < self.maxPresentedNames
                 else { return }
                 
-                if self.presentedNames.count == self.maxPresentedNames {
-                    
-                } else {
-                    self.loadNames()
-                }
+                self.loadNames()
             }
     }
 }
@@ -200,6 +196,7 @@ extension FavoriteNamesView {
         }
         
         self.presentedNames = self.names.randomElements(count: self.maxPresentedNames)
+        self.lastRefresh = currentTime
     }
 }
 
