@@ -30,6 +30,9 @@ final class Name {
     
     private(set) var isFavorite: Bool
     
+    // FIXME: - Add Tags to create categories.
+    // FIXME: - Add ability to reference the same name with varient spellings.
+    
     
     // MARK: - Init
     
@@ -81,84 +84,6 @@ extension Name {
         
         return names?.firstIndex(of: self).map { $0 + 1 }
     }
-    
-    
-//    static func loadDefaultNames(_ context: ModelContext) async throws {
-////                let storedNames = try? context.fetch(FetchDescriptor<Name>())
-////                let names = DefaultBabyNames()
-////        
-////                /// Add girl names.
-////                for (_, name) in names.girlNames {
-////                    let n = Name(name, sex: .female)
-////        
-////                    if let stored = storedNames {
-////                        if !stored.contains(n) {
-////                            context.insert(n)
-////                        }
-////                    }
-////                }
-////        
-////                /// Add boy names.
-////                for (_, name) in names.boyNames {
-////                    let n = Name(name, sex: .male)
-////        
-////                    if let stored = storedNames {
-////                        if !stored.contains(n) {
-////                            context.insert(n)
-////                        }
-////                    }
-////                }
-//        
-//        do {
-//            // Fetch all stored names' text once and create a set for fast lookup
-//            let storedNames = try context.fetch(FetchDescriptor<Name>())
-//            let storedNamesSet = Set(storedNames.map { $0.text })
-//            
-//            // Access default names
-//            let names = DefaultBabyNames()
-//            
-//            // Prepare new names for insertion
-//            var newNames: [Name] = []
-//            
-//            // Add girl names if they don't exist in the stored names
-//            for (_, name) in names.girlNames {
-//                if !storedNamesSet.contains(name) {
-//                    newNames.append(Name(name, sex: .female))
-//                }
-//            }
-//            
-//            // Add boy names if they don't exist in the stored names
-//            for (_, name) in names.boyNames {
-//                if !storedNamesSet.contains(name) {
-//                    newNames.append(Name(name, sex: .male))
-//                }
-//            }
-//            
-//            // Batch size for insertion
-//            let batchSize = 1000
-//            let totalObjects = newNames.count
-//            
-//            for i in 0..<(totalObjects / batchSize + 1) {
-//                let startIndex = i * batchSize
-//                let endIndex = min(startIndex + batchSize, totalObjects)
-//                
-//                for j in startIndex..<endIndex {
-//                    context.insert(newNames[j])
-//                }
-//                
-//                do {
-//                    try context.save()
-//                    print("Saved batch \(i + 1)")
-//                } catch {
-//                    print("Failed to save batch \(i + 1): \(error)")
-//                    throw error
-//                }
-//            }
-//        } catch {
-//            print("Failed to fetch stored names: \(error)")
-//            throw error
-//        }
-//    }
 }
 
 
