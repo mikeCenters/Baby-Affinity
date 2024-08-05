@@ -52,7 +52,6 @@ struct HomeView: View {
                 } label: {
                     Image(systemName: "switch.2")
                 }
-                .tint(self.selectedSex == .male ? .blue : .pink)
                 .confirmationDialog("Show which names?", isPresented: self.$showSexSelection) {
                     
                     ForEach(Sex.allCases, id: \.self) { sex in

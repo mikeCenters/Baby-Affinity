@@ -37,15 +37,13 @@ struct TopNamesView: View {
     /// The sex of the names provided.
     private let selectedSex: Sex
     
-    /// The title text used for the section header.
-//    private let headerTitle: String = "Your Top \(self.selectedSex)Names"
-//    
     
     // MARK: - Controls
     
     @State private var showMore: Bool = false
     
     @State private var isLoading = false
+    
     
     // MARK: - Init
     
