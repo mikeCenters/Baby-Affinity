@@ -15,11 +15,8 @@ struct Baby_AffinityApp: App {
             Name.self,
         ])
         
-        #if DEBUG
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-        #else
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-        #endif
+        
         
         do {
             let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
@@ -46,7 +43,7 @@ struct Baby_AffinityApp: App {
 
 #if DEBUG
 
-// MARK: -- Preview Model Container
+// MARK: - Preview Model Container
 
 /// `Model Container` used for testing and previews.
 let previewModelContainer: ModelContainer = {

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BA9BAFE72C5ED484008D88A2 /* FavoriteNamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9BAFE62C5ED484008D88A2 /* FavoriteNamesView.swift */; };
+		BA9BF0B82C60A2CC0056334E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9BF0B72C60A2CC0056334E /* Extensions.swift */; };
 		BACC30302C48A977003CEC7C /* Baby_AffinityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC302F2C48A977003CEC7C /* Baby_AffinityApp.swift */; };
 		BACC30322C48A977003CEC7C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC30312C48A977003CEC7C /* ContentView.swift */; };
 		BACC30362C48A978003CEC7C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BACC30352C48A978003CEC7C /* Assets.xcassets */; };
@@ -40,6 +41,7 @@
 
 /* Begin PBXFileReference section */
 		BA9BAFE62C5ED484008D88A2 /* FavoriteNamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteNamesView.swift; sourceTree = "<group>"; };
+		BA9BF0B72C60A2CC0056334E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		BACC302C2C48A976003CEC7C /* Baby Affinity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Baby Affinity.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BACC302F2C48A977003CEC7C /* Baby_AffinityApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Baby_AffinityApp.swift; sourceTree = "<group>"; };
 		BACC30312C48A977003CEC7C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -81,6 +83,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BA9BF0B62C60A2BB0056334E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				BA9BF0B72C60A2CC0056334E /* Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		BACC30232C48A976003CEC7C = {
 			isa = PBXGroup;
 			children = (
@@ -104,6 +114,7 @@
 		BACC302E2C48A977003CEC7C /* Baby Affinity */ = {
 			isa = PBXGroup;
 			children = (
+				BA9BF0B62C60A2BB0056334E /* Extensions */,
 				BACC305B2C48A99C003CEC7C /* Model */,
 				BACC30602C48C1E8003CEC7C /* View */,
 				BACC302F2C48A977003CEC7C /* Baby_AffinityApp.swift */,
@@ -307,6 +318,7 @@
 				BA9BAFE72C5ED484008D88A2 /* FavoriteNamesView.swift in Sources */,
 				BACC30632C48C34A003CEC7C /* DefaultBabyNames.swift in Sources */,
 				BACC30662C5C7B7B003CEC7C /* TopNamesView.swift in Sources */,
+				BA9BF0B82C60A2CC0056334E /* Extensions.swift in Sources */,
 				BACC30322C48A977003CEC7C /* ContentView.swift in Sources */,
 				BACC305F2C48A9FF003CEC7C /* Sex.swift in Sources */,
 				BACC305D2C48A9C1003CEC7C /* Name.swift in Sources */,
@@ -482,6 +494,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -511,6 +524,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

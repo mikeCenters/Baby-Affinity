@@ -32,7 +32,6 @@ struct ContentView: View {
                     TopNamesView(show: selectedSex)
                         .modelContext(modelContext)
                     
-                    // FIXME: Create Favorites List
                     FavoriteNamesView(show: selectedSex)
                         .modelContext(modelContext)
                     
