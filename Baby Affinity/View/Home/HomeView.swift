@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// FIXME: - Update query to load names into memory instead of pulling from SwiftData every time. Pull from SwiftData only once and monitor for changes. Else, use a new variable.
+
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     
