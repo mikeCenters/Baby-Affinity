@@ -32,7 +32,15 @@ struct Baby_AffinityApp: App {
             ContentView()
                 .onAppear {
                     Task(priority: .background) {
-                        Name.loadDefaultNames(sharedModelContainer.mainContext)
+                        // Prepare data in the background
+                        let newNames = await Name.prepareDefaultNames()
+                        
+                        // Insert names on the main actor
+                        do {
+                            try await Name.insertNames(newNames, into: sharedModelContainer.mainContext)
+                        } catch {
+                            print("Failed to load default names: \(error)")
+                        }
                     }
                 }
         }
