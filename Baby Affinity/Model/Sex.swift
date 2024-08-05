@@ -8,7 +8,7 @@
 import Foundation
 
 /// A male or female representation.
-enum Sex: Int16, Codable, CaseIterable {
+enum Sex: Int, Codable, CaseIterable {
     case female = 0
     case male = 1
     

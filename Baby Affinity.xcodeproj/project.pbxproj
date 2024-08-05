@@ -20,6 +20,7 @@
 		BACC305F2C48A9FF003CEC7C /* Sex.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC305E2C48A9FF003CEC7C /* Sex.swift */; };
 		BACC30632C48C34A003CEC7C /* DefaultBabyNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC30622C48C34A003CEC7C /* DefaultBabyNames.swift */; };
 		BACC30662C5C7B7B003CEC7C /* TopNamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC30652C5C7B7A003CEC7C /* TopNamesView.swift */; };
+		BAE858952C6114CB00177BA8 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE858942C6114CB00177BA8 /* HomeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 		BACC305E2C48A9FF003CEC7C /* Sex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sex.swift; sourceTree = "<group>"; };
 		BACC30622C48C34A003CEC7C /* DefaultBabyNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultBabyNames.swift; sourceTree = "<group>"; };
 		BACC30652C5C7B7A003CEC7C /* TopNamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNamesView.swift; sourceTree = "<group>"; };
+		BAE858942C6114CB00177BA8 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +181,7 @@
 		BACC30642C5C7B67003CEC7C /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				BAE858942C6114CB00177BA8 /* HomeView.swift */,
 				BACC30652C5C7B7A003CEC7C /* TopNamesView.swift */,
 				BA9BAFE62C5ED484008D88A2 /* FavoriteNamesView.swift */,
 			);
@@ -315,6 +318,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BAE858952C6114CB00177BA8 /* HomeView.swift in Sources */,
 				BA9BAFE72C5ED484008D88A2 /* FavoriteNamesView.swift in Sources */,
 				BACC30632C48C34A003CEC7C /* DefaultBabyNames.swift in Sources */,
 				BACC30662C5C7B7B003CEC7C /* TopNamesView.swift in Sources */,

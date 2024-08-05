@@ -16,16 +16,16 @@ final class Name {
     var sex: Sex? { Sex(rawValue: self.sexRawValue) }
     
     /// The rawValue of the `Sex` attribute. This attribute is required for sorting.
-    private(set) var sexRawValue: Int16
+    private(set) var sexRawValue: Int
     
     /// The text representation of the name.
     @Attribute(.unique) private(set) var text: String
     
     /// The number of times the name has been evaluated via the user.
-    private(set) var evaluated: Int16
+    private(set) var evaluated: Int
     
     /// The representation of the user's fondness of the name.
-    private(set) var affinityRating: Int16
+    private(set) var affinityRating: Int
     
     
     private(set) var isFavorite: Bool
@@ -38,7 +38,7 @@ final class Name {
     ///   - text: The description of the name.
     ///   - sex: The `Sex` of the name. `Male` or `Female`.
     ///   - affinityRating: The rating that represents a user's fondness towards it. The default rating is 1200.
-    init(_ text: String, sex: Sex, affinityRating: Int16 = 1200) {
+    init(_ text: String, sex: Sex, affinityRating: Int = 1200) {
         self.text = text
         self.sexRawValue = sex.rawValue
         self.affinityRating = affinityRating
@@ -58,7 +58,7 @@ extension Name {
     }
     
     /// Set the affinityRating attribute to the provided rating.
-    func setAffinity(_ rating: Int16) {
+    func setAffinity(_ rating: Int) {
         self.affinityRating = rating
     }
     

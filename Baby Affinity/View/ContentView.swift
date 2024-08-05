@@ -14,8 +14,7 @@ struct ContentView: View {
     
     // MARK: - Controls
     
-    @State private var selectedSex: Sex = .male
-    @State private var showSexSelection = false
+    @AppStorage("selectedSex") private var selectedSex: Sex = .male
     
     
     // MARK: - View
@@ -26,61 +25,15 @@ struct ContentView: View {
             
             // MARK: - Home Feed
             
-            NavigationStack {
-                
-                List {
-                    TopNamesView(show: selectedSex)
-                        .modelContext(modelContext)
-                    
-                    FavoriteNamesView(show: selectedSex)
-                        .modelContext(modelContext)
-                    
-                    // FIXME: Create Shared List
-                    Section("Shared List") {
-                        ForEach(0..<5) { i in
-                            Text("Name \(i+1)")
-                        }
-                    }
-                    
-                    // FIXME: Add precurated top names as a banner to add names to your favorites. These could be pulled from the global list as rising names or top 10 global names.
-                }
-                .navigationTitle("Baby Affinity")
-                .toolbar {
-                    Button {
-                        withAnimation {
-                            self.showSexSelection.toggle()
-                        }
-                    } label: {
-                        Image(systemName: "switch.2")
-                    }
-                    .tint(self.selectedSex == .male ? .blue : .pink)
-                    .confirmationDialog("Show which names?", isPresented: self.$showSexSelection) {
-                        
-                        ForEach(Sex.allCases, id: \.self) { sex in
-                            
-                            Button {
-                                withAnimation {
-                                    self.selectedSex = sex
-                                }
-                                
-                            } label: {
-                                Text(sex.alternateName)
-                            }
-                            
-                        }
+            HomeView()
+                .modelContext(self.modelContext)
+                .tabItem {
+                    Label {
+                        Text("Home")
+                    } icon: {
+                        Image(systemName: "house")
                     }
                 }
-                
-                
-                
-            }
-            .tabItem {
-                Label {
-                    Text("Home")
-                } icon: {
-                    Image(systemName: "house")
-                }
-            }
             
             
             // MARK: - Pick Names

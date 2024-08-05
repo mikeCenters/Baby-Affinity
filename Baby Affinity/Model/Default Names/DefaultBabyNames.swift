@@ -6,10 +6,10 @@
 //
 
 struct DefaultBabyNames {
-    static let buildNumber: Int16 = 1
+    static let buildNumber: Int = 1
     
     // MARK: - Girl Names
-    let girlNames: [(Int16, String)] = [
+    let girlNames: [(Int, String)] = [
         (0, "Olivia"),
         (0, "Emma"),
         (0, "Ava"),
@@ -1013,7 +1013,7 @@ struct DefaultBabyNames {
     ]
     
     // MARK: - Boy Names
-    let boyNames : [(Int16, String)] = [
+    let boyNames : [(Int, String)] = [
         (1, "Liam"),
         (1, "Noah"),
         (1, "Oliver"),
