@@ -22,6 +22,7 @@
 		BACC30662C5C7B7B003CEC7C /* TopNamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC30652C5C7B7A003CEC7C /* TopNamesView.swift */; };
 		BAE858952C6114CB00177BA8 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE858942C6114CB00177BA8 /* HomeView.swift */; };
 		BAE858982C6136AE00177BA8 /* NamePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE858972C6136AE00177BA8 /* NamePickerView.swift */; };
+		BAE8589B2C6271C400177BA8 /* AffinityCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE8589A2C6271C400177BA8 /* AffinityCalculator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,7 @@
 		BACC30652C5C7B7A003CEC7C /* TopNamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNamesView.swift; sourceTree = "<group>"; };
 		BAE858942C6114CB00177BA8 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		BAE858972C6136AE00177BA8 /* NamePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePickerView.swift; sourceTree = "<group>"; };
+		BAE8589A2C6271C400177BA8 /* AffinityCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffinityCalculator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				BA9BF0B62C60A2BB0056334E /* Extensions */,
+				BAE858992C6271A100177BA8 /* Services */,
 				BACC305B2C48A99C003CEC7C /* Model */,
 				BACC30602C48C1E8003CEC7C /* View */,
 				BACC302F2C48A977003CEC7C /* Baby_AffinityApp.swift */,
@@ -197,6 +200,14 @@
 				BAE858972C6136AE00177BA8 /* NamePickerView.swift */,
 			);
 			path = NamePicker;
+			sourceTree = "<group>";
+		};
+		BAE858992C6271A100177BA8 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				BAE8589A2C6271C400177BA8 /* AffinityCalculator.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -333,6 +344,7 @@
 				BAE858982C6136AE00177BA8 /* NamePickerView.swift in Sources */,
 				BA9BAFE72C5ED484008D88A2 /* FavoriteNamesView.swift in Sources */,
 				BACC30632C48C34A003CEC7C /* DefaultBabyNames.swift in Sources */,
+				BAE8589B2C6271C400177BA8 /* AffinityCalculator.swift in Sources */,
 				BACC30662C5C7B7B003CEC7C /* TopNamesView.swift in Sources */,
 				BA9BF0B82C60A2CC0056334E /* Extensions.swift in Sources */,
 				BACC30322C48A977003CEC7C /* ContentView.swift in Sources */,
