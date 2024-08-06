@@ -25,22 +25,28 @@ struct NamePickerView: View {
     
     // MARK: - Properties
     
+    /// Environment variable for the model context.
     @Environment(\.modelContext) private var modelContext
+    
+    /// App storage for the selected sex (male or female).
     @AppStorage("selectedSex") private var selectedSex = Sex.male
+    
+    /// Query for fetching `Name` objects.
     @Query private var names: [Name]
     
-    /// The names to present to the user.
-    @State private var presentedNames: [Name] = []
-    /// The names chosen via the user.
-    @State private var chosenNames: [Name] = []
+    /// State object for managing the view model.
+    @StateObject private var viewModel: NamePickerViewModel = .init()
     
     
     // MARK: - Controls and Constants
     
-    private let maxSelections = 5
-    private let numChoices = 10
-    private var title: String { "Pick \(self.maxSelections) Names" }
+    /// Title for the navigation bar, indicating the number of names to pick.
+    private var title: String { "Pick \(viewModel.maxSelections) Names" }
+    
+    /// State variable for showing the sex selection dialog.
     @State private var showSexSelection = false
+    
+    /// State variable for showing the instructions sheet.
     @State private var showInstructions = true
     
     
@@ -52,15 +58,15 @@ struct NamePickerView: View {
                 
                 // Chosen Names
                 
-                if !chosenNames.isEmpty {       /// Only show if names are chosen
+                if !viewModel.chosenNames.isEmpty { // Only show if names are chosen
                     Section(header: Text("Chosen Names")) {
-                        ForEach(chosenNames) { name in
+                        ForEach(viewModel.chosenNames) { name in
                             HStack {
                                 Text(name.text)
                                 Spacer()
                                 Button(action: {
                                     withAnimation {
-                                        deselectName(name)
+                                        viewModel.deselect(name)
                                     }
                                 }) {
                                     Image(systemName: "xmark.circle.fill")
@@ -71,15 +77,14 @@ struct NamePickerView: View {
                     }
                 }
                 
-                
                 // Presented Names
+                
                 Section {
-                    ForEach(self.presentedNames) { name in
+                    ForEach(viewModel.presentedNames) { name in
                         Button {
                             withAnimation {
-                                self.selectName(name)
+                                viewModel.select(name)
                             }
-                            
                         } label: {
                             Text(name.text)
                         }
@@ -87,71 +92,72 @@ struct NamePickerView: View {
                 }
                 
             }
+            .navigationTitle(title)
+            // MARK: - On Appear
             .onAppear {
-                // MARK: - On Appear
-                
                 withAnimation {
-                    self.loadNames()
+                    viewModel.load(names)
                 }
             }
-            .onChange(of: self.selectedSex, { oldValue, newValue in
-                // MARK: - On Change
-                
+            // MARK: - On Change
+            .onChange(of: selectedSex, { oldValue, newValue in
                 withAnimation {
-                    self.loadNames()
+                    viewModel.load(names)
                 }
             })
+            // MARK: - Toolbar
             .toolbar {
-                // MARK: - Toolbars
                 ToolbarItem(placement: .bottomBar) {
-                    self.submitNamesButton
+                    submitNamesButton
                 }
-            }
-            .toolbar {
+                
                 ToolbarItem(placement: .topBarTrailing) {
-                    self.sexSelectionIcon
+                    sexSelectionIcon
                 }
             }
-            .sheet(isPresented: self.$showInstructions) {
-                // MARK: - Sheet
-                self.instructions
+            // MARK: - Sheet
+            .sheet(isPresented: $showInstructions) {
+                instructions
             }
-            .navigationTitle(self.title)
         }
     }
+}
+
+// MARK: - View Components
+
+extension NamePickerView {
     
-    
-    // MARK: - View Components
-    
+    /// Button for submitting chosen names or fetching new names.
     private var submitNamesButton: some View {
         Button {
-            withAnimation {
-                self.submitNames()
+            Task {
+                await viewModel.submitNames()
+                
+                withAnimation {
+                    viewModel.load(names)
+                }
             }
-            
         } label: {
-            Text(self.chosenNames.isEmpty ? "New Names" : "Submit")
+            Text(viewModel.chosenNames.isEmpty ? "New Names" : "Submit")
         }
         .buttonStyle(BorderedButtonStyle())
     }
     
-    
+    /// Button for showing the sex selection dialog.
     private var sexSelectionIcon: some View {
         Button {
             withAnimation {
-                self.showSexSelection.toggle()
+                showSexSelection.toggle()
             }
         } label: {
             Image(systemName: "switch.2")
         }
-        .confirmationDialog("Show which names?", isPresented: self.$showSexSelection) {
-            
+        .confirmationDialog("Show which names?", isPresented: $showSexSelection) {
             ForEach(Sex.allCases, id: \.self) { sex in
                 Button {
                     withAnimation {
-                        self.selectedSex = sex
+                        selectedSex = sex
                     }
-                    
                 } label: {
                     Text(sex.alternateName)
                 }
@@ -159,9 +165,12 @@ struct NamePickerView: View {
         }
     }
     
+    /// Text providing instructions for using the name picker.
+    private var instructionsText: String {
+        "Choose up to \(viewModel.maxSelections) names from the list that are to your liking. While there may be other names that you would want to name your baby, pick among these that you like the most. \n\nIf you don't like the available names, simply select new names."
+    }
     
-    private var instructionsText: String { "Choose up to \(self.maxSelections) names from the list that are to your liking. While there may be other names that you would want to name your baby, pick among these that you like the most. \n\nIf you don't like the available names, simply select new names." }
-    
+    /// View presenting the instructions sheet.
     private var instructions: some View {
         VStack {
             Image(systemName: "checklist")
@@ -172,20 +181,20 @@ struct NamePickerView: View {
                 .padding([.horizontal, .bottom])
                 .foregroundStyle(.yellow)
             
-            Text("Pick \(self.maxSelections) Names")
+            Text("Pick \(viewModel.maxSelections) Names")
                 .font(.largeTitle)
                 .bold()
                 .padding()
                 .foregroundStyle(.tint)
             
-            Text(self.instructionsText)
+            Text(instructionsText)
                 .font(.body)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
             
             Button {
                 withAnimation {
-                    self.showInstructions = false
+                    showInstructions = false
                 }
             } label: {
                 Text("Find Names!")
@@ -194,48 +203,8 @@ struct NamePickerView: View {
             .buttonStyle(BorderedButtonStyle())
             .padding(.top, 40)
 
-            
-            
             Spacer()
         }
-    }
-    
-    
-    // MARK: - Methods
-    
-    private func loadNames() {
-        let totalNames = names.count
-        let top20PercentCount = Int(Double(totalNames) * 0.2)
-        let bottom20PercentCount = Int(Double(totalNames) * 0.2)
-        
-        let top20PercentNames = Array(names.prefix(top20PercentCount)).shuffled()
-        let bottom20PercentNames = Array(names.suffix(bottom20PercentCount)).shuffled()
-        let middleNames = Array(names.dropFirst(top20PercentCount).dropLast(bottom20PercentCount)).shuffled()
-        
-        let topNames = top20PercentNames.prefix(2)
-        let middleNamesToShow = middleNames.prefix(7)
-        let bottomNames = bottom20PercentNames.prefix(1)
-        
-        self.chosenNames = []
-        self.presentedNames = Array(topNames) + Array(middleNamesToShow) + Array(bottomNames)
-    }
-    
-    private func selectName(_ name: Name) {
-        if self.chosenNames.count < maxSelections {
-            self.chosenNames.append(name)
-            self.presentedNames.removeAll { $0 == name }
-        }
-    }
-    
-    private func deselectName(_ name: Name) {
-        self.chosenNames.removeAll { $0 == name }
-        self.presentedNames.append(name)
-    }
-    
-    private func submitNames() {
-        // FIXME: Submit
-        self.chosenNames = []
-        self.loadNames()
     }
 }
 
