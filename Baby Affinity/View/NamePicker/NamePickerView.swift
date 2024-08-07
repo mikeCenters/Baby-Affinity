@@ -125,8 +125,9 @@ struct NamePickerView: View {
     }
     
     
-    // MARK: - Method
+    // MARK: - Methods
     
+    /// Submit the names for rating.
     private func loadNames() {
         viewModel.load(names.filter { $0.sex == selectedSex })
     }
