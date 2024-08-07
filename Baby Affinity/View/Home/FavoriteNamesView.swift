@@ -37,17 +37,17 @@ struct FavoriteNamesView: View {
     
     var body: some View {
         Section(
-            header: Text("Favorite \(self.selectedSex.alternateName) Names")) {
+            header: Text("Favorite \(selectedSex.alternateName) Names")) {
                 
                 // MARK: - Cell View
                 
                 if presentedNames.isEmpty {   // No favorite names are available
-                    self.noFavoritesFound
+                    noFavoritesFound
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding()
                     
                 } else {                      // Favorites are available
-                    ForEach(self.presentedNames, id: \.self) { name in
+                    ForEach(presentedNames, id: \.self) { name in
                         NameCellView(name: name, rank: name.getRank(from: modelContext) ?? 0)
                     }
                 }
@@ -61,7 +61,7 @@ struct FavoriteNamesView: View {
                     // Reload names
                     Button {
                         withAnimation {
-                            self.loadNames()
+                            loadNames()
                         }
                         
                     } label: {
@@ -69,23 +69,23 @@ struct FavoriteNamesView: View {
                             .font(.headline)
                     }
                     .buttonStyle(.borderless)
-                    .sensoryFeedback(.impact, trigger: self.presentedNames)
+                    .sensoryFeedback(.impact, trigger: presentedNames)
                 }
             }
             .onAppear {
                 // MARK: - On Appear
                 
                 withAnimation {
-                    self.loadNames()
+                    loadNames()
                 }
             }
-            .onChange(of: self.names) { oldValue, newValue in
+            .onChange(of: names) { oldValue, newValue in
                 // MARK: - On Change
                 
-                guard self.presentedNames.count < self.maxPresentedNames
+                guard presentedNames.count < maxPresentedNames
                 else { return }
                 
-                self.loadNames()
+                loadNames()
             }
     }
 }
@@ -99,7 +99,7 @@ extension FavoriteNamesView {
     
     /// The text to be displayed when no favorite `Name`s are found.
     private var noFavoritesText: String {
-        "No favorite \(self.selectedSex.alternateName.lowercased()) names are found! Try adding them to your favorites to keep them available here."
+        "No favorite \(selectedSex.alternateName.lowercased()) names are found! Try adding them to your favorites to keep them available here."
     }
     
     /// A view to display when no favorite `Name`s are found.
@@ -122,14 +122,14 @@ extension FavoriteNamesView {
     
     /// Load names to be presented in the view.
     private func loadNames() {
-        let maxCount = min(self.maxPresentedNames, self.names.count)
+        let maxCount = min(maxPresentedNames, names.count)
         
         guard maxCount > 0 else {
-            self.presentedNames = []
+            presentedNames = []
             return
         }
         
-        self.presentedNames = self.names.randomElements(count: self.maxPresentedNames)
+        presentedNames = names.randomElements(count: maxPresentedNames)
     }
 }
 
