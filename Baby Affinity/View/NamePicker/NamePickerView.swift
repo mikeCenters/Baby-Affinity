@@ -8,20 +8,22 @@
 import SwiftUI
 import SwiftData
 
+// FIXME: The data is not following the selectedSex property.
+
 struct NamePickerView: View {
-    
-    // MARK: - Fetch Descriptor
-    
-    /// The `FetchDescriptor` used to return the names of the provided `Sex`.
-    static private func fetchDescriptor(for sex: Sex) -> FetchDescriptor<Name> {
-        return FetchDescriptor<Name>(
-            predicate: #Predicate { $0.sexRawValue == sex.rawValue },
-            sortBy: [
-                .init(\.affinityRating, order: .reverse)
-            ]
-        )
-    }
-    
+//    
+//    // MARK: - Fetch Descriptor
+//    
+//    /// The `FetchDescriptor` used to return the names of the provided `Sex`.
+//    static private func fetchDescriptor(for sex: Sex) -> FetchDescriptor<Name> {
+//        return FetchDescriptor<Name>(
+//            predicate: #Predicate { $0.sexRawValue == sex.rawValue },
+//            sortBy: [
+//                .init(\.affinityRating, order: .reverse)
+//            ]
+//        )
+//    }
+//    
     
     // MARK: - Properties
     
@@ -96,13 +98,13 @@ struct NamePickerView: View {
             // MARK: - On Appear
             .onAppear {
                 withAnimation {
-                    viewModel.load(names)
+                    loadNames()
                 }
             }
             // MARK: - On Change
             .onChange(of: selectedSex, { oldValue, newValue in
                 withAnimation {
-                    viewModel.load(names)
+                    loadNames()
                 }
             })
             // MARK: - Toolbar
@@ -121,6 +123,13 @@ struct NamePickerView: View {
             }
         }
     }
+    
+    
+    // MARK: - Method
+    
+    private func loadNames() {
+        viewModel.load(names.filter { $0.sex == selectedSex })
+    }
 }
 
 
@@ -135,7 +144,7 @@ extension NamePickerView {
                 await viewModel.submitNames()
                 
                 withAnimation {
-                    viewModel.load(names)
+                    viewModel.load(names.filter { $0.sex == selectedSex})
                 }
             }
         } label: {
