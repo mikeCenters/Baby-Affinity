@@ -36,7 +36,7 @@ struct NamePickerView: View {
     @State private var showInstructions = true
     
     
-    // MARK: - View
+    // MARK: - Body
     
     var body: some View {
         NavigationView {
