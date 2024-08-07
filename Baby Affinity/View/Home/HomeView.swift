@@ -16,7 +16,6 @@ struct HomeView: View {
     // MARK: - Controls and Constants
     
     @AppStorage("selectedSex") private var selectedSex = Sex.male
-    @State private var showSexSelection = false
     
     private let headerTitle = "Baby Affinity"
     
@@ -42,6 +41,8 @@ struct HomeView: View {
                 }
                 
                 // FIXME: Add precurated top names as a banner to add names to your favorites. These could be pulled from the global list as rising names or top 10 global names.
+                
+                // FIXME: Add most viewed names.
             }
             .navigationTitle(self.headerTitle)
             .toolbar {
@@ -58,6 +59,7 @@ struct HomeView: View {
 
 #Preview {
     HomeView()
+        .modelContainer(previewModelContainer_WithFavorites)
 }
 
 #endif

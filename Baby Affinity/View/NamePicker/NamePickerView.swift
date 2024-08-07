@@ -32,9 +32,6 @@ struct NamePickerView: View {
     /// Title for the navigation bar, indicating the number of names to pick.
     private var title: String { "Pick \(viewModel.maxSelections) Names" }
     
-    /// State variable for showing the sex selection dialog.
-    @State private var showSexSelection = false
-    
     /// State variable for showing the instructions sheet.
     @State private var showInstructions = true
     
