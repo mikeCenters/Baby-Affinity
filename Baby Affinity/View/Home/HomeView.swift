@@ -6,21 +6,41 @@
 //
 
 import SwiftUI
+import SwiftData
 
 // FIXME: - Update query to load names into memory instead of pulling from SwiftData every time. Pull from SwiftData only once and monitor for changes. Else, use a new variable.
 
+
 struct HomeView: View {
+    
+    // MARK: - Properties
+    
     @Environment(\.modelContext) private var modelContext
+    
+    @AppStorage("selectedSex") private var selectedSex = Sex.male
+    
+    /// Query for fetching `Name` objects.
+    @Query private var names: [Name]
+    
+    
+//    @Query(sort: \Name.affinityRating,
+//           order: .reverse)
+//    private var topNames: [Name]
+    
+    
+    @Query(filter: #Predicate<Name> { $0.isFavorite },
+           sort: \Name.affinityRating,
+           order: .reverse)
+    private var favoriteNames: [Name]
+    
     
     
     // MARK: - Controls and Constants
     
-    @AppStorage("selectedSex") private var selectedSex = Sex.male
-    
     private let headerTitle = "Baby Affinity"
     
     
-    // MARK: - View
+    // MARK: - Body
     
     var body: some View {
         
@@ -30,7 +50,7 @@ struct HomeView: View {
                 TopNamesView(show: self.selectedSex)
                     .modelContext(self.modelContext)
                 
-                FavoriteNamesView(show: self.selectedSex)
+                FavoriteNamesView(names: favoriteNames.filter { $0.sex == selectedSex })
                     .modelContext(self.modelContext)
                 
                 // FIXME: Create Shared List
