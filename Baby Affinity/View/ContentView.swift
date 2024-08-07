@@ -26,7 +26,6 @@ struct ContentView: View {
             // MARK: - Home Feed
             
             HomeView()
-                .modelContext(self.modelContext)
                 .tabItem {
                     Label {
                         Text("Home")
@@ -39,7 +38,6 @@ struct ContentView: View {
             // MARK: - Pick Names
             
             NamePickerView()
-                .modelContext(self.modelContext)
                 .tabItem {
                     Label {
                         Text("Pick Names")
@@ -60,6 +58,7 @@ struct ContentView: View {
                 }
             }
         }
+        .modelContext(self.modelContext)
         .tint(self.selectedSex == .male ? .blue : .pink)
     }
 }

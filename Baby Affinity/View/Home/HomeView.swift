@@ -22,10 +22,10 @@ struct HomeView: View {
     /// Query for fetching `Name` objects.
     @Query private var names: [Name]
     
-    
-//    @Query(sort: \Name.affinityRating,
-//           order: .reverse)
-//    private var topNames: [Name]
+    // FIXME: - This will not work. Pass all names to the view. Let view filter.
+    @Query(sort: \Name.affinityRating,
+           order: .reverse)
+    private var topNames: [Name]
     
     
     @Query(filter: #Predicate<Name> { $0.isFavorite },
@@ -47,11 +47,9 @@ struct HomeView: View {
         NavigationStack {
             
             List {
-                TopNamesView(show: self.selectedSex)
-                    .modelContext(self.modelContext)
+                TopNamesView(names: Array(topNames.filter { $0.sex == selectedSex }.prefix(10)))
                 
                 FavoriteNamesView(names: favoriteNames.filter { $0.sex == selectedSex })
-                    .modelContext(self.modelContext)
                 
                 // FIXME: Create Shared List
                 Section("Shared List") {
