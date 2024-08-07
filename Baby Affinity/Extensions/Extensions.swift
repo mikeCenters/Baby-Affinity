@@ -8,6 +8,8 @@
 import Foundation
 
 
+// MARK: - Array
+
 extension Array {
     /// Generates an array of random indices.
     ///
@@ -36,5 +38,19 @@ extension Array {
         
         let randomIndices = generateRandomIndices(count: limitedCount)
         return randomIndices.sorted().compactMap { self.indices.contains($0) ? self[$0] : nil }
+    }
+}
+
+
+// MARK: - Decimal
+
+extension Decimal {
+    /// Converts a Decimal to an Int, rounding the value.
+    /// 
+    /// - Parameter roundBehavior: The rounding behavior to use. If `nil`, the default rounding behavior is used.
+    /// - Returns: The converted Int value.
+    func convertToInt(roundBehavior: NSDecimalNumberBehaviors? = nil) -> Int {
+        let nsDecimalNumber = NSDecimalNumber(decimal: self)
+        return nsDecimalNumber.rounding(accordingToBehavior: roundBehavior).intValue
     }
 }

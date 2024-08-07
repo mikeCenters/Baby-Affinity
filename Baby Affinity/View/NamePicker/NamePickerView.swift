@@ -60,9 +60,9 @@ struct NamePickerView: View {
                 
                 // Chosen Names
                 
-                if !viewModel.chosenNames.isEmpty { // Only show if names are chosen
+                if !viewModel.selectedNames.isEmpty { // Only show if names are chosen
                     Section(header: Text("Chosen Names")) {
-                        ForEach(viewModel.chosenNames) { name in
+                        ForEach(viewModel.selectedNames) { name in
                             HStack {
                                 Text(name.text)
                                 Spacer()
@@ -142,14 +142,14 @@ extension NamePickerView {
     private var submitNamesButton: some View {
         Button {
             Task {
-                await viewModel.submitNames()
+                await viewModel.updateRatings()
                 
                 withAnimation {
                     viewModel.load(names.filter { $0.sex == selectedSex})
                 }
             }
         } label: {
-            Text(viewModel.chosenNames.isEmpty ? "New Names" : "Submit")
+            Text(viewModel.selectedNames.isEmpty ? "New Names" : "Submit")
         }
         .buttonStyle(BorderedButtonStyle())
     }
