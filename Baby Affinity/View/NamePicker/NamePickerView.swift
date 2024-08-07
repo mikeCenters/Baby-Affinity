@@ -8,22 +8,9 @@
 import SwiftUI
 import SwiftData
 
-// FIXME: The data is not following the selectedSex property.
+// FIXME: Upon submission, the app crashes when calculating new ratings. When rapidly submitted. Try fixing Home View's performance first.
 
 struct NamePickerView: View {
-//    
-//    // MARK: - Fetch Descriptor
-//    
-//    /// The `FetchDescriptor` used to return the names of the provided `Sex`.
-//    static private func fetchDescriptor(for sex: Sex) -> FetchDescriptor<Name> {
-//        return FetchDescriptor<Name>(
-//            predicate: #Predicate { $0.sexRawValue == sex.rawValue },
-//            sortBy: [
-//                .init(\.affinityRating, order: .reverse)
-//            ]
-//        )
-//    }
-//    
     
     // MARK: - Properties
     
@@ -114,7 +101,7 @@ struct NamePickerView: View {
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
-                    sexSelectionIcon
+                    SexSelectionIconView()
                 }
             }
             // MARK: - Sheet
@@ -154,27 +141,6 @@ extension NamePickerView {
         .buttonStyle(BorderedButtonStyle())
     }
     
-    /// Button for showing the sex selection dialog.
-    private var sexSelectionIcon: some View {
-        Button {
-            withAnimation {
-                showSexSelection.toggle()
-            }
-        } label: {
-            Image(systemName: "switch.2")
-        }
-        .confirmationDialog("Show which names?", isPresented: $showSexSelection) {
-            ForEach(Sex.allCases, id: \.self) { sex in
-                Button {
-                    withAnimation {
-                        selectedSex = sex
-                    }
-                } label: {
-                    Text(sex.alternateName)
-                }
-            }
-        }
-    }
     
     /// Text providing instructions for using the name picker.
     private var instructionsText: String {

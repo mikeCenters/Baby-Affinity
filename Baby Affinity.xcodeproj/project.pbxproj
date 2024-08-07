@@ -24,6 +24,7 @@
 		BAE858982C6136AE00177BA8 /* NamePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE858972C6136AE00177BA8 /* NamePickerView.swift */; };
 		BAE8589B2C6271C400177BA8 /* AffinityCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE8589A2C6271C400177BA8 /* AffinityCalculator.swift */; };
 		BAE8589D2C62BC4B00177BA8 /* NamePickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE8589C2C62BC4B00177BA8 /* NamePickerViewModel.swift */; };
+		BAE858A02C6326C000177BA8 /* SexSelectionIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE8589F2C6326C000177BA8 /* SexSelectionIconView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 		BAE858972C6136AE00177BA8 /* NamePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePickerView.swift; sourceTree = "<group>"; };
 		BAE8589A2C6271C400177BA8 /* AffinityCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffinityCalculator.swift; sourceTree = "<group>"; };
 		BAE8589C2C62BC4B00177BA8 /* NamePickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePickerViewModel.swift; sourceTree = "<group>"; };
+		BAE8589F2C6326C000177BA8 /* SexSelectionIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SexSelectionIconView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +173,7 @@
 		BACC30602C48C1E8003CEC7C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				BAE8589E2C6326AD00177BA8 /* Components */,
 				BACC30642C5C7B67003CEC7C /* Home */,
 				BAE858962C61369A00177BA8 /* NamePicker */,
 				BACC30312C48A977003CEC7C /* ContentView.swift */,
@@ -211,6 +214,14 @@
 				BAE8589A2C6271C400177BA8 /* AffinityCalculator.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		BAE8589E2C6326AD00177BA8 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				BAE8589F2C6326C000177BA8 /* SexSelectionIconView.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -350,6 +361,7 @@
 				BAE8589B2C6271C400177BA8 /* AffinityCalculator.swift in Sources */,
 				BACC30662C5C7B7B003CEC7C /* TopNamesView.swift in Sources */,
 				BA9BF0B82C60A2CC0056334E /* Extensions.swift in Sources */,
+				BAE858A02C6326C000177BA8 /* SexSelectionIconView.swift in Sources */,
 				BACC30322C48A977003CEC7C /* ContentView.swift in Sources */,
 				BACC305F2C48A9FF003CEC7C /* Sex.swift in Sources */,
 				BACC305D2C48A9C1003CEC7C /* Name.swift in Sources */,

@@ -45,31 +45,19 @@ struct HomeView: View {
             }
             .navigationTitle(self.headerTitle)
             .toolbar {
-                Button {
-                    withAnimation {
-                        self.showSexSelection.toggle()
-                    }
-                } label: {
-                    Image(systemName: "switch.2")
-                }
-                .confirmationDialog("Show which names?", isPresented: self.$showSexSelection) {
-                    
-                    ForEach(Sex.allCases, id: \.self) { sex in
-                        Button {
-                            withAnimation {
-                                self.selectedSex = sex
-                            }
-                            
-                        } label: {
-                            Text(sex.alternateName)
-                        }
-                    }
-                }
+                SexSelectionIconView()
             }
         }
     }
 }
 
+
+#if DEBUG
+
+// MARK: - Preview
+
 #Preview {
     HomeView()
 }
+
+#endif
