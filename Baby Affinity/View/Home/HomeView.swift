@@ -4,66 +4,48 @@
 //
 //  Created by Mike Centers on 8/5/24.
 //
-
 import SwiftUI
 import SwiftData
 
-// FIXME: - Update query to load names into memory instead of pulling from SwiftData every time. Pull from SwiftData only once and monitor for changes. Else, use a new variable.
-
-
+/// The main home view of the Baby Affinity app.
 struct HomeView: View {
     
     // MARK: - Properties
     
+    /// The environment's model context.
     @Environment(\.modelContext) private var modelContext
     
+    /// The selected sex for which the names are filtered, stored in `AppStorage`.
     @AppStorage("selectedSex") private var selectedSex = Sex.male
-    
-    /// Query for fetching `Name` objects.
-    @Query private var names: [Name]
-    
-    // FIXME: - This will not work. Pass all names to the view. Let view filter.
-    @Query(sort: \Name.affinityRating,
-           order: .reverse)
-    private var topNames: [Name]
-    
-    
-    @Query(filter: #Predicate<Name> { $0.isFavorite },
-           sort: \Name.affinityRating,
-           order: .reverse)
-    private var favoriteNames: [Name]
-    
     
     
     // MARK: - Controls and Constants
     
+    /// The title of the navigation bar.
     private let headerTitle = "Baby Affinity"
     
     
     // MARK: - Body
     
     var body: some View {
-        
         NavigationStack {
-            
             List {
-                TopNamesView(names: Array(topNames.filter { $0.sex == selectedSex }.prefix(10)))
                 
-                FavoriteNamesView(names: favoriteNames.filter { $0.sex == selectedSex })
+                /// Displays the top names based on affinity rating for the selected sex.
+                TopNamesView(sex: selectedSex)
+                    
+                /// Displays the favorite names for the selected sex.
+                FavoriteNamesView(sex: selectedSex)
                 
                 // FIXME: Create Shared List
-                Section("Shared List") {
-                    ForEach(0..<5) { i in
-                        Text("Name \(i+1)")
-                    }
-                }
                 
                 // FIXME: Add precurated top names as a banner to add names to your favorites. These could be pulled from the global list as rising names or top 10 global names.
                 
                 // FIXME: Add most viewed names.
             }
-            .navigationTitle(self.headerTitle)
+            .navigationTitle(headerTitle)
             .toolbar {
+                /// Toolbar item to select the sex for filtering names.
                 SexSelectionIconView()
             }
         }
