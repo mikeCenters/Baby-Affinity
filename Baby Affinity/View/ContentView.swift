@@ -9,6 +9,9 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+    
+    // MARK: - Properties
+    
     @Environment(\.modelContext) private var modelContext
     
     
@@ -58,8 +61,8 @@ struct ContentView: View {
                 }
             }
         }
-        .modelContext(self.modelContext)
-        .tint(self.selectedSex == .male ? .blue : .pink)
+        .modelContext(modelContext)
+        .tint(selectedSex == .male ? .blue : .pink)
     }
 }
 
