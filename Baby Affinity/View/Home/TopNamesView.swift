@@ -19,8 +19,8 @@ struct TopNamesView: View {
     /// The selected sex for which the names are filtered, stored in `AppStorage`.
     @AppStorage("selectedSex") private var selectedSex = Sex.male
     
-    /// The names of the selected `Sex` that are labeled as a favorite.
-    var names: [Name]
+    /// The top `nameLimit` of names to present.
+    @Query private var names: [Name]
     
     
     // MARK: - Controls and Constants
@@ -31,6 +31,25 @@ struct TopNamesView: View {
     /// Boolean to indicate if the view is in a loading state.
     @State private var isLoading = false
     
+    /// The limit of names to be presented.
+    static private let nameLimit = 10
+    
+    /// The limit of names to show when the view is collapsed.
+    static private let abvLimit = 5
+    
+    
+    // MARK: - Init
+    
+    init(sex: Sex) {
+        var descriptor = FetchDescriptor<Name>(
+            predicate: #Predicate { $0.sexRawValue == sex.rawValue },
+            sortBy: [.init(\.affinityRating, order: .reverse)]
+        )
+        descriptor.fetchLimit = Self.nameLimit
+        
+        _names = Query(descriptor)
+    }
+    
     
     // MARK: - Body
     
@@ -39,13 +58,16 @@ struct TopNamesView: View {
             
             // MARK: - Cell View
             
-            if names.isEmpty {         // Names are not loaded
+            if names.isEmpty {           // Names are not loaded
                 LoadingIndicator(isLoading: $isLoading)
                 
                 
             } else {                        // Show the list of top names
-                ForEach(Array(names.enumerated()).prefix(showMore ? names.count : 5), id: \.element) { (index, name) in
+                ForEach(Array(names.enumerated()).prefix(showMore ? Self.nameLimit : Self.abvLimit), id: \.element) { (index, name) in
+                    /// The topNames array is arranged in descending order of the rank.
+                    /// The array is already set to reflect their rank, so index+1 gives the correct value.
                     NameCellView(name: name, rank: index + 1)
+                        .onAppear { print("showing \(name.text)")}
                 }
             }
             
@@ -55,7 +77,7 @@ struct TopNamesView: View {
             HStack {
                 Spacer()
                 
-                Button {                    /// Toggle to show more names.
+                Button {                    /// Toggle to expand and collapse the view..
                     withAnimation {
                         showMore.toggle()
                     }
@@ -76,16 +98,10 @@ struct TopNamesView: View {
 // MARK: - Preview
 
 #Preview {
-    
-    let names = (1...10).map {
-        Name("Name \($0)", sex: .male, affinityRating: 1200)
+    List {
+        TopNamesView(sex: .male)
     }
-    
-    
-    return List {
-        TopNamesView(names: names)
-            .modelContainer(previewModelContainer_WithFavorites)
-    }
+    .modelContainer(previewModelContainer_WithFavorites)
 }
 
 #endif
