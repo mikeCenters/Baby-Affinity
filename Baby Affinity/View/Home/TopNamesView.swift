@@ -40,6 +40,18 @@ struct TopNamesView: View {
     
     // MARK: - Init
     
+    /**
+     Initializes a `TopNamesView` with a specific sex filter.
+
+     - Parameter sex: The `Sex` to filter the names by. This parameter determines which names are displayed based on their associated sex.
+
+     This initializer creates a `FetchDescriptor` configured with a predicate to filter names based on the provided sex, and a sort descriptor to order the names by their `affinityRating` in descending order. The fetch limit is set to the top `nameLimit` names to be presented.
+
+     Example usage:
+     ```
+     TopNamesView(sex: .female)
+     ```
+     */
     init(sex: Sex) {
         var descriptor = FetchDescriptor<Name>(
             predicate: #Predicate { $0.sexRawValue == sex.rawValue },
