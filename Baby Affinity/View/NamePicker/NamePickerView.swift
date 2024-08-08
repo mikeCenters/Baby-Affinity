@@ -8,8 +8,10 @@
 import SwiftUI
 import SwiftData
 
-// FIXME: Upon submission, the app crashes when calculating new ratings. When rapidly submitted. Try fixing Home View's performance first.
-
+/// A view for selecting baby names based on user preferences.
+///
+/// The `NamePickerView` allows users to pick a set number of names from a list of presented names.
+/// Users can select names they like, and the app will update the affinity ratings for those names.
 struct NamePickerView: View {
     
     // MARK: - Properties
@@ -26,14 +28,26 @@ struct NamePickerView: View {
     /// State object for managing the view model.
     @StateObject private var viewModel: NamePickerViewModel = .init()
     
-    
-    // MARK: - Controls and Constants
-    
     /// Title for the navigation bar, indicating the number of names to pick.
     private var title: String { "Pick \(viewModel.maxSelections) Names" }
     
     /// State variable for showing the instructions sheet.
     @State private var showInstructions = true
+    
+    
+    // MARK: - Init
+    
+    /// Initializes the `NamePickerView` with a specified sex.
+    ///
+    /// - Parameter sex: The sex of the names to be picked (male or female).
+    init(sex: Sex) {
+        var descriptor = FetchDescriptor<Name>(
+            predicate: #Predicate { $0.sexRawValue == sex.rawValue },
+            sortBy: [.init(\.affinityRating, order: .reverse)]
+        )
+        
+        _names = Query(descriptor)
+    }
     
     
     // MARK: - Body
@@ -111,9 +125,9 @@ struct NamePickerView: View {
     
     // MARK: - Methods
     
-    /// Submit the names for rating.
+    /// Loads the names based on the selected sex and updates the view model.
     private func loadNames() {
-        viewModel.load(names.filter { $0.sex == selectedSex })
+        viewModel.load(names)
     }
 }
 
@@ -122,22 +136,24 @@ struct NamePickerView: View {
 
 extension NamePickerView {
     
-    /// Button for submitting chosen names or fetching new names.
+    /// A button for submitting chosen names or fetching new names.
     private var submitNamesButton: some View {
         Button {
-            Task {
-                await viewModel.updateRatings()
-                
-                withAnimation {
-                    viewModel.load(names.filter { $0.sex == selectedSex})
-                }
+            let winners = viewModel.selectedNames
+            let losers = viewModel.presentedNames
+            
+            Task(priority: .medium) {
+                viewModel.updateRatings(winners: winners, losers: losers)
+            }
+            
+            withAnimation {
+                loadNames()
             }
         } label: {
             Text(viewModel.selectedNames.isEmpty ? "New Names" : "Submit")
         }
         .buttonStyle(BorderedButtonStyle())
     }
-    
     
     /// Text providing instructions for using the name picker.
     private var instructionsText: String {
@@ -188,7 +204,7 @@ extension NamePickerView {
 // MARK: - Preview
 
 #Preview {
-    NamePickerView()
+    NamePickerView(sex: .male)
         .modelContainer(previewModelContainer_WithFavorites)
 }
 

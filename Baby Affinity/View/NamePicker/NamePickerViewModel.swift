@@ -45,8 +45,8 @@ class NamePickerViewModel: ObservableObject {
         let middleNamesToShow = middleNames.prefix(7)
         let bottomNames = bottom20PercentNames.prefix(1)
         
-        self.selectedNames = []
-        self.presentedNames = Array(topNames) + Array(middleNamesToShow) + Array(bottomNames)
+        selectedNames = []
+        presentedNames = Array(topNames) + Array(middleNamesToShow) + Array(bottomNames)
     }
     
     /// Selects a name from the presented names and adds it to the chosen names.
@@ -55,9 +55,9 @@ class NamePickerViewModel: ObservableObject {
     /// and removed from the presented names.
     /// - Parameter name: The name to be selected.
     func select(_ name: Name) {
-        if self.selectedNames.count < maxSelections {
-            self.selectedNames.append(name)
-            self.presentedNames.removeAll { $0 == name }
+        if selectedNames.count < maxSelections {
+            selectedNames.append(name)
+            presentedNames.removeAll { $0 == name }
         }
     }
     
@@ -66,34 +66,31 @@ class NamePickerViewModel: ObservableObject {
     /// The deselected name is removed from the chosen names and added back to the presented names.
     /// - Parameter name: The name to be deselected.
     func deselect(_ name: Name) {
-        self.selectedNames.removeAll { $0 == name }
-        self.presentedNames.append(name)
+        selectedNames.removeAll { $0 == name }
+        presentedNames.append(name)
     }
     
-    /// Updates the affinity rating of the chosen names asynchronously.
+    /// Updates the affinity ratings of the provided names..
     ///
-    /// This method is a placeholder for the actual submission logic, which should be implemented in the FIXME section.
-    func updateRatings() async {
-        // Check if names have been chosen.
-        guard !selectedNames.isEmpty else {
-            updateRatingsWhenNoNamesChosen()
-            return
-        }
-        
-        let winningNames = selectedNames
-        let losingNames = presentedNames
-        
+    /// This method updates the affinity ratings of the provided winners and losers based on the group rating.
+    /// The affinity ratings are recalculated using the `AffinityCalculator` based on the  group rating, and
+    /// the evaluation count for each name is incremented.
+    ///
+    /// - Parameters:
+    ///   - winners: An array of `Name` objects that have been selected.
+    ///   - losers: An array of `Name` objects that have been presented but not selected.
+    func updateRatings(winners: [Name], losers: [Name]) {
         // Get the group rating.
-        let groupRating = calculateGroupRating()
+        let groupRating = calculateGroupRating(winners: winners, losers: losers)
         
         // Assign new Affinity ratings to names.
-        for name in winningNames {
+        for name in winners {
             let ratings = AffinityCalculator.getScores(winnerRating: name.affinityRating, loserRating: groupRating)
             name.setAffinity(ratings.newWinnerRating)
             name.increaseEvaluationCount()
         }
         
-        for name in losingNames {
+        for name in losers {
             let ratings = AffinityCalculator.getScores(winnerRating: groupRating, loserRating: name.affinityRating)
             name.setAffinity(ratings.newLoserRating)
             name.increaseEvaluationCount()
@@ -102,40 +99,24 @@ class NamePickerViewModel: ObservableObject {
     
     /// Calculates the average affinity rating for the group of presented and selected names.
     ///
-    /// This method computes the average affinity rating for both selected and presented names,
+    /// This method computes the average affinity rating for both selected (winners) and presented (losers) names,
     /// and then returns the average of these two values as the group rating.
+    ///
+    /// - Parameters:
+    ///   - winners: An array of `Name` objects that have been chosen as winners.
+    ///   - losers: An array of `Name` objects that have been presented but not chosen.
     /// - Returns: The group average affinity rating as an integer.
-    private func calculateGroupRating() -> Rating {
-        let winningNames = selectedNames
-        let losingNames = presentedNames
-        
+    private func calculateGroupRating(winners: [Name], losers: [Name]) -> Rating {
         // Get Winner's Average Affinity Rating.
-        let winnersTotalRating = winningNames.compactMap { $0.affinityRating }.reduce(0, +)
-        let winnersAverageRating = Decimal(winnersTotalRating) / Decimal(winningNames.count)
+        let winnersTotalRating = winners.compactMap { $0.affinityRating }.reduce(0, +)
+        let winnersAverageRating = Decimal(winnersTotalRating) / Decimal(winners.count)
         
         // Get Loser's Average Affinity Rating.
-        let losersTotalRating = losingNames.compactMap { $0.affinityRating }.reduce(0, +)
-        let losersAverageRating = Decimal(losersTotalRating) / Decimal(losingNames.count)
+        let losersTotalRating = losers.compactMap { $0.affinityRating }.reduce(0, +)
+        let losersAverageRating = Decimal(losersTotalRating) / Decimal(losers.count)
         
         // Get Group Average Affinity Rating.
         let groupRating = (winnersAverageRating + losersAverageRating) / 2
         return groupRating.convertToInt()
-    }
-    
-    /// Updates the affinity ratings when no names have been chosen.
-    ///
-    /// This method assigns new affinity ratings to all presented names based on the group rating,
-    /// and increments their evaluation count.
-    private func updateRatingsWhenNoNamesChosen() {
-        // Check no names are chosen prior to logging ratings.
-        guard selectedNames.isEmpty else { return }
-        
-        for name in presentedNames {
-            let groupRating = calculateGroupRating()
-            let ratings = AffinityCalculator.getScores(winnerRating: groupRating, loserRating: name.affinityRating)
-            
-            name.setAffinity(ratings.newLoserRating)
-            name.increaseEvaluationCount()
-        }
     }
 }
