@@ -8,7 +8,6 @@
 import SwiftUI
 import SwiftData
 
-
 /// A list view of the favorite `Name`s.
 struct FavoriteNamesView: View {
     
@@ -20,17 +19,44 @@ struct FavoriteNamesView: View {
     /// The selected sex for which the names are filtered, stored in `AppStorage`.
     @AppStorage("selectedSex") private var selectedSex = Sex.male
     
-    /// The names of the selected `Sex` that are labeled as a favorite.
-    var names: [Name]
+    /// The list of favorite names to be queried from the data context.
+    @Query private var names: [Name] = []
     
-    /// The list of names to be presented within the view.
+    /// The list of favorite names presented in the view.
     @State private var presentedNames: [Name] = []
     
     
     // MARK: - Controls and Constants
     
     /// The maximum number of names to be presented.
-    private let maxPresentedNames = 5
+    static private let nameLimit = 5
+    
+    
+    // MARK: - Init
+    
+    /**
+     Initializes a `FavoriteNamesView` with a specific sex filter.
+
+     - Parameter sex: The `Sex` to filter the names by. This parameter determines which favorite names are displayed based on their associated sex.
+
+     This initializer creates a `FetchDescriptor` configured with a predicate to filter names based on the provided sex and their favorite status, and a sort descriptor to order the names by their `affinityRating` in descending order.
+
+     Example usage:
+     ```
+     FavoriteNamesView(sex: .female)
+     ```
+     */
+    init(sex: Sex) {
+        let descriptor = FetchDescriptor<Name>(
+            predicate: #Predicate {
+                $0.sexRawValue == sex.rawValue &&
+                $0.isFavorite
+            },
+            sortBy: [.init(\.affinityRating, order: .reverse)]
+        )
+        
+        _names = Query(descriptor)
+    }
     
     
     // MARK: - Body
@@ -47,7 +73,7 @@ struct FavoriteNamesView: View {
                         .padding()
                     
                 } else {                      // Favorites are available
-                    ForEach(presentedNames, id: \.self) { name in
+                    ForEach(presentedNames.randomElements(count: Self.nameLimit), id: \.self) { name in
                         NameCellView(name: name, rank: name.getRank(from: modelContext) ?? 0)
                     }
                 }
@@ -69,7 +95,7 @@ struct FavoriteNamesView: View {
                             .font(.headline)
                     }
                     .buttonStyle(.borderless)
-                    .sensoryFeedback(.impact, trigger: presentedNames)
+                    .sensoryFeedback(.impact, trigger: names)
                 }
             }
             .onAppear {
@@ -78,14 +104,6 @@ struct FavoriteNamesView: View {
                 withAnimation {
                     loadNames()
                 }
-            }
-            .onChange(of: names) { oldValue, newValue in
-                // MARK: - On Change
-                
-                guard presentedNames.count < maxPresentedNames
-                else { return }
-                
-                loadNames()
             }
     }
 }
@@ -120,16 +138,20 @@ extension FavoriteNamesView {
 
 extension FavoriteNamesView {
     
-    /// Load names to be presented in the view.
+    /**
+     Loads the favorite names to be presented in the view.
+     
+     This method randomly selects a subset of the favorite names from the `names` array, up to a maximum of `nameLimit`. The selected names are then assigned to `presentedNames` for display in the view.
+     
+     The selection is done each time the method is called, which can be triggered by user actions such as pressing a reload button.
+     
+     Example usage:
+     ```
+     loadNames()
+     ```
+     */
     private func loadNames() {
-        let maxCount = min(maxPresentedNames, names.count)
-        
-        guard maxCount > 0 else {
-            presentedNames = []
-            return
-        }
-        
-        presentedNames = names.randomElements(count: maxPresentedNames)
+        presentedNames = names.randomElements(count: Self.nameLimit)
     }
 }
 
@@ -139,16 +161,11 @@ extension FavoriteNamesView {
 // MARK: - Preview
 
 #Preview {
-    
-    let names = (1...10).map {
-        Name("Name \($0)", sex: .male, affinityRating: 1200)
+    List {
+        FavoriteNamesView(sex: .male)
     }
-    
-    
-    return List {
-        FavoriteNamesView(names: names)
-            .modelContainer(previewModelContainer_WithFavorites)
-    }
+    .modelContainer(previewModelContainer_WithFavorites)
+//    .modelContainer(previewModelContainer)
 }
 
 #endif
