@@ -105,6 +105,11 @@ struct FavoriteNamesView: View {
                     loadNames()
                 }
             }
+            .onChange(of: selectedSex) {
+                withAnimation {
+                    loadNames()
+                }
+            }
     }
 }
 
