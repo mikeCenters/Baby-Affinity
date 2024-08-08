@@ -28,7 +28,7 @@ struct NameCellView: View {
         HStack {
             
             /// Displays the rank of the `Name` object.
-            Text("\(rank+1000)")
+            Text("\(rank)")
                 .font(.headline)
                 .frame(maxWidth: 60, alignment: .leading)
             
