@@ -28,9 +28,9 @@ struct NameCellView: View {
         HStack {
             
             /// Displays the rank of the `Name` object.
-            Text("\(rank)")
+            Text("\(rank+1000)")
                 .font(.headline)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: 60, alignment: .leading)
             
             
             VStack(alignment: .center) {
@@ -60,7 +60,7 @@ struct NameCellView: View {
             }
             .buttonStyle(.borderless)   /// Disable List cell tapping.
             .sensoryFeedback(.impact, trigger: name.isFavorite)
-            .frame(maxWidth: .infinity, alignment: .trailing)
+            .frame(maxWidth: 60, alignment: .trailing)
         }
     }
 }
