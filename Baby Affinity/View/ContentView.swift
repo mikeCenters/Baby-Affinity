@@ -23,7 +23,6 @@ struct ContentView: View {
     // MARK: - View
     
     var body: some View {
-        
         TabView {
             
             // MARK: - Home Feed
@@ -40,7 +39,7 @@ struct ContentView: View {
             
             // MARK: - Pick Names
             
-            NamePickerView()
+            NamePickerView(sex: selectedSex)
                 .tabItem {
                     Label {
                         Text("Pick Names")
@@ -66,7 +65,13 @@ struct ContentView: View {
     }
 }
 
+
+#if DEBUG
+
+// MARK: - Preview
 #Preview {
     ContentView()
         .modelContainer(previewModelContainer_WithFavorites)
 }
+
+#endif
