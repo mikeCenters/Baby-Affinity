@@ -79,7 +79,6 @@ struct TopNamesView: View {
                     /// The topNames array is arranged in descending order of the rank.
                     /// The array is already set to reflect their rank, so index+1 gives the correct value.
                     NameCellView(name: name, rank: index + 1)
-                        .onAppear { print("showing \(name.text)")}
                 }
             }
             
