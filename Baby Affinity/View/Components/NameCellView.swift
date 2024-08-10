@@ -13,7 +13,7 @@ struct NameCellView: View {
     // MARK: - Properties
     
     /// The `Name` object to be displayed in the cell.
-    @Bindable var name: Name
+    var name: Name
     
     /// The rank of the `Name` object.
     var rank: Int
