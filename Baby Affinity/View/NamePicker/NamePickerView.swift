@@ -41,7 +41,7 @@ struct NamePickerView: View {
     ///
     /// - Parameter sex: The sex of the names to be picked (male or female).
     init(sex: Sex) {
-        var descriptor = FetchDescriptor<Name>(
+        let descriptor = FetchDescriptor<Name>(
             predicate: #Predicate { $0.sexRawValue == sex.rawValue },
             sortBy: [.init(\.affinityRating, order: .reverse)]
         )
