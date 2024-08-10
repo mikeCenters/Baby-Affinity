@@ -7,30 +7,37 @@
 
 import SwiftUI
 
-
 /// A view that displays a `Name` object with its rank, rating, and favorite status.
 struct NameCellView: View {
     
     // MARK: - Properties
     
     /// The `Name` object to be displayed in the cell.
-    var name: Name
+    @Bindable var name: Name
     
     /// The rank of the `Name` object.
     var rank: Int
     
     
+    // MARK: - Controls and Constants
+    
+    /// A boolean that represents the state of the favorite button press.
+    @State private var favIsTapped = false
+    
+    /// Used to provide the maxWidth of the rank and favorites icon. This is used to place the name perfectly center within the cell.
+    private let rankAndIconMaxWidth: CGFloat? = 60
+    
+    
     // MARK: - Body
     
     var body: some View {
-        
         /// The `.frame` modifier is used to place components perfectly in their position. Use of `Spacer()` will create offsets for the center component.
         HStack {
             
             /// Displays the rank of the `Name` object.
             Text("\(rank)")
                 .font(.headline)
-                .frame(maxWidth: 60, alignment: .leading)
+                .frame(maxWidth: rankAndIconMaxWidth, alignment: .leading)
             
             
             VStack(alignment: .center) {
@@ -48,23 +55,30 @@ struct NameCellView: View {
             
             Button {
                 /// Toggles the favorite status of the `Name` object.
-                withAnimation {
+                withAnimation(.bouncy.speed(1.5)) {
                     name.toggleFavorite()
+                    favIsTapped.toggle()
+                    
+                } completion: {
+                    withAnimation(.bouncy.speed(1.5)) {
+                        favIsTapped.toggle()
+                    }
                 }
                 
             } label: {
                 /// Displays a filled star if the `Name` is a favorite, otherwise an empty star.
                 Image(systemName: name.isFavorite ? "star.fill" : "star")
-                    .foregroundColor(name.isFavorite ? .yellow : .gray)
                     .font(.headline)
+                    .foregroundColor(name.isFavorite ? .yellow : .gray)
+                /// Scale effect will upscale when tapped and is a favorite; otherwise, no scaling is perfomed.
+                    .scaleEffect(favIsTapped ? name.isFavorite ? 1.3 : 1 : 1)
             }
-            .buttonStyle(.borderless)   /// Disable List cell tapping.
+            .frame(maxWidth: rankAndIconMaxWidth, alignment: .trailing)
             .sensoryFeedback(.impact, trigger: name.isFavorite)
-            .frame(maxWidth: 60, alignment: .trailing)
+            .buttonStyle(.borderless)   /// Disable List cell tapping.
         }
     }
 }
-
 
 
 #if DEBUG
@@ -87,4 +101,3 @@ import SwiftData
 }
 
 #endif
-
