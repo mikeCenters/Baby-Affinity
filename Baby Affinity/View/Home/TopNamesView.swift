@@ -70,11 +70,12 @@ struct TopNamesView: View {
             
             // MARK: - Cell View
             
-            if names.isEmpty {           // Names are not loaded
+            // FIXME: The animations work at the moment on device. Will need to figure out how to handle conditional views and animations. Placing the ForEach within a VStack fixes the animations.
+            
+            if names.isEmpty {              /// Names are not loaded
                 LoadingIndicator(isLoading: $isLoading)
                 
-                
-            } else {                        // Show the list of top names
+            } else {                        /// Show the list of top names
                 ForEach(Array(names.enumerated()).prefix(showMore ? Self.nameLimit : Self.abvLimit), id: \.element) { (index, name) in
                     /// The topNames array is arranged in descending order of the rank.
                     /// The array is already set to reflect their rank, so index+1 gives the correct value.
