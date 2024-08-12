@@ -13,11 +13,14 @@ struct NamesView: View {
     
     // MARK: - Properties
     
-    /// The list of names to be displayed.
-    @Query private var names: [Name]
+    /// The list of names to be queried.
+    @Query private var namesQuery: [Name]
     
     /// The selected sex for filtering the names.
     @AppStorage("selectedSex") private var selectedSex = Sex.male
+    
+    /// The list of names to be presented.
+    @State private var names: [Name] = []
     
     
     // MARK: - Controls
@@ -30,16 +33,11 @@ struct NamesView: View {
     
     /// Initializes a new instance of `NamesView`.
     ///
+    /// A view that shows all list of all names in descending order, based on the affinity rating attribute.
+    ///
     /// - Parameters:
-    ///   - sex: The sex to filter the names by.
     ///   - isShown: A binding to control the visibility of the view.
-    init(sex: Sex, isShown: Binding<Bool>) {
-        let descriptor = FetchDescriptor<Name>(
-            predicate: #Predicate { $0.sexRawValue == sex.rawValue },
-            sortBy: [.init(\.affinityRating, order: .reverse)]
-        )
-        
-        _names = Query(descriptor)
+    init(isShown: Binding<Bool>) {
         _isShown = isShown
     }
     
@@ -58,6 +56,7 @@ struct NamesView: View {
                     }
                 }
             }
+            // MARK: - Toolbar
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
@@ -71,6 +70,26 @@ struct NamesView: View {
                 }
             }
         }
+        // MARK: - On Appear
+        .onAppear() {
+            withAnimation {
+                loadNames()
+            }
+        }
+        // MARK: - On Change
+        .onChange(of: namesQuery) {
+            withAnimation {
+                loadNames()
+            }
+        }
+    }
+    
+    
+    // MARK: - Methods
+    
+    /// Load names from the query to the view.
+    private func loadNames() {
+        names = namesQuery.filter { $0.sex == selectedSex }
     }
 }
 
@@ -80,7 +99,7 @@ struct NamesView: View {
 // MARK: - Preview
 
 #Preview {
-    NamesView(sex: .male, isShown: .constant(true))
+    NamesView(isShown: .constant(true))
         .modelContainer(previewModelContainer_WithFavorites)
 }
 

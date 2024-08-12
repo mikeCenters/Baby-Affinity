@@ -73,7 +73,7 @@ struct HomeView: View {
                 SexSelectionIconView()
             }
             .sheet(isPresented: $showAllNames) {
-                NamesView(sex: selectedSex, isShown: $showAllNames)
+                NamesView(isShown: $showAllNames)
             }
         }
     }
