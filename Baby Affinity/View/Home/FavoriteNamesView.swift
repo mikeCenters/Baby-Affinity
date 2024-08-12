@@ -12,6 +12,7 @@ import SwiftData
 struct FavoriteNamesView: View {
     
     // MARK: - View States
+    
     enum States {
         case isLoading, noFavorites, showNames
     }
@@ -51,6 +52,7 @@ struct FavoriteNamesView: View {
     /// The maximum number of names to be presented.
     static private let nameLimit = 5
     
+    /// The state of the view.
     @State private var viewState: FavoriteNamesView.States = .isLoading
     
     
