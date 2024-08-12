@@ -35,7 +35,8 @@ struct HomeView: View {
                 TopNamesView(sex: selectedSex)
                     
                 /// Displays the favorite names for the selected sex.
-                FavoriteNamesView(sex: selectedSex)
+                FavoriteNamesView()
+                
                 
                 // FIXME: Create Shared List
                 

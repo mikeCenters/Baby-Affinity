@@ -11,6 +11,29 @@ import SwiftData
 /// A list view of the favorite `Name`s.
 struct FavoriteNamesView: View {
     
+    // MARK: - View States
+    enum States {
+        case isLoading, noFavorites, showNames
+    }
+    
+    
+    // MARK: - Fetch Descriptor
+    
+    /// Returns a `FetchDescriptor` for fetching `Name` objects filtered by sex and favorite status, sorted by affinity rating in descending order.
+    ///
+    /// - Parameter sex: The `Sex` value to filter the `Name` objects by.
+    /// - Returns: A `FetchDescriptor` configured with the specified predicate and sort order.
+    static private func getFetchDescriptor(_ sex: Sex) -> FetchDescriptor<Name> {
+        FetchDescriptor<Name>(
+            predicate: #Predicate {
+                $0.sexRawValue == sex.rawValue &&
+                $0.isFavorite
+            },
+            sortBy: [.init(\.affinityRating, order: .reverse)]
+        )
+    }
+    
+    
     // MARK: - Properties
     
     /// The environment's model context.
@@ -18,9 +41,6 @@ struct FavoriteNamesView: View {
     
     /// The selected sex for which the names are filtered, stored in `AppStorage`.
     @AppStorage("selectedSex") private var selectedSex = Sex.male
-    
-    /// The list of favorite names to be queried from the data context.
-    @Query private var names: [Name] = []
     
     /// The list of favorite names presented in the view.
     @State private var presentedNames: [Name] = []
@@ -31,32 +51,7 @@ struct FavoriteNamesView: View {
     /// The maximum number of names to be presented.
     static private let nameLimit = 5
     
-    
-    // MARK: - Init
-    
-    /**
-     Initializes a `FavoriteNamesView` with a specific sex filter.
-
-     - Parameter sex: The `Sex` to filter the names by. This parameter determines which favorite names are displayed based on their associated sex.
-
-     This initializer creates a `FetchDescriptor` configured with a predicate to filter names based on the provided sex and their favorite status, and a sort descriptor to order the names by their `affinityRating` in descending order.
-
-     Example usage:
-     ```
-     FavoriteNamesView(sex: .female)
-     ```
-     */
-    init(sex: Sex) {
-        let descriptor = FetchDescriptor<Name>(
-            predicate: #Predicate {
-                $0.sexRawValue == sex.rawValue &&
-                $0.isFavorite
-            },
-            sortBy: [.init(\.affinityRating, order: .reverse)]
-        )
-        
-        _names = Query(descriptor)
-    }
+    @State private var viewState: FavoriteNamesView.States = .isLoading
     
     
     // MARK: - Body
@@ -65,14 +60,18 @@ struct FavoriteNamesView: View {
         Section(
             header: Text("Favorite \(selectedSex.alternateName) Names")) {
                 
-                // MARK: - Cell View
+                // MARK: - Body
                 
-                if presentedNames.isEmpty {   // No favorite names are available
+                switch viewState {
+                case .isLoading:        /// View is loading names
+                    LoadingIndicator(isLoading: .constant(true))
+                    
+                case .noFavorites:      /// No favorite names are available
                     noFavoritesFound
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding()
                     
-                } else {                      // Favorites are available
+                case .showNames:        /// Favorites are available
                     ForEach(presentedNames.randomElements(count: Self.nameLimit), id: \.self) { name in
                         NameCellView(name: name, rank: name.getRank(from: modelContext) ?? 0)
                     }
@@ -86,8 +85,11 @@ struct FavoriteNamesView: View {
                     
                     // Reload names
                     Button {
-                        withAnimation {
-                            loadNames()
+                        /// Only load names if the view state is not already loading names.
+                        if viewState != .isLoading {
+                            withAnimation {
+                                loadNames()
+                            }
                         }
                         
                     } label: {
@@ -95,19 +97,24 @@ struct FavoriteNamesView: View {
                             .font(.headline)
                     }
                     .buttonStyle(.borderless)
-                    .sensoryFeedback(.impact, trigger: names)
+                    .sensoryFeedback(.impact, trigger: presentedNames)
                 }
             }
+        // MARK: - On Appear
             .onAppear {
-                // MARK: - On Appear
-                
                 withAnimation {
                     loadNames()
                 }
             }
+        // MARK: - On Change
             .onChange(of: selectedSex) {
                 withAnimation {
                     loadNames()
+                }
+            }
+            .onChange(of: presentedNames) {
+                withAnimation {
+                    viewState = presentedNames.isEmpty ? .noFavorites : .showNames
                 }
             }
     }
@@ -156,7 +163,16 @@ extension FavoriteNamesView {
      ```
      */
     private func loadNames() {
-        presentedNames = names.randomElements(count: Self.nameLimit)
+        viewState = .isLoading
+        presentedNames = []
+        
+        do {
+            let names = try modelContext.fetch(Self.getFetchDescriptor(selectedSex))
+            presentedNames = names.randomElements(count: Self.nameLimit)
+            
+        } catch {
+            fatalError("Could not fetch names for the Favorite Names View: \(error)")
+        }
     }
 }
 
@@ -167,7 +183,7 @@ extension FavoriteNamesView {
 
 #Preview {
     List {
-        FavoriteNamesView(sex: .male)
+        FavoriteNamesView()
     }
     .modelContainer(previewModelContainer_WithFavorites)
 //    .modelContainer(previewModelContainer)
