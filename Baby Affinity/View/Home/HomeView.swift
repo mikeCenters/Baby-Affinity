@@ -24,6 +24,9 @@ struct HomeView: View {
     /// The title of the navigation bar.
     private let headerTitle = "Baby Affinity"
     
+    /// Show all names of the selected sex.
+    @State private var showAllNames = false
+    
     
     // MARK: - Body
     
@@ -31,11 +34,31 @@ struct HomeView: View {
         NavigationStack {
             List {
                 
+                // FIXME: Add Name Selection Card.
+                /// A card view, with a full name option, due date, etc.
+                
                 /// Displays the top names based on affinity rating for the selected sex.
                 TopNamesView(sex: selectedSex)
                     
                 /// Displays the favorite names for the selected sex.
                 FavoriteNamesView()
+                
+                HStack {
+                    Spacer()
+                    
+                    Button {
+                        withAnimation {
+                            showAllNames.toggle()
+                        }
+                    } label: {
+                        Text("Show all names")
+                    }
+                    .font(.headline)
+                    
+                    Spacer()
+                }
+                .listRowBackground(Color.clear)
+
                 
                 
                 // FIXME: Create Shared List
@@ -48,6 +71,9 @@ struct HomeView: View {
             .toolbar {
                 /// Toolbar item to select the sex for filtering names.
                 SexSelectionIconView()
+            }
+            .sheet(isPresented: $showAllNames) {
+                NamesView(sex: selectedSex, isShown: $showAllNames)
             }
         }
     }
