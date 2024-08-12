@@ -33,6 +33,22 @@ class NamePickerViewModel: ObservableObject {
     /// From these groups, it selects names to present: 2 from the top 20%, 7 from the middle 60%, and 1 from the bottom 20%.
     /// - Parameter names: The list of names to be processed and presented.
     func load(_ names: [Name]) {
+        
+        /// FIXME: Update what names are to be selected for viewing.
+        /// Example:
+        /// Filter the names into groups based on the median rating; one group below, one group above.
+        /// One group of "not evaluated names".
+        ///
+        /// If not evaluated has a count:
+        ///     Show 2 from the top median group.
+        ///     Show 8 from the not evaluated group.
+        ///
+        /// Else:
+        ///     Show 1 below the median.
+        ///     Show 3 from the top 20% above the median.
+        ///     Show 6 from the median to the top 20%.
+        
+        
         let totalNames = names.count
         let top20PercentCount = Int(Double(totalNames) * 0.2)
         let bottom20PercentCount = Int(Double(totalNames) * 0.2)
