@@ -8,21 +8,31 @@
 import SwiftUI
 import SwiftData
 
+/// A view that displays a list of names filtered by the selected sex and sorted by affinity rating.
 struct NamesView: View {
     
     // MARK: - Properties
     
+    /// The list of names to be displayed.
     @Query private var names: [Name]
     
+    /// The selected sex for filtering the names.
     @AppStorage("selectedSex") private var selectedSex = Sex.male
     
     
     // MARK: - Controls
+    
+    /// A binding to control the visibility of the view.
     @Binding var isShown: Bool
     
     
     // MARK: - Init
     
+    /// Initializes a new instance of `NamesView`.
+    ///
+    /// - Parameters:
+    ///   - sex: The sex to filter the names by.
+    ///   - isShown: A binding to control the visibility of the view.
     init(sex: Sex, isShown: Binding<Bool>) {
         let descriptor = FetchDescriptor<Name>(
             predicate: #Predicate { $0.sexRawValue == sex.rawValue },
