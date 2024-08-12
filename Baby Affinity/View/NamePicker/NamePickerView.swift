@@ -53,7 +53,7 @@ struct NamePickerView: View {
     // MARK: - Body
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 
                 // Chosen Names
