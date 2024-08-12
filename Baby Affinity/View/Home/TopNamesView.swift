@@ -11,6 +11,13 @@ import SwiftData
 /// A list view of the top 10 `Name`s based on the Affinity Rating attribute.
 struct TopNamesView: View {
     
+    // MARK: - View States
+    
+    enum States {
+        case isLoading, showNames
+    }
+    
+    
     // MARK: - Properties
     
     /// The environment's model context.
@@ -36,6 +43,9 @@ struct TopNamesView: View {
     
     /// The limit of names to show when the view is collapsed.
     static private let abvLimit = 5
+    
+    /// The state of the view.
+    @State private var viewState: TopNamesView.States = .isLoading
     
     
     // MARK: - Init
@@ -70,12 +80,12 @@ struct TopNamesView: View {
             
             // MARK: - Cell View
             
-            // FIXME: The animations work at the moment on device. Will need to figure out how to handle conditional views and animations. Placing the ForEach within a VStack fixes the animations.
-            
-            if names.isEmpty {              /// Names are not loaded
+            switch viewState {
+            case .isLoading:        /// Names are not loaded
                 LoadingIndicator(isLoading: $isLoading)
                 
-            } else {                        /// Show the list of top names
+                
+            case .showNames:        /// Show the list of top names
                 ForEach(Array(names.enumerated()).prefix(showMore ? Self.nameLimit : Self.abvLimit), id: \.element) { (index, name) in
                     /// The topNames array is arranged in descending order of the rank.
                     /// The array is already set to reflect their rank, so index+1 gives the correct value.
@@ -100,6 +110,14 @@ struct TopNamesView: View {
                 }
                 .buttonStyle(.borderless)   /// Disable List cell tapping.
             }
+        }
+        // MARK: - On Appear
+        .onAppear {
+            viewState = names.isEmpty ? .isLoading : .showNames
+        }
+        // MARK: - On Change
+        .onChange(of: names) {
+            viewState = names.isEmpty ? .isLoading : .showNames
         }
     }
 }
