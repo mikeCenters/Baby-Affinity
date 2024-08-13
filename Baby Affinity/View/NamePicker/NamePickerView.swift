@@ -31,6 +31,9 @@ struct NamePickerView: View {
     /// Title for the navigation bar, indicating the number of names to pick.
     private var title: String { "Pick \(viewModel.maxSelections) Names" }
     
+    
+    // MARK: - Controls
+    
     /// State variable for showing the instructions sheet.
     @State private var showInstructions = true
     
@@ -56,29 +59,14 @@ struct NamePickerView: View {
         NavigationStack {
             List {
                 
-                // Chosen Names
-                
-                if !viewModel.selectedNames.isEmpty { // Only show if names are chosen
-                    Section(header: Text("Chosen Names")) {
-                        ForEach(viewModel.selectedNames) { name in
-                            HStack {
-                                Text(name.text)
-                                Spacer()
-                                Button(action: {
-                                    withAnimation {
-                                        viewModel.deselect(name)
-                                    }
-                                }) {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .foregroundColor(.red)
-                                }
-                            }
-                        }
-                    }
+                // Selected Names
+                /// Only show if names are chosen
+                if !viewModel.selectedNames.isEmpty {
+                    selectedNamesSection
                 }
                 
-                // Presented Names
                 
+                // Presented Names
                 Section {
                     ForEach(viewModel.presentedNames) { name in
                         Button {
@@ -90,25 +78,13 @@ struct NamePickerView: View {
                         }
                     }
                 }
-                
             }
             .navigationTitle(title)
-            // MARK: - On Appear
-            .onAppear {
-                withAnimation {
-                    loadNames()
-                }
-            }
-            // MARK: - On Change
-            .onChange(of: selectedSex, { oldValue, newValue in
-                withAnimation {
-                    loadNames()
-                }
-            })
             // MARK: - Toolbar
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
                     submitNamesButton
+                        .padding(.bottom)
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
@@ -120,6 +96,18 @@ struct NamePickerView: View {
                 instructions
             }
         }
+        // MARK: - On Appear
+        .onAppear {
+            withAnimation {
+                loadNames()
+            }
+        }
+        // MARK: - On Change
+        .onChange(of: selectedSex, { oldValue, newValue in
+            withAnimation {
+                loadNames()
+            }
+        })
     }
     
     
@@ -135,6 +123,27 @@ struct NamePickerView: View {
 // MARK: - View Components
 
 extension NamePickerView {
+    
+    /// A section of names that have been selected.
+    var selectedNamesSection: some View {
+        Section(header: Text("Chosen Names")) {
+            ForEach(viewModel.selectedNames) { name in
+                HStack {
+                    Text(name.text)
+                    Spacer()
+                    Button {
+                        withAnimation {
+                            viewModel.deselect(name)
+                        }
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.red)
+                    }
+                }
+            }
+        }
+    }
+    
     
     /// A button for submitting chosen names or fetching new names.
     private var submitNamesButton: some View {
@@ -154,6 +163,7 @@ extension NamePickerView {
         }
         .buttonStyle(BorderedButtonStyle())
     }
+    
     
     /// Text providing instructions for using the name picker.
     private var instructionsText: String {
