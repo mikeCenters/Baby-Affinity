@@ -4,72 +4,126 @@
 //
 //  Created by Mike Centers on 7/17/24.
 //
+//
+//  Name.swift
+//  Baby Affinity
+//
+//  Created by Mike Centers on 7/17/24.
+//
 
 import Foundation
 import SwiftData
 
+// FIXME: - Add Tags to create categories.
+// FIXME: - Add ability to reference the same name with variant spellings.
+
 @Model
 final class Name {
     
+    // MARK: - Errors
+    
+    /// Errors that can occur during `Name` initialization or modification.
+    enum NameError: Error {
+        case nameIsEmpty
+        case ratingBelowMinimum(_ minimumRating: Int)
+        case unableToInitialize
+    }
+    
+    
+    // MARK: - Default Values
+    
+    /// Default affinity rating assigned to a new `Name` instance.
+    static let defaultAffinityRating = 1200
+    
+    /// Default evaluation count assigned to a new `Name` instance.
+    static let defaultEvaluationCount = 0
+    
+    /// Default favorite status assigned to a new `Name` instance.
+    static let defaultFavoriteStatus = false
+    
+    /// Minimum value allowed for the affinity rating.
+    static let minimumAffinityRating = 0
+    
+    
+    
     // MARK: - Attributes
-    /// The sex of the name.
+    
+    /// The sex of the name, represented as a `Sex` enum value. It is derived from the raw value.
     var sex: Sex? { Sex(rawValue: self.sexRawValue) }
     
-    /// The rawValue of the `Sex` attribute. This attribute is required for sorting.
+    /// Raw value representing the sex of the name. Used for sorting and comparisons.
     private(set) var sexRawValue: Int
     
-    /// The text representation of the name.
+    /// The text representation of the name. This must be unique.
     @Attribute(.unique) private(set) var text: String
     
-    /// The number of times the name has been evaluated via the user.
+    /// The number of times the name has been evaluated by the user.
     private(set) var evaluated: Int
     
-    /// The representation of the user's fondness of the name.
+    /// The affinity rating for the name, indicating the user's fondness.
     private(set) var affinityRating: Int
     
     /// Indicates whether the name is marked as a favorite.
     private(set) var isFavorite: Bool
     
-    // FIXME: - Add Tags to create categories.
-    // FIXME: - Add ability to reference the same name with variant spellings.
-    
     
     // MARK: - Init
     
-    /// Initialize a `Name` object with the provided attributes. These are the `Names` a user would consider for naming their child.
+    /// Initialize a `Name` object with the provided attributes. This initializer can throw errors if the input is invalid.
     /// - Parameters:
-    ///   - text: The description of the name.
-    ///   - sex: The `Sex` of the name. `Male` or `Female`.
-    ///   - affinityRating: The rating that represents a user's fondness towards it. The default rating is 1200.
-    init(_ text: String, sex: Sex, affinityRating: Int = 1200) {
+    ///   - text: The description of the name. Must not be empty.
+    ///   - sex: The `Sex` of the name, represented as an enum value.
+    ///   - affinityRating: The rating representing the user's fondness towards the name. Defaults to `Name.defaultAffinityRating`. Must be non-negative.
+    /// - Throws: `NameError` if `text` is empty or`affinityRating` is below the minimum.
+    init?(_ text: String, sex: Sex, affinityRating: Int = Name.defaultAffinityRating) throws {
+        // Check if text is empty
+        guard !text.isEmpty else {
+            throw NameError.nameIsEmpty
+        }
+        
+        // Check if affinity rating is valid
+        guard affinityRating >= Name.minimumAffinityRating else {
+            throw NameError.ratingBelowMinimum(Name.minimumAffinityRating)
+        }
+        
+        // Set default values
         self.text = text
         self.sexRawValue = sex.rawValue
-        self.affinityRating = affinityRating
-        self.evaluated = 0
-        self.isFavorite = false
+        self.affinityRating = Name.defaultAffinityRating
+        self.evaluated = Name.defaultEvaluationCount
+        self.isFavorite = Name.defaultFavoriteStatus
     }
 }
 
 
+// MARK: - Methods
+
 extension Name {
     
-    // MARK: - Methods
-    
-    /// Increase the times evaluated by one interval.
+    /// Increase the evaluation count by one.
     func increaseEvaluationCount() {
         self.evaluated += 1
     }
     
-    /// Set the affinityRating attribute to the provided rating.
-    /// - Parameter rating: The new affinity rating.
-    func setAffinity(_ rating: Int) {
+    /// Set the affinity rating to the provided value.
+    /// - Parameter rating: The new affinity rating. Must be non-negative.
+    /// - Throws: `NameError.ratingBelowMinimum` if the rating is below the minimum allowed value.
+    func setAffinity(_ rating: Int) throws {
+        guard rating >= Name.minimumAffinityRating else {
+            throw NameError.ratingBelowMinimum(Name.minimumAffinityRating)
+        }
         self.affinityRating = rating
     }
     
-    /// Toggle the `.isFavorite` attribute.
+    /// Toggle the `isFavorite` status between true and false.
     func toggleFavorite() {
         self.isFavorite.toggle()
     }
+}
+
+
+// FIXME: Move to NameDataManager
+extension Name {
     
     /// Get the rank of the `Name` within its `Sex` category, based on affinityRating.
     /// - Parameter context: The context to fetch the names from.
@@ -87,10 +141,8 @@ extension Name {
         
         return names?.firstIndex(of: self).map { $0 + 1 }
     }
-}
-
-
-extension Name {
+    
+    
     /// Prepare the default names for insertion into the database.
     /// - Returns: An array of `Name` objects.
     static func prepareDefaultNames() async -> [Name] {
@@ -100,14 +152,17 @@ extension Name {
         // Prepare new names for insertion
         var newNames: [Name] = []
 
+        
+        // FIXME: Try statements
         // Add girl names
         for (_, name) in names.girlNames {
-            newNames.append(Name(name, sex: .female))
+            newNames.append(try! Name(name, sex: .female)!)
         }
-
+        
+        // FIXME: Try statements
         // Add boy names
         for (_, name) in names.boyNames {
-            newNames.append(Name(name, sex: .male))
+            newNames.append(try! Name(name, sex: .male)!)
         }
         
         return newNames
