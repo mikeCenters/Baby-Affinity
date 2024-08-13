@@ -29,41 +29,59 @@ class NamePickerViewModel: ObservableObject {
     
     /// Loads the names to be presented to the user.
     ///
-    /// This method divides the input list of names into three groups: top 20%, middle 60%, and bottom 20%.
-    /// From these groups, it selects names to present: 2 from the top 20%, 7 from the middle 60%, and 1 from the bottom 20%.
+    /// This method filters the input list of names into groups based on the median affinity rating:
+    /// one group below the median, one group above the median, and one group of "not evaluated" names.
+    /// From these groups, it selects names to present based on the following rules:
+    /// - If there are not evaluated names:
+    ///     - Show 2 from the top 20% of the top median group.
+    ///     - Show 8 from the not evaluated group.
+    /// - Else:
+    ///     - Show 1 below the median.
+    ///     - Show 3 from the top 20% above the median.
+    ///     - Show 6 from the median to the top 20%.
     /// - Parameter names: The list of names to be processed and presented.
     func load(_ names: [Name]) {
+        // Check that names is not empty.
+        guard !names.isEmpty else { return }
         
-        /// FIXME: Update what names are to be selected for viewing.
-        /// Example:
-        /// Filter the names into groups based on the median rating; one group below, one group above.
-        /// One group of "not evaluated names".
-        ///
-        /// If not evaluated has a count:
-        ///     Show 2 from the top median group.
-        ///     Show 8 from the not evaluated group.
-        ///
-        /// Else:
-        ///     Show 1 below the median.
-        ///     Show 3 from the top 20% above the median.
-        ///     Show 6 from the median to the top 20%.
-        
-        
-        let totalNames = names.count
-        let top20PercentCount = Int(Double(totalNames) * 0.2)
-        let bottom20PercentCount = Int(Double(totalNames) * 0.2)
-        
-        let top20PercentNames = Array(names.prefix(top20PercentCount)).shuffled()
-        let bottom20PercentNames = Array(names.suffix(bottom20PercentCount)).shuffled()
-        let middleNames = Array(names.dropFirst(top20PercentCount).dropLast(bottom20PercentCount)).shuffled()
-        
-        let topNames = top20PercentNames.prefix(2)
-        let middleNamesToShow = middleNames.prefix(7)
-        let bottomNames = bottom20PercentNames.prefix(1)
-        
+        // Empty the selected names array.
         selectedNames = []
-        presentedNames = Array(topNames) + Array(middleNamesToShow) + Array(bottomNames)
+        
+        // Separate names into evaluated and not evaluated
+        var evaluatedNames: [Name] = []
+        var notEvaluatedNames: [Name] = []
+        
+        names.forEach { name in
+            name.evaluated > 0 ? evaluatedNames.append(name) : notEvaluatedNames.append(name)
+        }
+        
+        // Sort evaluated names by affinity rating
+        evaluatedNames.sort { $0.affinityRating < $1.affinityRating }
+        
+        // Find the median index
+        let medianIndex = evaluatedNames.count / 2
+        let belowMedianNames = evaluatedNames.prefix(medianIndex)
+        let aboveMedianNames = evaluatedNames.suffix(from: medianIndex)
+        
+        // Calculate top 20% count for above median names
+        let top20PercentCount = max(1, Int(Double(aboveMedianNames.count) * 0.2))
+        
+        // The array of names to present to the view
+        var namesToShow: [Name] = []
+        
+        if notEvaluatedNames.isEmpty {      // All names have been evaluated.
+            namesToShow.append(contentsOf: belowMedianNames.shuffled().prefix(1))
+            namesToShow.append(contentsOf: aboveMedianNames.suffix(top20PercentCount).shuffled().prefix(3))
+            namesToShow.append(contentsOf: aboveMedianNames.dropLast(top20PercentCount).shuffled().prefix(6))
+            
+        } else {                            // Some names still need evaluated.
+            namesToShow.append(contentsOf: aboveMedianNames.suffix(top20PercentCount).shuffled().prefix(2))
+            namesToShow.append(contentsOf: notEvaluatedNames.shuffled().prefix(8))
+        }
+        
+        presentedNames = namesToShow.shuffled()
     }
+    
     
     /// Selects a name from the presented names and adds it to the chosen names.
     ///
