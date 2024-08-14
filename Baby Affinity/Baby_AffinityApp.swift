@@ -71,15 +71,15 @@ let previewModelContainer: ModelContainer = {
             
             /// Add girl names.
             for (sex, name) in names.girlNames {
-                let n = Name(name, sex: .female)
-                n.setAffinity((900...1500).randomElement() ?? 1200)
+                let n = try! Name(name, sex: .female)!
+                try! n.setAffinity((900...1500).randomElement() ?? 1200)
                 context.insert(n)
             }
             
             /// Add boy names.
             for (sex, name) in names.boyNames {
-                let n = Name(name, sex: .male)
-                n.setAffinity((900...1500).randomElement() ?? 1200)
+                let n = try! Name(name, sex: .male)!
+                try! n.setAffinity((900...1500).randomElement() ?? 1200)
                 context.insert(n)
             }
         }
@@ -109,17 +109,17 @@ let previewModelContainer_WithFavorites: ModelContainer = {
             
             /// Add girl names.
             for (sex, name) in names.girlNames {
-                let n = Name(name, sex: .female)
+                let n = try! Name(name, sex: .female)!
                 if n.text.contains("e") { n.toggleFavorite() }
-                n.setAffinity((900...1500).randomElement() ?? 1200)
+                try! n.setAffinity((900...1500).randomElement() ?? 1200)
                 context.insert(n)
             }
             
             /// Add boy names.
             for (sex, name) in names.boyNames {
-                let n = Name(name, sex: .male)
+                let n = try! Name(name, sex: .male)!
                 if n.text.contains("e") { n.toggleFavorite() }
-                n.setAffinity((900...1500).randomElement() ?? 1200)
+                try! n.setAffinity((900...1500).randomElement() ?? 1200)
                 context.insert(n)
             }
         }

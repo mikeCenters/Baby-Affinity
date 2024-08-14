@@ -91,7 +91,7 @@ import SwiftData
 
 #Preview {
     let names = (1...10).map {
-        Name("Name \($0)", sex: .male, affinityRating: 1200)
+        try! Name("Name \($0)", sex: .male)!
     }
     
     return List {

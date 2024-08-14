@@ -117,17 +117,39 @@ class NamePickerViewModel: ObservableObject {
         // Get the group rating.
         let groupRating = calculateGroupRating(winners: winners, losers: losers)
         
+        // FIXME: Check error handling. Possibly refactor.
         // Assign new Affinity ratings to names.
         for name in winners {
             let ratings = AffinityCalculator.getScores(winnerRating: name.affinityRating, loserRating: groupRating)
-            name.setAffinity(ratings.newWinnerRating)
-            name.increaseEvaluationCount()
+            
+            do {
+                try name.setAffinity(ratings.newWinnerRating)
+                name.increaseEvaluationCount()
+                
+            } catch Name.NameError.ratingBelowMinimum {
+                try! name.setAffinity(Name.minimumAffinityRating)
+                logError("Affinity Rating below minimum, \(Name.minimumAffinityRating). Affinity Calculator produced the updated rating when calculating winners.")
+                
+            } catch {
+                logError("Unexpected error: \(error.localizedDescription)")
+            }
         }
         
+        // FIXME: Check error handling. Possibly refactor.
         for name in losers {
             let ratings = AffinityCalculator.getScores(winnerRating: groupRating, loserRating: name.affinityRating)
-            name.setAffinity(ratings.newLoserRating)
-            name.increaseEvaluationCount()
+            
+            do {
+                try name.setAffinity(ratings.newLoserRating)
+                name.increaseEvaluationCount()
+                
+            } catch Name.NameError.ratingBelowMinimum {
+                try! name.setAffinity(Name.minimumAffinityRating)
+                logError("Affinity Rating below minimum, \(Name.minimumAffinityRating). Affinity Calculator produced the updated rating when calculating winners.")
+                
+            } catch {
+                logError("Unexpected error: \(error.localizedDescription)")
+            }
         }
     }
     

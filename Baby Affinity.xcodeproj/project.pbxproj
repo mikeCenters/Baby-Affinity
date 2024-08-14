@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		BA5EED312C69B5A400267AD1 /* NamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5EED302C69B5A400267AD1 /* NamesView.swift */; };
+		BA5EED342C6B0C4C00267AD1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5EED332C6B0C4C00267AD1 /* SettingsView.swift */; };
+		BA719A162C6C2C5600A552FA /* LogError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA719A152C6C2C5600A552FA /* LogError.swift */; };
 		BA9BAFE72C5ED484008D88A2 /* FavoriteNamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9BAFE62C5ED484008D88A2 /* FavoriteNamesView.swift */; };
 		BA9BF0B82C60A2CC0056334E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9BF0B72C60A2CC0056334E /* Extensions.swift */; };
 		BACC30302C48A977003CEC7C /* Baby_AffinityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC302F2C48A977003CEC7C /* Baby_AffinityApp.swift */; };
@@ -28,6 +30,8 @@
 		BAE858A02C6326C000177BA8 /* SexSelectionIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE8589F2C6326C000177BA8 /* SexSelectionIconView.swift */; };
 		BAE858A22C6335A400177BA8 /* NameCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE858A12C6335A400177BA8 /* NameCellView.swift */; };
 		BAE858A42C6349B900177BA8 /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE858A32C6349B900177BA8 /* LoadingIndicator.swift */; };
+		BAEBE3282C6B3E5F00035488 /* NameDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBE3272C6B3E5F00035488 /* NameDataManager.swift */; };
+		BAEBE32A2C6C134B00035488 /* NameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBE3292C6C134B00035488 /* NameTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +53,8 @@
 
 /* Begin PBXFileReference section */
 		BA5EED302C69B5A400267AD1 /* NamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamesView.swift; sourceTree = "<group>"; };
+		BA5EED332C6B0C4C00267AD1 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		BA719A152C6C2C5600A552FA /* LogError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogError.swift; sourceTree = "<group>"; };
 		BA9BAFE62C5ED484008D88A2 /* FavoriteNamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteNamesView.swift; sourceTree = "<group>"; };
 		BA9BF0B72C60A2CC0056334E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		BACC302C2C48A976003CEC7C /* Baby Affinity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Baby Affinity.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -72,6 +78,8 @@
 		BAE8589F2C6326C000177BA8 /* SexSelectionIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SexSelectionIconView.swift; sourceTree = "<group>"; };
 		BAE858A12C6335A400177BA8 /* NameCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameCellView.swift; sourceTree = "<group>"; };
 		BAE858A32C6349B900177BA8 /* LoadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
+		BAEBE3272C6B3E5F00035488 /* NameDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameDataManager.swift; sourceTree = "<group>"; };
+		BAEBE3292C6C134B00035488 /* NameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +107,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BA5EED322C6B0C3900267AD1 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				BA5EED332C6B0C4C00267AD1 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		BA9BF0B62C60A2BB0056334E /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -153,6 +169,7 @@
 			isa = PBXGroup;
 			children = (
 				BACC30422C48A979003CEC7C /* Baby_AffinityTests.swift */,
+				BAEBE3292C6C134B00035488 /* NameTests.swift */,
 			);
 			path = "Baby AffinityTests";
 			sourceTree = "<group>";
@@ -172,6 +189,7 @@
 				BACC30612C48C333003CEC7C /* Default Names */,
 				BACC305C2C48A9C1003CEC7C /* Name.swift */,
 				BACC305E2C48A9FF003CEC7C /* Sex.swift */,
+				BAEBE3272C6B3E5F00035488 /* NameDataManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -182,6 +200,7 @@
 				BAE8589E2C6326AD00177BA8 /* Components */,
 				BACC30642C5C7B67003CEC7C /* Home */,
 				BAE858962C61369A00177BA8 /* NamePicker */,
+				BA5EED322C6B0C3900267AD1 /* Settings */,
 				BACC30312C48A977003CEC7C /* ContentView.swift */,
 			);
 			path = View;
@@ -219,6 +238,7 @@
 			isa = PBXGroup;
 			children = (
 				BAE8589A2C6271C400177BA8 /* AffinityCalculator.swift */,
+				BA719A152C6C2C5600A552FA /* LogError.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -363,11 +383,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA719A162C6C2C5600A552FA /* LogError.swift in Sources */,
 				BAE858952C6114CB00177BA8 /* HomeView.swift in Sources */,
 				BAE858982C6136AE00177BA8 /* NamePickerView.swift in Sources */,
 				BA9BAFE72C5ED484008D88A2 /* FavoriteNamesView.swift in Sources */,
 				BAE858A22C6335A400177BA8 /* NameCellView.swift in Sources */,
 				BACC30632C48C34A003CEC7C /* DefaultBabyNames.swift in Sources */,
+				BA5EED342C6B0C4C00267AD1 /* SettingsView.swift in Sources */,
 				BAE8589B2C6271C400177BA8 /* AffinityCalculator.swift in Sources */,
 				BACC30662C5C7B7B003CEC7C /* TopNamesView.swift in Sources */,
 				BA9BF0B82C60A2CC0056334E /* Extensions.swift in Sources */,
@@ -376,6 +398,7 @@
 				BACC30322C48A977003CEC7C /* ContentView.swift in Sources */,
 				BACC305F2C48A9FF003CEC7C /* Sex.swift in Sources */,
 				BACC305D2C48A9C1003CEC7C /* Name.swift in Sources */,
+				BAEBE3282C6B3E5F00035488 /* NameDataManager.swift in Sources */,
 				BAE858A42C6349B900177BA8 /* LoadingIndicator.swift in Sources */,
 				BACC30302C48A977003CEC7C /* Baby_AffinityApp.swift in Sources */,
 				BAE8589D2C62BC4B00177BA8 /* NamePickerViewModel.swift in Sources */,
@@ -386,6 +409,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BAEBE32A2C6C134B00035488 /* NameTests.swift in Sources */,
 				BACC30432C48A979003CEC7C /* Baby_AffinityTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
