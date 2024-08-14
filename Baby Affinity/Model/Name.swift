@@ -23,7 +23,7 @@ final class Name {
     // MARK: - Errors
     
     /// Errors that can occur during `Name` initialization or modification.
-    enum NameError: Error {
+    enum NameError: Error, Equatable {
         case nameIsEmpty
         case ratingBelowMinimum(_ minimumRating: Int)
         case unableToInitialize
