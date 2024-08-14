@@ -1,5 +1,5 @@
 //
-//  NameDataManager.swift
+//  NamePersistenceController.swift
 //  Baby Affinity
 //
 //  Created by Mike Centers on 8/13/24.
@@ -8,7 +8,18 @@
 import Foundation
 import SwiftData
 
-protocol NameDataManager {
+/// A protocol for managing name data in the Baby Affinity app.
+///
+/// The `NamePersistenceController` protocol defines a set of methods for performing CRUD (Create, Read, Update, Delete)
+/// operations on `Name` objects, as well as additional methods for specific data queries.
+/// These methods support various functionalities within the app, including fetching names by different criteria,
+/// adding new names, deleting existing names, updating name details, and retrieving the rank of a name based on
+/// its affinity rating.
+///
+/// Implementers of this protocol are expected to handle the interaction with the underlying data storage
+/// mechanisms, ensuring that the data operations are executed asynchronously and can throw errors if any
+/// operation fails.
+protocol NamePersistenceController {
     
     /// Fetches all `Name` objects.
     /// - Parameter context: The model context used for fetching data.
@@ -83,7 +94,7 @@ protocol NameDataManager {
     func getRank(of name: Name, from context: ModelContext) async throws -> Int?
 }
 
-extension NameDataManager {
+extension NamePersistenceController {
     func fetchNames(context: ModelContext) async throws -> [Name] {
         let descriptor = FetchDescriptor<Name>()
         return try context.fetch(descriptor)
