@@ -30,7 +30,7 @@
 		BAE858A02C6326C000177BA8 /* SexSelectionIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE8589F2C6326C000177BA8 /* SexSelectionIconView.swift */; };
 		BAE858A22C6335A400177BA8 /* NameCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE858A12C6335A400177BA8 /* NameCellView.swift */; };
 		BAE858A42C6349B900177BA8 /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE858A32C6349B900177BA8 /* LoadingIndicator.swift */; };
-		BAEBE3282C6B3E5F00035488 /* NameDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBE3272C6B3E5F00035488 /* NameDataManager.swift */; };
+		BAEBE3282C6B3E5F00035488 /* NamePersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBE3272C6B3E5F00035488 /* NamePersistenceController.swift */; };
 		BAEBE32A2C6C134B00035488 /* NameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBE3292C6C134B00035488 /* NameTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -78,7 +78,7 @@
 		BAE8589F2C6326C000177BA8 /* SexSelectionIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SexSelectionIconView.swift; sourceTree = "<group>"; };
 		BAE858A12C6335A400177BA8 /* NameCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameCellView.swift; sourceTree = "<group>"; };
 		BAE858A32C6349B900177BA8 /* LoadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
-		BAEBE3272C6B3E5F00035488 /* NameDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameDataManager.swift; sourceTree = "<group>"; };
+		BAEBE3272C6B3E5F00035488 /* NamePersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePersistenceController.swift; sourceTree = "<group>"; };
 		BAEBE3292C6C134B00035488 /* NameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -189,7 +189,7 @@
 				BACC30612C48C333003CEC7C /* Default Names */,
 				BACC305C2C48A9C1003CEC7C /* Name.swift */,
 				BACC305E2C48A9FF003CEC7C /* Sex.swift */,
-				BAEBE3272C6B3E5F00035488 /* NameDataManager.swift */,
+				BAEBE3272C6B3E5F00035488 /* NamePersistenceController.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -398,7 +398,7 @@
 				BACC30322C48A977003CEC7C /* ContentView.swift in Sources */,
 				BACC305F2C48A9FF003CEC7C /* Sex.swift in Sources */,
 				BACC305D2C48A9C1003CEC7C /* Name.swift in Sources */,
-				BAEBE3282C6B3E5F00035488 /* NameDataManager.swift in Sources */,
+				BAEBE3282C6B3E5F00035488 /* NamePersistenceController.swift in Sources */,
 				BAE858A42C6349B900177BA8 /* LoadingIndicator.swift in Sources */,
 				BACC30302C48A977003CEC7C /* Baby_AffinityApp.swift in Sources */,
 				BAE8589D2C62BC4B00177BA8 /* NamePickerViewModel.swift in Sources */,
