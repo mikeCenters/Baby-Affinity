@@ -4,12 +4,6 @@
 //
 //  Created by Mike Centers on 7/17/24.
 //
-//
-//  Name.swift
-//  Baby Affinity
-//
-//  Created by Mike Centers on 7/17/24.
-//
 
 import Foundation
 import SwiftData
@@ -123,25 +117,8 @@ extension Name {
 
 
 // FIXME: Move to NameDataManager
+
 extension Name {
-    
-    /// Get the rank of the `Name` within its `Sex` category, based on affinityRating.
-    /// - Parameter context: The context to fetch the names from.
-    /// - Returns: The rank of the name, or `nil` if the name is not found.
-    func getRank(from context: ModelContext) -> Int? {
-        let sex = self.sexRawValue
-        let descriptor = FetchDescriptor<Name>(
-            predicate: #Predicate { $0.sexRawValue == sex },
-            sortBy: [
-                .init(\.affinityRating, order: .reverse)
-            ]
-        )
-        
-        let names = try? context.fetch(descriptor)
-        
-        return names?.firstIndex(of: self).map { $0 + 1 }
-    }
-    
     
     /// Prepare the default names for insertion into the database.
     /// - Returns: An array of `Name` objects.
@@ -167,6 +144,7 @@ extension Name {
         
         return newNames
     }
+    
     
     /// Insert names into the provided context in batches.
     /// - Parameters:
@@ -196,5 +174,28 @@ extension Name {
             
             try context.save()
         }
+    }
+}
+
+
+// MARK: - Migrated to NameDataManager
+
+extension Name {
+    
+    /// Get the rank of the `Name` within its `Sex` category, based on affinityRating.
+    /// - Parameter context: The context to fetch the names from.
+    /// - Returns: The rank of the name, or `nil` if the name is not found.
+    func getRank(from context: ModelContext) -> Int? {
+        let sex = self.sexRawValue
+        let descriptor = FetchDescriptor<Name>(
+            predicate: #Predicate { $0.sexRawValue == sex },
+            sortBy: [
+                .init(\.affinityRating, order: .reverse)
+            ]
+        )
+        
+        let names = try? context.fetch(descriptor)
+        
+        return names?.firstIndex(of: self).map { $0 + 1 }
     }
 }
