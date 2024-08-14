@@ -51,14 +51,14 @@ struct ContentView: View {
             
             // MARK: - Settings
             
-            Text("Settings")
-            .tabItem {
-                Label {
-                    Text("Settings")
-                } icon: {
-                    Image(systemName: "gearshape")
+            SettingsView()
+                .tabItem {
+                    Label {
+                        Text("Settings")
+                    } icon: {
+                        Image(systemName: "gearshape")
+                    }
                 }
-            }
         }
         .modelContext(modelContext)
         .tint(selectedSex == .male ? .blue : .pink)
