@@ -76,7 +76,7 @@ struct TopNamesView: View {
     // MARK: - Body
     
     var body: some View {
-        Section(header: Text("Top \(selectedSex.alternateName) Names")) {
+        Section(header: Text("Top \(selectedSex.childNaming) Names")) {
             
             // MARK: - Cell View
             

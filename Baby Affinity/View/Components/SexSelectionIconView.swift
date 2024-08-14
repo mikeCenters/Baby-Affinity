@@ -40,8 +40,8 @@ struct SexSelectionIconView: View {
                         selectedSex = sex
                     }
                 } label: {
-                    // Display the alternate name for each sex.
-                    Text(sex.alternateName)
+                    // Display the child naming convention for each sex.
+                    Text(sex.childNaming)
                 }
             }
         }

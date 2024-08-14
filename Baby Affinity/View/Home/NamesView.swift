@@ -47,7 +47,7 @@ struct NamesView: View {
     var body: some View {
         NavigationStack {
             List {
-                Section(header: Text("All \(selectedSex.alternateName) Names")) {
+                Section(header: Text("All \(selectedSex.childNaming) Names")) {
                     
                     ForEach(Array(names.enumerated()), id: \.element) { (index, name) in
                         /// The array is arranged in descending order of the rank.

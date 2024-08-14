@@ -60,7 +60,7 @@ struct FavoriteNamesView: View {
     
     var body: some View {
         Section(
-            header: Text("Favorite \(selectedSex.alternateName) Names")) {
+            header: Text("Favorite \(selectedSex.childNaming) Names")) {
                 
                 // MARK: - Body
                 
@@ -131,7 +131,7 @@ extension FavoriteNamesView {
     
     /// The text to be displayed when no favorite `Name`s are found.
     private var noFavoritesText: String {
-        "No favorite \(selectedSex.alternateName.lowercased()) names are found! Try adding them to your favorites to keep them available here."
+        "No favorite \(selectedSex.childNaming.lowercased()) names are found! Try adding them to your favorites to keep them available here."
     }
     
     /// A view to display when no favorite `Name`s are found.
