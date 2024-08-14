@@ -83,7 +83,7 @@ final class Name {
         // Set default values
         self.text = text
         self.sexRawValue = sex.rawValue
-        self.affinityRating = Name.defaultAffinityRating
+        self.affinityRating = affinityRating
         self.evaluated = Name.defaultEvaluationCount
         self.isFavorite = Name.defaultFavoriteStatus
     }
