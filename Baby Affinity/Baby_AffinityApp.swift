@@ -31,20 +31,29 @@ struct Baby_AffinityApp: App {
         WindowGroup {
             ContentView()
                 .onAppear {
-                    Task(priority: .background) {
-                        // Prepare data in the background
-                        let newNames = await Name.prepareDefaultNames()
-                        
-                        // Insert names on the main actor
-                        do {
-                            try await Name.insertNames(newNames, into: sharedModelContainer.mainContext)
-                        } catch {
-                            print("Failed to load default names: \(error)")
-                        }
+                    withAnimation {
+                        loadData()
                     }
                 }
         }
         .modelContainer(sharedModelContainer)
+    }
+}
+
+
+// MARK: - Persistence Management
+
+extension Baby_AffinityApp: NamePersistenceController_Admin {
+    @MainActor
+    private func loadData() {
+        do {
+            if try fetchNames(context: sharedModelContainer.mainContext).isEmpty {
+                try loadDefaultNames(into: sharedModelContainer.mainContext)
+            }
+        } catch {
+            fatalError("Unable to load default data on initial app launch: \(error)")
+        }
+        
     }
 }
 

@@ -80,6 +80,32 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         }
     }
     
+    func testLoadDefaultNames_Raw() {
+        let nameData = DefaultBabyNames()
+        let totalNamesCount = nameData.girlNames.count + nameData.boyNames.count
+        
+        /// Add girl names.
+        for (_, name) in nameData.girlNames {
+            let n = try! Name(name, sex: .female)!
+            context.insert(n)
+        }
+        
+        /// Add boy names.
+        for (_, name) in nameData.boyNames {
+            let n = try! Name(name, sex: .male)!
+            context.insert(n)
+        }
+        
+        do {
+            let names = try fetchNames(context: context)
+            
+            XCTAssertEqual(names.count, totalNamesCount, "Not all names are in persistence.")
+            
+        } catch {
+            XCTFail("Unable to fetch names. Error: \(error)")
+        }
+    }
+    
     
     // MARK: - Create
     func testCreateName() throws {

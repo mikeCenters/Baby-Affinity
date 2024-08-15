@@ -178,9 +178,43 @@ extension NamePersistenceController_Admin {
     }
     
     func loadDefaultNames(into context: ModelContext) throws {
-        try context.transaction {
-            let defaultNames = getDefaultNames()
-            try insert(defaultNames, context: context)
+        let nameData = DefaultBabyNames()
+        let totalNamesCount = nameData.girlNames.count + nameData.boyNames.count
+        
+        /// Add girl names.
+        for (_, name) in nameData.girlNames {
+            let n = try! Name(name, sex: .female)!
+            context.insert(n)
+        }
+        
+        /// Add boy names.
+        for (_, name) in nameData.boyNames {
+            let n = try! Name(name, sex: .male)!
+            context.insert(n)
         }
     }
+    
+    // FIXME: - LoadDefaultNames should use the admin methods to insert the Names. Performance is sluggish in this method.
+    
+//    func _loadDefaultNames(into context: ModelContext) throws {
+//        let nameData = DefaultBabyNames()
+//        let totalNamesCount = nameData.girlNames.count + nameData.boyNames.count
+//        
+//        /// Add girl names.
+//        for (_, name) in nameData.girlNames {
+//            let n = try! Name(name, sex: .female)!
+//            context.insert(n)
+//        }
+//        
+//        /// Add boy names.
+//        for (_, name) in nameData.boyNames {
+//            let n = try! Name(name, sex: .male)!
+//            context.insert(n)
+//        }
+//        
+//        try context.transaction {
+//            let defaultNames = getDefaultNames()
+//            try insert(defaultNames, context: context)
+//        }
+//    }
 }

@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 /// A list view of the favorite `Name`s.
-struct FavoriteNamesView: View {
+struct FavoriteNamesView: View, NamePersistenceController {
     
     // MARK: - View States
     
@@ -75,7 +75,8 @@ struct FavoriteNamesView: View {
                     
                 case .showNames:        /// Favorites are available
                     ForEach(presentedNames.randomElements(count: Self.nameLimit), id: \.self) { name in
-                        NameCellView(name: name, rank: name.getRank(from: modelContext) ?? 0)
+                        let rank = try? getRank(of: name, from: modelContext)
+                        NameCellView(name: name, rank: rank ?? 0)
                     }
                 }
                 
