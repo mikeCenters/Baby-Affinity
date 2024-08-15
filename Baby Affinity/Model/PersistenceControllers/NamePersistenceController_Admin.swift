@@ -179,7 +179,6 @@ extension NamePersistenceController_Admin {
     
     func loadDefaultNames(into context: ModelContext) throws {
         let nameData = DefaultBabyNames()
-        let totalNamesCount = nameData.girlNames.count + nameData.boyNames.count
         
         /// Add girl names.
         for (_, name) in nameData.girlNames {
