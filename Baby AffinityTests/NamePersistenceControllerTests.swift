@@ -243,9 +243,9 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
 
     func testFetchFavoriteNames() throws {
         var names: [Name] = []
-        /// Create 10 favorite names.
+        /// Create 10 favorite male names.
         (0..<10).forEach {
-            guard let name = createName("Favorite Name \($0 + 1)", sex: .male) else {
+            guard let name = createName("Male Favorite Name \($0 + 1)", sex: .male) else {
                 XCTFail("Unable to create a new Name.")
                 return
             }
@@ -253,9 +253,28 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
             names.append(name)
         }
         
-        /// Create 10 non-favorite names.
+        /// Create 10 non-favorite male names.
         (0..<10).forEach {
-            guard let name = createName("Non-Favorite Name \($0 + 1)", sex: .male) else {
+            guard let name = createName("Male Non-Favorite Name \($0 + 1)", sex: .male) else {
+                XCTFail("Unable to create a new Name.")
+                return
+            }
+            names.append(name)
+        }
+        
+        /// Create 10 favorite female names.
+        (0..<10).forEach {
+            guard let name = createName("Female Favorite Name \($0 + 1)", sex: .female) else {
+                XCTFail("Unable to create a new Name.")
+                return
+            }
+            name.toggleFavorite()
+            names.append(name)
+        }
+        
+        /// Create 10 non-favorite female names.
+        (0..<10).forEach {
+            guard let name = createName("Female Non-Favorite Name \($0 + 1)", sex: .female) else {
                 XCTFail("Unable to create a new Name.")
                 return
             }
@@ -264,8 +283,11 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         
         try insert(names, context: context)
 
-        let favoriteNames = try fetchFavoriteNames(context: context)
-        XCTAssertEqual(favoriteNames.count, 10, "Only 10 favorite names should exist.")
+        let maleFavoriteNames = try fetchFavoriteNames(sex: .male, context: context)
+        XCTAssertEqual(maleFavoriteNames.count, 10, "Only 10 favorite male names should exist.")
+        
+        let femaleFavoriteNames = try fetchFavoriteNames(sex: .female, context: context)
+        XCTAssertEqual(femaleFavoriteNames.count, 10, "Only 10 favorite male names should exist.")
     }
     
     

@@ -139,4 +139,20 @@ let previewModelContainer_WithFavorites: ModelContainer = {
     }
 }()
 
+/// `Model Container` used for testing and previews. Will have an empty persistent store.
+let previewModelContainer_EmptyStore: ModelContainer = {
+    let schema = Schema([
+        Name.self,
+    ])
+    let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    
+    do {
+        let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+        
+        return container
+    } catch {
+        fatalError("Could not create ModelContainer: \(error)")
+    }
+}()
+
 #endif

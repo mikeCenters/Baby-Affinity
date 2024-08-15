@@ -8,30 +8,13 @@
 import SwiftUI
 import SwiftData
 
-/// A list view of the favorite `Name`s.
+/// A list view of the favorite `Name` objects.
 struct FavoriteNamesView: View, NamePersistenceController {
     
     // MARK: - View States
     
     enum States {
         case isLoading, noFavorites, showNames
-    }
-    
-    
-    // MARK: - Fetch Descriptor
-    
-    /// Returns a `FetchDescriptor` for fetching `Name` objects filtered by sex and favorite status, sorted by affinity rating in descending order.
-    ///
-    /// - Parameter sex: The `Sex` value to filter the `Name` objects by.
-    /// - Returns: A `FetchDescriptor` configured with the specified predicate and sort order.
-    static private func getFetchDescriptor(_ sex: Sex) -> FetchDescriptor<Name> {
-        FetchDescriptor<Name>(
-            predicate: #Predicate {
-                $0.sexRawValue == sex.rawValue &&
-                $0.isFavorite
-            },
-            sortBy: [.init(\.affinityRating, order: .reverse)]
-        )
     }
     
     
@@ -53,7 +36,8 @@ struct FavoriteNamesView: View, NamePersistenceController {
     static private let nameLimit = 5
     
     /// The state of the view.
-    @State private var viewState: FavoriteNamesView.States = .isLoading
+    @State var viewState: FavoriteNamesView.States = .isLoading
+    @State private var isLoading = true
     
     
     // MARK: - Body
@@ -66,7 +50,7 @@ struct FavoriteNamesView: View, NamePersistenceController {
                 
                 switch viewState {
                 case .isLoading:        /// View is loading names
-                    LoadingIndicator(isLoading: .constant(true))
+                    LoadingIndicator(isLoading: $isLoading)
                     
                 case .noFavorites:      /// No favorite names are available
                     noFavoritesFound
@@ -170,12 +154,19 @@ extension FavoriteNamesView {
         presentedNames = []
         
         do {
-            let names = try modelContext.fetch(Self.getFetchDescriptor(selectedSex))
-            presentedNames = names.randomElements(count: Self.nameLimit)
+            let names = try fetchFavoriteNames(sex: selectedSex, context: modelContext)
+            let namesToShow = names.randomElements(count: Self.nameLimit)
+            presentedNames = namesToShow.sorted { $0.affinityRating > $1.affinityRating }
             
+            handleViewState()
         } catch {
-            fatalError("Could not fetch names for the Favorite Names View: \(error)")
+            logError("Could not fetch names for the Favorite Names View: \(error)")
         }
+        
+    }
+    
+    private func handleViewState() {
+        viewState = presentedNames.isEmpty ? .noFavorites : .showNames
     }
 }
 
@@ -184,12 +175,25 @@ extension FavoriteNamesView {
 
 // MARK: - Preview
 
-#Preview {
+#Preview("Favorites are available") {
     List {
         FavoriteNamesView()
     }
     .modelContainer(previewModelContainer_WithFavorites)
-//    .modelContainer(previewModelContainer)
+}
+
+#Preview("Favorites are not available") {
+    List {
+        FavoriteNamesView()
+    }
+    .modelContainer(previewModelContainer)
+}
+
+#Preview("View is loading") {
+    List {
+        FavoriteNamesView(viewState: .isLoading)
+    }
+    .modelContainer(previewModelContainer_EmptyStore)
 }
 
 #endif

@@ -60,11 +60,13 @@ protocol NamePersistenceController {
     /// - Throws: An error if the fetch operation fails.
     func fetchName(byText text: String, sex: Sex, context: ModelContext) throws -> Name?
     
-    /// Fetches `Name` objects that are marked as favorites.
-    /// - Parameter context: The model context used for fetching data.
+    /// Fetches `Name` objects that are marked as favorites filtered by sex.
+    /// - Parameters:
+    ///   - sex: The sex to filter the `Name` objects by.
+    ///   - context: The model context used for fetching data.
     /// - Returns: An array of `Name` objects marked as favorites.
     /// - Throws: An error if the fetch operation fails.
-    func fetchFavoriteNames(context: ModelContext) throws -> [Name]
+    func fetchFavoriteNames(sex: Sex, context: ModelContext) throws -> [Name]
     
     /// Gets the rank of a `Name` object based on its affinity rating.
     /// - Parameters:
@@ -109,8 +111,12 @@ extension NamePersistenceController {
         return namesFetch.first
     }
     
-    func fetchFavoriteNames(context: ModelContext) throws -> [Name] {
-        let descriptor = FetchDescriptor<Name>(predicate: #Predicate { $0.isFavorite })
+    func fetchFavoriteNames(sex: Sex, context: ModelContext) throws -> [Name] {
+        let descriptor = FetchDescriptor<Name>(
+            predicate: #Predicate {
+                $0.isFavorite &&
+                $0.sexRawValue == sex.rawValue
+            })
         return try context.fetch(descriptor)
     }
     
