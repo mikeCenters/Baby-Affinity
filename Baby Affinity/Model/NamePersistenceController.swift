@@ -25,7 +25,7 @@ protocol NamePersistenceController {
     /// - Parameter context: The model context used for fetching data.
     /// - Returns: An array of `Name` objects.
     /// - Throws: An error if the fetch operation fails.
-    func fetchNames(context: ModelContext) async throws -> [Name]
+    func fetchNames(context: ModelContext) throws -> [Name]
     
     /// Fetches `Name` objects filtered by sex.
     /// - Parameters:
@@ -33,15 +33,7 @@ protocol NamePersistenceController {
     ///   - context: The model context used for fetching data.
     /// - Returns: An array of `Name` objects with the specified sex.
     /// - Throws: An error if the fetch operation fails.
-    func fetchNames(_ sex: Sex, context: ModelContext) async throws -> [Name]
-    
-    /// Fetches a `Name` object by its unique identifier.
-    /// - Parameters:
-    ///   - id: The unique identifier of the `Name` object.
-    ///   - context: The model context used for fetching data.
-    /// - Returns: The `Name` object with the specified identifier, or `nil` if not found.
-    /// - Throws: An error if the fetch operation fails.
-    func fetchName(byID id: PersistentIdentifier, context: ModelContext) async throws -> Name?
+    func fetchNames(_ sex: Sex, context: ModelContext) throws -> [Name]
     
     /// Fetches `Name` objects based on the evaluation count.
     /// - Parameters:
@@ -49,41 +41,21 @@ protocol NamePersistenceController {
     ///   - context: The model context used for fetching data.
     /// - Returns: An array of `Name` objects with the specified evaluation count.
     /// - Throws: An error if the fetch operation fails.
-    func fetchNames(evaluatedCount: Int, context: ModelContext) async throws -> [Name]
+    func fetchNames(evaluatedCount: Int, context: ModelContext) throws -> [Name]
+    
+    /// Fetches a `Name` object by its text property.
+    /// - Parameters:
+    ///   - text: The `String` representation of the name to be fetched.
+    ///   - context: The model context used for fetching data.
+    /// - Returns: The `Name` object with the specified identifier, or `nil` if not found.
+    /// - Throws: An error if the fetch operation fails.
+    func fetchName(byText text: String, context: ModelContext) throws -> Name?
     
     /// Fetches `Name` objects that are marked as favorites.
     /// - Parameter context: The model context used for fetching data.
     /// - Returns: An array of `Name` objects marked as favorites.
     /// - Throws: An error if the fetch operation fails.
-    func fetchFavoriteNames(context: ModelContext) async throws -> [Name]
-    
-    /// Adds a new `Name` object.
-    /// - Parameters:
-    ///   - name: The `Name` object to be added.
-    ///   - context: The model context used for adding data.
-    /// - Throws: An error if the add operation fails.
-    func addName(_ name: Name, context: ModelContext) async throws
-    
-    /// Deletes a `Name` object.
-    /// - Parameters:
-    ///   - name: The `Name` object to be deleted.
-    ///   - context: The model context used for deleting data.
-    /// - Throws: An error if the delete operation fails.
-    func deleteName(_ name: Name, context: ModelContext) async throws
-    
-    /// Deletes multiple `Name` objects.
-    /// - Parameters:
-    ///   - names: An array of `Name` objects to be deleted.
-    ///   - context: The model context used for deleting data.
-    /// - Throws: An error if the delete operation fails.
-    func deleteNames(_ names: [Name], context: ModelContext) async throws
-    
-    /// Updates an existing `Name` object.
-    /// - Parameters:
-    ///   - name: The `Name` object to be updated.
-    ///   - context: The model context used for updating data.
-    /// - Throws: An error if the update operation fails.
-    func updateName(_ name: Name, context: ModelContext) async throws
+    func fetchFavoriteNames(context: ModelContext) throws -> [Name]
     
     /// Gets the rank of a `Name` object based on its affinity rating.
     /// - Parameters:
@@ -91,55 +63,41 @@ protocol NamePersistenceController {
     ///   - context: The model context used for fetching data.
     /// - Returns: The rank of the `Name` object, or `nil` if not found.
     /// - Throws: An error if the fetch operation fails.
-    func getRank(of name: Name, from context: ModelContext) async throws -> Int?
+    func getRank(of name: Name, from context: ModelContext) throws -> Int?
 }
 
 extension NamePersistenceController {
-    func fetchNames(context: ModelContext) async throws -> [Name] {
+    
+    // MARK: - Fetch
+    
+    func fetchNames(context: ModelContext) throws -> [Name] {
         let descriptor = FetchDescriptor<Name>()
         return try context.fetch(descriptor)
     }
-
-    func fetchNames(_ sex: Sex, context: ModelContext) async throws -> [Name] {
-        let descriptor = FetchDescriptor<Name>(predicate: #Predicate { $0.sex == sex })
+    
+    func fetchNames(_ sex: Sex, context: ModelContext) throws -> [Name] {
+        let descriptor = FetchDescriptor<Name>(predicate: #Predicate { $0.sexRawValue == sex.rawValue })
         return try context.fetch(descriptor)
     }
     
-    func fetchName(byID id: PersistentIdentifier, context: ModelContext) async throws -> Name? {
-        let descriptor = FetchDescriptor<Name>(predicate: #Predicate { $0.id == id })
-        return try context.fetch(descriptor).first
-    }
-    
-    func fetchNames(evaluatedCount: Int, context: ModelContext) async throws -> [Name] {
+    func fetchNames(evaluatedCount: Int, context: ModelContext) throws -> [Name] {
         let descriptor = FetchDescriptor<Name>(predicate: #Predicate { $0.evaluated == evaluatedCount })
         return try context.fetch(descriptor)
     }
     
-    func fetchFavoriteNames(context: ModelContext) async throws -> [Name] {
+    func fetchName(byText text: String, context: ModelContext) throws -> Name? {
+        let descriptor = FetchDescriptor<Name>(predicate: #Predicate { $0.text == text })
+        return try context.fetch(descriptor).first
+    }
+    
+    func fetchFavoriteNames(context: ModelContext) throws -> [Name] {
         let descriptor = FetchDescriptor<Name>(predicate: #Predicate { $0.isFavorite })
         return try context.fetch(descriptor)
     }
     
-    func addName(_ name: Name, context: ModelContext) async throws {
-        context.insert(name)
-        try context.save()
-    }
+    // MARK: - Methods
     
-    func deleteName(_ name: Name, context: ModelContext) async throws {
-        context.delete(name)
-        try context.save()
-    }
-    
-    func deleteNames(_ names: [Name], context: ModelContext) async throws {
-        names.forEach { context.delete($0) }
-        try context.save()
-    }
-    
-    func updateName(_ name: Name, context: ModelContext) async throws {
-        try context.save()
-    }
-    
-    func getRank(of name: Name, from context: ModelContext) async throws -> Int? {
+    func getRank(of name: Name, from context: ModelContext) throws -> Int? {
         let sex = name.sexRawValue
         let descriptor = FetchDescriptor<Name>(
             predicate: #Predicate { $0.sexRawValue == sex },
@@ -151,5 +109,154 @@ extension NamePersistenceController {
         let names = try context.fetch(descriptor)
         
         return names.firstIndex(of: name).map { $0 + 1 }
+    }
+}
+
+// MARK: - Admin
+
+/// A protocol for administrative operations on name data in the Baby Affinity app.
+///
+/// The `NamePersistenceController_Admin` protocol extends the `NamePersistenceController` protocol by adding methods
+/// for creating, deleting, and inserting `Name` objects, as well as retrieving default names. These methods are
+/// intended for use in administrative tasks, such as initializing the app's database with default names or
+/// removing names from the database.
+///
+/// Implementers of this protocol are responsible for ensuring that these administrative operations are performed
+/// correctly and efficiently, handling any errors that may occur during the process.
+protocol NamePersistenceController_Admin: NamePersistenceController {
+    
+    /// Creates a `Name` object.
+    /// - Parameters:
+    ///   - name: The `String` representation of the name to be created. This must not be empty.
+    ///   - sex: The `Sex` associated with the name, which determines its gender classification.
+    ///   - affinityRating: The initial affinity rating for the name. This must be a non-negative integer.
+    /// - Returns: A `Name` object if the creation is successful, or `nil` if an error occurs during initialization.
+    func createName(_ name: String, sex: Sex, affinityRating: Int) -> Name?
+    
+    /// Deletes a `Name` object.
+    /// - Parameters:
+    ///   - name: The `Name` object to be deleted.
+    ///   - context: The model context used for deleting data.
+    /// - Throws: An error if the delete operation fails.
+    func delete(_ name: Name, context: ModelContext) throws
+    
+    /// Deletes multiple `Name` objects.
+    /// - Parameters:
+    ///   - names: An array of `Name` objects to be deleted.
+    ///   - context: The model context used for deleting data.
+    /// - Throws: An error if the delete operation fails.
+    func delete(_ names: [Name], context: ModelContext) throws
+    
+    /// Inserts a `Name` object.
+    /// - Parameters:
+    ///   - name: The `Name` object to be inserted.
+    ///   - context: The model context used for inserting data.
+    /// - Throws: An error if the insert operation fails.
+    func insert(_ name: Name, context: ModelContext) throws
+    
+    /// Inserts multiple `Name` objects.
+    /// - Parameters:
+    ///   - names: An array of `Name` objects to be inserted.
+    ///   - context: The model context used for inserting data.
+    /// - Throws: An error if the insert operation fails.
+    func insert(_ names: [Name], context: ModelContext) throws
+    
+    /// Retrieves a list of default `Name` objects, optionally filtered by sex.
+    /// - Parameter sex: An optional `Sex` value to filter the names by. If `nil`, both male and female names are returned.
+    /// - Returns: An array of `Name` objects. If `sex` is provided, only names of that sex are returned. If `sex` is `nil`, names of both sexes are returned.
+    func getDefaultNames(_ sex: Sex?) -> [Name]
+    
+    /// Loads default `Name` objects into the data context.
+    /// - Parameter context: The model context used for inserting data.
+    /// - Throws: An error if the insert operation fails.
+    func loadDefaultNames(into context: ModelContext) throws
+}
+
+
+extension NamePersistenceController_Admin {
+    
+    // MARK: - Create
+    
+    func createName(_ name: String, sex: Sex, affinityRating: Int = Name.defaultAffinityRating) -> Name? {
+        do {
+            return try Name(name, sex: sex, affinityRating: affinityRating)
+        } catch Name.NameError.nameIsEmpty {
+            logError("Error: The name cannot be empty. Skipping: \(name)")
+        } catch Name.NameError.ratingBelowMinimum(let minimum) {
+            logError("Error: The affinity rating is below the minimum (\(minimum)). Skipping: \(name)")
+        } catch {
+            logError("Unexpected error initializing Name: \(error.localizedDescription). Skipping: \(name)")
+        }
+        return nil
+    }
+    
+    
+    // MARK: - Delete
+    
+    func delete(_ name: Name, context: ModelContext) throws {
+        context.delete(name)
+        try context.save()
+    }
+    
+    func delete(_ names: [Name], context: ModelContext) throws {
+        for name in names {
+            try delete(name, context: context)
+        }
+    }
+    
+    
+    // MARK: - Insert
+    
+    func insert(_ name: Name, context: ModelContext) throws {
+        context.insert(name)
+        try context.save()
+    }
+    
+    func insert(_ names: [Name], context: ModelContext) throws {
+        for name in names {
+            try insert(name, context: context)
+        }
+    }
+}
+
+
+// MARK: - Default Data
+
+extension NamePersistenceController_Admin {
+    
+    func getDefaultNames(_ sex: Sex? = nil) -> [Name] {
+        var names: [Name] = []
+        
+        switch sex {
+        case .female:   // Female Names
+            for (_, name) in DefaultBabyNames().girlNames {
+                if let newName = createName(name, sex: .female) {
+                    names.append(newName)
+                }
+            }
+        case .male:     // Male Names
+            for (_, name) in DefaultBabyNames().boyNames {
+                if let newName = createName(name, sex: .male) {
+                    names.append(newName)
+                }
+            }
+        default:        // All Names
+            for (_, name) in DefaultBabyNames().girlNames {
+                if let newName = createName(name, sex: .female) {
+                    names.append(newName)
+                }
+            }
+            for (_, name) in DefaultBabyNames().boyNames {
+                if let newName = createName(name, sex: .male) {
+                    names.append(newName)
+                }
+            }
+        }
+        return names
+    }
+    
+    func loadDefaultNames(into context: ModelContext) throws {
+        let defaultNames = getDefaultNames()
+        try insert(defaultNames, context: context)
     }
 }

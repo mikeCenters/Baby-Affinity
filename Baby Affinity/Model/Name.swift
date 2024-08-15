@@ -49,7 +49,7 @@ final class Name {
     private(set) var sexRawValue: Int
     
     /// The text representation of the name. This must be unique.
-    @Attribute(.unique) private(set) var text: String
+    private(set) var text: String
     
     /// The number of times the name has been evaluated by the user.
     private(set) var evaluated: Int
@@ -74,6 +74,7 @@ final class Name {
         guard !text.isEmpty else {
             throw NameError.nameIsEmpty
         }
+        // FIXME: Throw error when name exists for the sex.
         
         // Check if affinity rating is valid
         guard affinityRating >= Name.minimumAffinityRating else {
@@ -116,35 +117,9 @@ extension Name {
 }
 
 
-// FIXME: Move to NameDataManager
+// MARK: - Migrated to NameDataManager
 
 extension Name {
-    
-    /// Prepare the default names for insertion into the database.
-    /// - Returns: An array of `Name` objects.
-    static func prepareDefaultNames() async -> [Name] {
-        // Access default names
-        let names = DefaultBabyNames()
-        
-        // Prepare new names for insertion
-        var newNames: [Name] = []
-
-        
-        // FIXME: Try statements
-        // Add girl names
-        for (_, name) in names.girlNames {
-            newNames.append(try! Name(name, sex: .female)!)
-        }
-        
-        // FIXME: Try statements
-        // Add boy names
-        for (_, name) in names.boyNames {
-            newNames.append(try! Name(name, sex: .male)!)
-        }
-        
-        return newNames
-    }
-    
     
     /// Insert names into the provided context in batches.
     /// - Parameters:
@@ -175,12 +150,6 @@ extension Name {
             try context.save()
         }
     }
-}
-
-
-// MARK: - Migrated to NameDataManager
-
-extension Name {
     
     /// Get the rank of the `Name` within its `Sex` category, based on affinityRating.
     /// - Parameter context: The context to fetch the names from.
@@ -197,5 +166,31 @@ extension Name {
         let names = try? context.fetch(descriptor)
         
         return names?.firstIndex(of: self).map { $0 + 1 }
+    }
+    
+    
+    /// Prepare the default names for insertion into the database.
+    /// - Returns: An array of `Name` objects.
+    static func prepareDefaultNames() async -> [Name] {
+        // Access default names
+        let names = DefaultBabyNames()
+        
+        // Prepare new names for insertion
+        var newNames: [Name] = []
+
+        
+        // FIXME: Try statements
+        // Add girl names
+        for (_, name) in names.girlNames {
+            newNames.append(try! Name(name, sex: .female)!)
+        }
+        
+        // FIXME: Try statements
+        // Add boy names
+        for (_, name) in names.boyNames {
+            newNames.append(try! Name(name, sex: .male)!)
+        }
+        
+        return newNames
     }
 }
