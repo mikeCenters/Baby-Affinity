@@ -106,7 +106,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         }
         
         try insert(name, context: context)
-        let fetchedName = try fetchName(byText: "Mike", context: context)
+        let fetchedName = try fetchName(byText: "Mike", sex: .male, context: context)
         
         XCTAssertEqual(fetchedName?.text, "Mike", "The inserted name text should be 'Mike'.")
     }
@@ -130,22 +130,44 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         }
     }
     
-    func testInsertDuplicateNames() throws {
+    func testInsertName_ThrowsDuplicateNameInserted() throws {
+        guard let maleName = createName("Mike", sex: .male),
+              let femaleName = createName("Mike", sex: .female)
+        else {
+            XCTFail("Unable to create a new Name.")
+            return
+        }
         
+        XCTAssertNoThrow(try insert(maleName, context: context), "Should be able to insert Name.")
+        XCTAssertNoThrow(try insert(femaleName, context: context), "Should be able to insert Name.")
+        XCTAssertThrowsError(try insert(maleName, context: context), "Should be not be able to insert Name.")
+        XCTAssertThrowsError(try insert(femaleName, context: context), "Should be not be able to insert Name.")
     }
     
     
     // MARK: - Fetch
     
     func testFetchNames_ByText() throws {
-        let names = try fetchNames(context: context)
-        XCTAssertEqual(names.count, 0)
+        guard let maleName = try Name("Mike", sex: .male),
+              let femaleName = try Name("Mike", sex: .female)
+        else {
+            XCTFail("Unable to create a Name.")
+            return
+        }
         
-        let name = try Name("Mike", sex: .male)
-        context.insert(name!)
-        let fetchedNames = try fetchNames(context: context)
-        XCTAssertEqual(fetchedNames.count, 1)
-        XCTAssertEqual(fetchedNames.first?.text, "Mike")
+        XCTAssertTrue(try fetchNames(context: context).isEmpty, "No names should be inserted")
+        XCTAssertNoThrow(try insert(maleName, context: context), "Should be able to insert name.")
+        XCTAssertNoThrow(try insert(femaleName, context: context), "Should be able to insert name.")
+        
+        guard let maleFetch = try fetchName(byText: maleName.text, sex: .male, context: context),
+              let femaleFetch = try fetchName(byText: femaleName.text, sex: .female, context: context)
+        else {
+            XCTFail("Unable to fetch inserted names.")
+            return
+        }
+        
+        XCTAssertEqual(maleName, maleFetch, "Male names should be the same.")
+        XCTAssertEqual(femaleName, femaleFetch, "Female names should be the same.")
     }
     
     func testFetchNames_BySex() throws {
@@ -189,7 +211,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         
         try insert(name, context: context)
 
-        let fetchedName = try fetchName(byText: "Mike", context: context)
+        let fetchedName = try fetchName(byText: "Mike", sex: .male, context: context)
         XCTAssertEqual(fetchedName?.text, "Mike", "Unable to find the Name by its text.")
     }
 
@@ -197,7 +219,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         var names: [Name] = []
         /// Create 10 favorite names.
         (0..<10).forEach {
-            guard let name = createName("Name \($0 + 1)", sex: .male) else {
+            guard let name = createName("Favorite Name \($0 + 1)", sex: .male) else {
                 XCTFail("Unable to create a new Name.")
                 return
             }
@@ -207,7 +229,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         
         /// Create 10 non-favorite names.
         (0..<10).forEach {
-            guard let name = createName("Name \($0 + 1)", sex: .male) else {
+            guard let name = createName("Non-Favorite Name \($0 + 1)", sex: .male) else {
                 XCTFail("Unable to create a new Name.")
                 return
             }
@@ -231,7 +253,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         
         // Insert the name.
         try insert(name, context: context)
-        guard let fetchedName = try fetchName(byText: "Mike", context: context) else {
+        guard let fetchedName = try fetchName(byText: "Mike", sex: .male, context: context) else {
             XCTFail("Name is not inserted.")
             return
         }
@@ -239,7 +261,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         // Delete the inserted name.
         try delete(fetchedName, context: context)
         
-        let nilName = try fetchName(byText: "Mike", context: context)
+        let nilName = try fetchName(byText: "Mike", sex: .male, context: context)
         XCTAssertNil(nilName, "Name is not deleted.")
     }
     
