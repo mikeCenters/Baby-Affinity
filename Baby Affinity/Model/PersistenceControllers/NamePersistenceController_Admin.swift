@@ -1,135 +1,14 @@
 //
-//  NamePersistenceController.swift
+//  NamePersistenceController_Admin.swift
 //  Baby Affinity
 //
-//  Created by Mike Centers on 8/13/24.
+//  Created by Mike Centers on 8/15/24.
 //
 
 import Foundation
 import SwiftData
 
-enum NamePersistenceError: Error {
-    case duplicateNameInserted(_ name: String)
-}
-
-
-
-/// A protocol for managing name data in the Baby Affinity app.
-///
-/// The `NamePersistenceController` protocol defines a set of methods for performing CRUD (Create, Read, Update, Delete)
-/// operations on `Name` objects, as well as additional methods for specific data queries.
-/// These methods support various functionalities within the app, including fetching names by different criteria,
-/// adding new names, deleting existing names, updating name details, and retrieving the rank of a name based on
-/// its affinity rating.
-///
-/// Implementers of this protocol are expected to handle the interaction with the underlying data storage
-/// mechanisms, ensuring that the data operations are executed asynchronously and can throw errors if any
-/// operation fails.
-protocol NamePersistenceController {
-    
-    /// Fetches all `Name` objects.
-    /// - Parameter context: The model context used for fetching data.
-    /// - Returns: An array of `Name` objects.
-    /// - Throws: An error if the fetch operation fails.
-    func fetchNames(context: ModelContext) throws -> [Name]
-    
-    /// Fetches `Name` objects filtered by sex.
-    /// - Parameters:
-    ///   - sex: The sex to filter the `Name` objects by.
-    ///   - context: The model context used for fetching data.
-    /// - Returns: An array of `Name` objects with the specified sex.
-    /// - Throws: An error if the fetch operation fails.
-    func fetchNames(_ sex: Sex, context: ModelContext) throws -> [Name]
-    
-    /// Fetches `Name` objects based on the evaluation count.
-    /// - Parameters:
-    ///   - evaluatedCount: The number of times the `Name` objects have been evaluated.
-    ///   - context: The model context used for fetching data.
-    /// - Returns: An array of `Name` objects with the specified evaluation count.
-    /// - Throws: An error if the fetch operation fails.
-    func fetchNames(evaluatedCount: Int, context: ModelContext) throws -> [Name]
-    
-    /// Fetches a `Name` object by its text property.
-    /// - Parameters:
-    ///   - text: The `String` representation of the name to be fetched.
-    ///   - context: The model context used for fetching data.
-    ///   - sex: The `Sex` of the `Name` object.
-    /// - Returns: The `Name` object with the specified identifier, or `nil` if not found.
-    /// - Throws: An error if the fetch operation fails.
-    func fetchName(byText text: String, sex: Sex, context: ModelContext) throws -> Name?
-    
-    /// Fetches `Name` objects that are marked as favorites.
-    /// - Parameter context: The model context used for fetching data.
-    /// - Returns: An array of `Name` objects marked as favorites.
-    /// - Throws: An error if the fetch operation fails.
-    func fetchFavoriteNames(context: ModelContext) throws -> [Name]
-    
-    /// Gets the rank of a `Name` object based on its affinity rating.
-    /// - Parameters:
-    ///   - name: The `Name` object to get the rank of.
-    ///   - context: The model context used for fetching data.
-    /// - Returns: The rank of the `Name` object, or `nil` if not found.
-    /// - Throws: An error if the fetch operation fails.
-    func getRank(of name: Name, from context: ModelContext) throws -> Int?
-}
-
-extension NamePersistenceController {
-    
-    // MARK: - Fetch
-    
-    func fetchNames(context: ModelContext) throws -> [Name] {
-        let descriptor = FetchDescriptor<Name>()
-        return try context.fetch(descriptor)
-    }
-    
-    func fetchNames(_ sex: Sex, context: ModelContext) throws -> [Name] {
-        let descriptor = FetchDescriptor<Name>(predicate: #Predicate { $0.sexRawValue == sex.rawValue })
-        return try context.fetch(descriptor)
-    }
-    
-    func fetchNames(evaluatedCount: Int, context: ModelContext) throws -> [Name] {
-        let descriptor = FetchDescriptor<Name>(predicate: #Predicate { $0.evaluated == evaluatedCount })
-        return try context.fetch(descriptor)
-    }
-    
-    func fetchName(byText text: String, sex: Sex, context: ModelContext) throws -> Name? {
-        let descriptor = FetchDescriptor<Name>(
-            predicate: #Predicate {
-                $0.text == text &&
-                $0.sexRawValue == sex.rawValue
-            })
-        let namesFetch = try context.fetch(descriptor)
-        
-        /// Check for multiple names being found.
-        if namesFetch.count > 1 {
-            logError("Multiple \(sex.sexNamingConvention.lowercased()) names of `\(text.capitalized)` were fetched!")
-        }
-        return namesFetch.first
-    }
-    
-    func fetchFavoriteNames(context: ModelContext) throws -> [Name] {
-        let descriptor = FetchDescriptor<Name>(predicate: #Predicate { $0.isFavorite })
-        return try context.fetch(descriptor)
-    }
-    
-    // MARK: - Methods
-    
-    func getRank(of name: Name, from context: ModelContext) throws -> Int? {
-        let sex = name.sexRawValue
-        let descriptor = FetchDescriptor<Name>(
-            predicate: #Predicate { $0.sexRawValue == sex },
-            sortBy: [
-                .init(\.affinityRating, order: .reverse)
-            ]
-        )
-        
-        let names = try context.fetch(descriptor)
-        
-        return names.firstIndex(of: name).map { $0 + 1 }
-    }
-}
-
-// MARK: - Admin
+// FIXME: Persistent Controller_Admin needs to throw errors, log them, and attempt to handle them. Then, build tests.
 
 /// A protocol for administrative operations on name data in the Baby Affinity app.
 ///
@@ -175,7 +54,7 @@ protocol NamePersistenceController_Admin: NamePersistenceController {
 
      This method checks if a `Name` with the same text and sex already exists in the context.
      If it does, it throws a `NamePersistenceError.duplicateNameInserted` error. If not,
-     it inserts the `Name` and saves the context.
+     it inserts the `Name`.
 
      - Parameters:
        - name: The `Name` object to be inserted.
@@ -183,17 +62,23 @@ protocol NamePersistenceController_Admin: NamePersistenceController {
 
      - Throws:
        - `NamePersistenceError.duplicateNameCreated` if a `Name` with the same text and sex already exists.
-       - Any error that occurs during the save operation.
-
-     - Example:
      */
     func insert(_ name: Name, context: ModelContext) throws
     
-    /// Inserts multiple `Name` objects.
-    /// - Parameters:
-    ///   - names: An array of `Name` objects to be inserted.
-    ///   - context: The model context used for inserting data.
-    /// - Throws: An error if the insert operation fails.
+    /**
+     Inserts multiple `Name` objects into the given context if it does not already exist.
+
+     This method checks if a `Name` with the same text and sex already exists in the context.
+     If it does, it throws a `NamePersistenceError.duplicateNameInserted` error. If not,
+     it inserts the `Name`.
+
+     - Parameters:
+       - name: The `Name` object to be inserted.
+       - context: The `ModelContext` where the `Name` should be inserted.
+
+     - Throws:
+       - `NamePersistenceError.duplicateNameCreated` if a `Name` with the same text and sex already exists.
+     */
     func insert(_ names: [Name], context: ModelContext) throws
     
     /// Retrieves a list of default `Name` objects, optionally filtered by sex.
@@ -230,7 +115,6 @@ extension NamePersistenceController_Admin {
     
     func delete(_ name: Name, context: ModelContext) throws {
         context.delete(name)
-        try context.save()
     }
     
     func delete(_ names: [Name], context: ModelContext) throws {
@@ -248,7 +132,6 @@ extension NamePersistenceController_Admin {
             throw NamePersistenceError.duplicateNameInserted(name.text)
         }
         context.insert(name)
-        try context.save()
     }
     
     func insert(_ names: [Name], context: ModelContext) throws {
@@ -295,7 +178,9 @@ extension NamePersistenceController_Admin {
     }
     
     func loadDefaultNames(into context: ModelContext) throws {
-        let defaultNames = getDefaultNames()
-        try insert(defaultNames, context: context)
+        try context.transaction {
+            let defaultNames = getDefaultNames()
+            try insert(defaultNames, context: context)
+        }
     }
 }

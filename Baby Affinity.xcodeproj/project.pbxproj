@@ -33,6 +33,7 @@
 		BAE858A42C6349B900177BA8 /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE858A32C6349B900177BA8 /* LoadingIndicator.swift */; };
 		BAEBE3282C6B3E5F00035488 /* NamePersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBE3272C6B3E5F00035488 /* NamePersistenceController.swift */; };
 		BAEBE32A2C6C134B00035488 /* NameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBE3292C6C134B00035488 /* NameTests.swift */; };
+		BAF3C6712C6EB1C2004F9E46 /* NamePersistenceController_Admin.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF3C6702C6EB1C2004F9E46 /* NamePersistenceController_Admin.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +83,7 @@
 		BAE858A32C6349B900177BA8 /* LoadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
 		BAEBE3272C6B3E5F00035488 /* NamePersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePersistenceController.swift; sourceTree = "<group>"; };
 		BAEBE3292C6C134B00035488 /* NameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameTests.swift; sourceTree = "<group>"; };
+		BAF3C6702C6EB1C2004F9E46 /* NamePersistenceController_Admin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePersistenceController_Admin.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -189,10 +191,10 @@
 		BACC305B2C48A99C003CEC7C /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				BAF3C66F2C6EB1A1004F9E46 /* PersistenceControllers */,
 				BACC30612C48C333003CEC7C /* Default Names */,
 				BACC305C2C48A9C1003CEC7C /* Name.swift */,
 				BACC305E2C48A9FF003CEC7C /* Sex.swift */,
-				BAEBE3272C6B3E5F00035488 /* NamePersistenceController.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -254,6 +256,15 @@
 				BAE858A32C6349B900177BA8 /* LoadingIndicator.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		BAF3C66F2C6EB1A1004F9E46 /* PersistenceControllers */ = {
+			isa = PBXGroup;
+			children = (
+				BAEBE3272C6B3E5F00035488 /* NamePersistenceController.swift */,
+				BAF3C6702C6EB1C2004F9E46 /* NamePersistenceController_Admin.swift */,
+			);
+			path = PersistenceControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -404,6 +415,7 @@
 				BAEBE3282C6B3E5F00035488 /* NamePersistenceController.swift in Sources */,
 				BAE858A42C6349B900177BA8 /* LoadingIndicator.swift in Sources */,
 				BACC30302C48A977003CEC7C /* Baby_AffinityApp.swift in Sources */,
+				BAF3C6712C6EB1C2004F9E46 /* NamePersistenceController_Admin.swift in Sources */,
 				BAE8589D2C62BC4B00177BA8 /* NamePickerViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
