@@ -7,96 +7,91 @@
 
 import SwiftUI
 
-// FIXME: Need to fix data manager first.
-
 extension SettingsView {
-    enum Destinations: Int, CaseIterable {
-        case about, contact, products
+    enum Item: Int, CaseIterable {
+        case appCard, about, contact, products, resetData
         
         var label: String {
             switch self {
+            case .appCard:
+                "App Card"
             case .about:
                 "About"
             case .contact:
                 "Contact Us"
             case .products:
                 "Products"
+            case .resetData:
+                "Reset Data"
             }
         }
         
-        var section: Int {
+        var sectionID: Int {
             switch self {
+            case .appCard:
+                1
             case .about:
-                1
+                2
             case .contact:
-                1
+                2
             case .products:
-                1
+                2
+            case .resetData:
+                3
             }
         }
         
-        var destination: some View {
-            Text("Some View")
+        var view: some View {
+            Group {
+                switch self {
+                case .appCard:
+                    AppCard()
+                case .about:
+                    Text("About")
+                case .contact:
+                    Text("Contact Us")
+                case .products:
+                    Text("Products")
+                case .resetData:
+                    ResetDataButton()
+                }
+            }
+        }
+        
+        static func getLastSectionID() -> Int {
+            var sectionCount: Int = 0
+            for label in Item.allCases {
+                if label.sectionID > sectionCount {
+                    sectionCount = label.sectionID
+                }
+            }
+            return sectionCount
         }
     }
 }
 
 
 struct SettingsView: View, NamePersistenceController_Admin {
+    
+    // MARK: - Properties
+    
     @Environment(\.modelContext) var modelContext
     
-    @State private var isShowingDataConfirmation: Bool = false
+    
+    // MARK: - Body
     
     var body: some View {
         NavigationStack {
             List {
-                Section {
-                    VStack(spacing: 8) {
-                        RoundedRectangle(cornerRadius: 60/3.14)
-                            .frame(width: 60, height: 60)
-                        
-                        Text("Baby Affinity")
-                            .font(.title3).bold()
-                        
-                        Text("Discover the perfect name for your baby, the app that generates a unique list of names just for you.")
-                            .font(.callout)
-                    }
-                    .multilineTextAlignment(.center)
-                    .padding()
-                }
-                
-                
-                // Section 1
-                Section {
-                    ForEach(SettingsView.Destinations.allCases, id: \.self) { item in
-                        if item.section == 1 {
-                            NavigationLink(destination: item.destination) {
-                                Text("Item \(item.label)")
+                /// Iterate over each section
+                ForEach(1...Item.getLastSectionID(), id: \.self) { sectionID in
+                    Section {
+                        /// Only display the items assigned to the sectionID.
+                        ForEach(Item.allCases, id: \.self) { item in
+                            if item.sectionID == sectionID {
+                                item.view
                             }
                         }
-                    }
-                }
-                
-                
-                // Reset Data
-                Section {
-                    Button {
-                        withAnimation {
-                            isShowingDataConfirmation.toggle()
-                        }
-                        
-                    } label: {
-                        Text("Reset Data")
-                    }
-                    .foregroundColor(.red)
-                    .confirmationDialog("Reset data",
-                                        isPresented: $isShowingDataConfirmation) {
-                        Button("Yes", role: .destructive) { 
-                            resetNameData(in: modelContext)
-                        }
-                        Button("Cancel", role: .cancel) { }
-                    } message: {
-                        Text("You are about to reset all data. Are you sure?")
                     }
                 }
             }
@@ -105,6 +100,28 @@ struct SettingsView: View, NamePersistenceController_Admin {
     }
 }
 
-#Preview {
-    SettingsView()
+
+#if DEBUG
+
+// MARK: - Previews
+
+#Preview("Settings View in Tab View") {
+    TabView {
+        SettingsView()
+            .tabItem {
+                Label {
+                    Text("Settings")
+                } icon: {
+                    Image(systemName: "gearshape")
+                }
+            }
+    }
+    .modelContainer(previewModelContainer)
 }
+
+#Preview("Settings View") {
+    SettingsView()
+        .modelContainer(previewModelContainer)
+}
+
+#endif
