@@ -37,6 +37,7 @@
 		BAF3C6732C6F886A004F9E46 /* ResetDataButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF3C6722C6F886A004F9E46 /* ResetDataButton.swift */; };
 		BAF3C6752C6F941E004F9E46 /* AppCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF3C6742C6F941E004F9E46 /* AppCard.swift */; };
 		BAF3C6772C6F9994004F9E46 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF3C6762C6F9994004F9E46 /* AboutView.swift */; };
+		BAF3C6792C6FAC45004F9E46 /* LegalInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF3C6782C6FAC45004F9E46 /* LegalInfoView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,6 +91,7 @@
 		BAF3C6722C6F886A004F9E46 /* ResetDataButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetDataButton.swift; sourceTree = "<group>"; };
 		BAF3C6742C6F941E004F9E46 /* AppCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCard.swift; sourceTree = "<group>"; };
 		BAF3C6762C6F9994004F9E46 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		BAF3C6782C6FAC45004F9E46 /* LegalInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegalInfoView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +126,7 @@
 				BAF3C6722C6F886A004F9E46 /* ResetDataButton.swift */,
 				BAF3C6742C6F941E004F9E46 /* AppCard.swift */,
 				BAF3C6762C6F9994004F9E46 /* AboutView.swift */,
+				BAF3C6782C6FAC45004F9E46 /* LegalInfoView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -408,6 +411,7 @@
 			files = (
 				BA719A162C6C2C5600A552FA /* LogError.swift in Sources */,
 				BAE858952C6114CB00177BA8 /* HomeView.swift in Sources */,
+				BAF3C6792C6FAC45004F9E46 /* LegalInfoView.swift in Sources */,
 				BAE858982C6136AE00177BA8 /* NamePickerView.swift in Sources */,
 				BA9BAFE72C5ED484008D88A2 /* FavoriteNamesView.swift in Sources */,
 				BAE858A22C6335A400177BA8 /* NameCellView.swift in Sources */,
