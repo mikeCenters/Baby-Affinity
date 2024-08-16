@@ -30,8 +30,8 @@ struct ResetDataButton: View, NamePersistenceController_Admin {
             
         } label: {
             Text("Reset Data")
+                .foregroundColor(.red)
         }
-        .foregroundColor(.red)
         .confirmationDialog("Reset data", isPresented: $isShowingConfirmation) {
             Button("Yes", role: .destructive) {
                 withAnimation {
