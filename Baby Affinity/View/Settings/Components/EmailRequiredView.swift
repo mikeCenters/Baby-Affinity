@@ -7,15 +7,18 @@
 
 import SwiftUI
 
+/// A view that informs the user that email setup is required for in-app support.
 struct EmailRequiredView: View {
     
     // MARK: - Properties
     
+    /// A binding to the presentation mode environment value, used to dismiss the view.
     @Environment(\.presentationMode) private var presentationMode
     
     
     // MARK: - Body
     
+    /// The content and behavior of the view.
     var body: some View {
         NavigationStack {
             VStack(spacing: 16) {
@@ -59,27 +62,31 @@ struct EmailRequiredView: View {
 
 // MARK: - Previews
 
-#Preview("Presented in a Sheet") {
-    struct Preview: View {
-        @State var isShown = true
-        
-        var body: some View {
-            Button {
-                isShown.toggle()
-            } label: {
-                Text("Show Email Required View")
-            }
-            .sheet(isPresented: $isShown) {
-                EmailRequiredView()
+extension EmailRequiredView {
+    /// Previews the EmailRequiredView presented in a sheet.
+    #Preview("Presented in a Sheet") {
+        struct Preview: View {
+            @State var isShown = true
+            
+            var body: some View {
+                Button {
+                    isShown.toggle()
+                } label: {
+                    Text("Show Email Required View")
+                }
+                .sheet(isPresented: $isShown) {
+                    EmailRequiredView()
+                }
             }
         }
+        
+        return Preview()
     }
-    
-    return Preview()
-}
 
-#Preview("Email Required View") {
-    EmailRequiredView()
+    /// Previews the EmailRequiredView.
+    #Preview("Email Required View") {
+        EmailRequiredView()
+    }
 }
 
 #endif
