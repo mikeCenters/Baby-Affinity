@@ -32,7 +32,7 @@ struct AboutView: View {
                     HStack {
                         Spacer()
                         Image(systemName: "info.bubble")
-                            .headerSymbolStyle(selectedSex == .male ? .blue : .pink)
+                            .headerSymbolStyle()
                         Spacer()
                     }
                     
@@ -53,7 +53,7 @@ struct AboutView: View {
                     HStack {
                         Spacer()
                         Image(systemName: "medal")
-                            .headerSymbolStyle(selectedSex == .male ? .blue : .pink)
+                            .headerSymbolStyle()
                         Spacer()
                     }
                     
@@ -74,7 +74,7 @@ struct AboutView: View {
                     HStack {
                         Spacer()
                         Image(systemName: "lock.shield")
-                            .headerSymbolStyle(selectedSex == .male ? .blue : .pink)
+                            .headerSymbolStyle()
                         Spacer()
                     }
                     
@@ -95,7 +95,7 @@ struct AboutView: View {
                     HStack {
                         Spacer()
                         Image(systemName: "list.number")
-                            .headerSymbolStyle(selectedSex == .male ? .blue : .pink)
+                            .headerSymbolStyle()
                         Spacer()
                     }
                     

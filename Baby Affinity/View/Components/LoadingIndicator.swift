@@ -27,7 +27,7 @@ struct LoadingIndicator: View {
             ForEach(0..<3) { index in
                 Circle()
                     .frame(width: 40, height: 40)
-                    .foregroundColor(selectedSex == .male ? .blue : .pink)
+                    .foregroundStyle(.tint)
                     .scaleEffect(isLoading ? 0.9 : 0.5)
                     .animation(
                         Animation.easeInOut(duration: 0.6)

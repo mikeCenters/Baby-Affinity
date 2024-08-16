@@ -53,7 +53,7 @@ struct ContactUsView: View {
                     .scaledToFit()
                     .frame(width: 128, height: 128)
                     .symbolRenderingMode(.palette)
-                    .foregroundStyle(.primary, selectedSex == .male ? .blue : .pink)
+                    .foregroundStyle(.primary, .tint)
                 Spacer()
             }
             .padding(.bottom)
@@ -64,7 +64,7 @@ struct ContactUsView: View {
                         HStack {
                             Spacer()
                             Image(systemName: "questionmark.bubble")
-                                .headerSymbolStyle(selectedSex == .male ? .blue : .pink)
+                                .headerSymbolStyle()
                             Spacer()
                         }
                         
@@ -98,7 +98,7 @@ struct ContactUsView: View {
                         HStack {
                             Spacer()
                             Image(systemName: "lightbulb.max")
-                                .headerSymbolStyle(selectedSex == .male ? .blue : .pink)
+                                .headerSymbolStyle()
                             Spacer()
                         }
                         
@@ -132,7 +132,7 @@ struct ContactUsView: View {
                         HStack {
                             Spacer()
                             Image(systemName: "note.text.badge.plus")
-                                .headerSymbolStyle(selectedSex == .male ? .blue : .pink)
+                                .headerSymbolStyle()
                             Spacer()
                         }
                         
