@@ -49,7 +49,11 @@ extension SettingsView {
                 case .appCard:
                     AppCard()
                 case .about:
-                    Text("About")
+                    NavigationLink {
+                        AboutView()
+                    } label: {
+                        Text("About")
+                    }
                 case .contact:
                     Text("Contact Us")
                 case .products:
