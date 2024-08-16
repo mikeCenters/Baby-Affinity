@@ -16,8 +16,8 @@ struct LoadingIndicator: View {
     /// The selected sex for which the names are filtered, stored in `AppStorage`.
     @AppStorage("selectedSex") private var selectedSex = Sex.male
     
-    /// A binding to a boolean value that determines whether the loading animation should be displayed.
-    @Binding var isLoading: Bool
+    /// The property that determines the state of the animation.
+    @State private var isLoading: Bool = false
     
     
     // MARK: - Body
@@ -50,15 +50,7 @@ struct LoadingIndicator: View {
 
 /// A preview provider for `LoadingIndicator`.
 #Preview {
-    struct Preview: View {
-        @State private var isLoading = false
-        
-        var body: some View {
-            LoadingIndicator(isLoading: $isLoading)
-        }
-    }
-    
-    return Preview()
+    LoadingIndicator()
 }
 
 #endif

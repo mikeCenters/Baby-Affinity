@@ -36,21 +36,19 @@ struct FavoriteNamesView: View, NamePersistenceController {
     static private let nameLimit = 5
     
     /// The state of the view.
-    @State var viewState: FavoriteNamesView.States = .isLoading
-    @State private var isLoading = true
+    @State private var viewState: FavoriteNamesView.States = .isLoading
     
     
     // MARK: - Body
     
     var body: some View {
-        Section(
-            header: Text("Favorite \(selectedSex.childNaming) Names")) {
+        Section(header: Text("Favorite \(selectedSex.childNaming) Names")) {
                 
                 // MARK: - Body
                 
                 switch viewState {
                 case .isLoading:        /// View is loading names
-                    LoadingIndicator(isLoading: $isLoading)
+                    LoadingIndicator()
                     
                 case .noFavorites:      /// No favorite names are available
                     noFavoritesFound
@@ -101,7 +99,7 @@ struct FavoriteNamesView: View, NamePersistenceController {
             }
             .onChange(of: presentedNames) {
                 withAnimation {
-                    viewState = presentedNames.isEmpty ? .noFavorites : .showNames
+                    handleViewState()
                 }
             }
     }
@@ -190,8 +188,29 @@ extension FavoriteNamesView {
 }
 
 #Preview("View is loading") {
-    List {
-        FavoriteNamesView(viewState: .isLoading)
+    
+    @State var selectedSex: Sex = .male
+
+    return List {
+        Section(header: Text("Favorite \(selectedSex.childNaming) Names")) {
+            
+            LoadingIndicator()
+            
+            // MARK: - Footer View
+            
+            HStack {
+                Spacer()
+                
+                // Reload names
+                Button {
+                    
+                } label: {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.headline)
+                }
+                .buttonStyle(.borderless)
+            }
+        }
     }
     .modelContainer(previewModelContainer_EmptyStore)
 }
