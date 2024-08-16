@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// A view that provides information about the Baby Affinity app, including its purpose, mission, privacy policy, and the Affinity Rating system.
 struct AboutView: View {
     
     // MARK: - Properties
@@ -14,6 +15,7 @@ struct AboutView: View {
     /// The selected sex for which the names are filtered, stored in `AppStorage`.
     @AppStorage("selectedSex") private var selectedSex = Sex.male
     
+    /// The URL for more information about the Elo Rating System.
     private var wikiURL: URL {
         URL(string: "https://en.wikipedia.org/wiki/Elo_rating_system")!
     }
@@ -21,9 +23,11 @@ struct AboutView: View {
     
     // MARK: - Body
     
+    /// The content and behavior of the view.
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
+                // About Section
                 VStack(alignment: .leading, spacing: 16) {
                     HStack {
                         Spacer()
@@ -43,7 +47,7 @@ struct AboutView: View {
                 Divider()
             }
             
-            
+            // Mission Section
             VStack(spacing: 0) {
                 VStack(alignment: .leading, spacing: 16) {
                     HStack {
@@ -64,7 +68,7 @@ struct AboutView: View {
                 Divider()
             }
             
-            
+            // Privacy Section
             VStack(spacing: 0) {
                 VStack(alignment: .leading, spacing: 16) {
                     HStack {
@@ -85,7 +89,7 @@ struct AboutView: View {
                 Divider()
             }
             
-            
+            // Affinity Rating Section
             VStack(spacing: 0) {
                 VStack(alignment: .leading, spacing: 16) {
                     HStack {
@@ -98,7 +102,7 @@ struct AboutView: View {
                     Text("Affinity Rating")
                         .font(.title).bold()
                     
-                    Text("The Affinity Rating System is an adaptation of the ELO Rating System. The ELO Rating System was invented by Arpad Elo and is used throughout many competetive environments to assess player skill levels. For more information on the ELO Rating System, visit the wiki link.")
+                    Text("The Affinity Rating System is an adaptation of the ELO Rating System. The ELO Rating System was invented by Arpad Elo and is used throughout many competitive environments to assess player skill levels. For more information on the ELO Rating System, visit the wiki link.")
                     
                     Link(destination: wikiURL, label: {
                         Text("Wikipedia: Elo Rating System")
@@ -122,25 +126,29 @@ struct AboutView: View {
 
 // MARK: - Previews
 
-#Preview("About View in a Tab View") {
-    TabView {
+extension AboutView {
+    /// Previews the AboutView in a tab view.
+    #Preview("About View in a Tab View") {
+        TabView {
+            NavigationStack {
+                AboutView()
+            }
+            .tabItem {
+                Label {
+                    Text("Settings")
+                } icon: {
+                    Image(systemName: "gearshape")
+                }
+            }
+        }
+        .modelContainer(previewModelContainer)
+    }
+
+    /// Previews the AboutView.
+    #Preview("About View") {
         NavigationStack {
             AboutView()
         }
-        .tabItem {
-            Label {
-                Text("Settings")
-            } icon: {
-                Image(systemName: "gearshape")
-            }
-        }
-    }
-    .modelContainer(previewModelContainer)
-}
-
-#Preview("About View") {
-    NavigationStack {
-        AboutView()
     }
 }
 
