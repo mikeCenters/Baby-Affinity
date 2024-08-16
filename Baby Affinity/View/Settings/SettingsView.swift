@@ -60,7 +60,11 @@ extension SettingsView {
                         Text("About")
                     }
                 case .contact:
-                    Text("Contact Us")
+                    NavigationLink {
+                        ContactUsView()
+                    } label: {
+                        Text("Contact Us")
+                    }
                 case .products:
                     Text("Products")
                 case .resetData:
