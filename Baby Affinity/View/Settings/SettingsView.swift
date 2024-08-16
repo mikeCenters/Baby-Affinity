@@ -12,6 +12,7 @@ extension SettingsView {
         case appCard
         case about, contact, products
         case resetData
+        case legalInfo
         
         var label: String {
             switch self {
@@ -25,6 +26,8 @@ extension SettingsView {
                 "Products"
             case .resetData:
                 "Reset Data"
+            case .legalInfo:
+                "Legal Info"
             }
         }
         
@@ -40,6 +43,8 @@ extension SettingsView {
                 2
             case .resetData:
                 3
+            case .legalInfo:
+                4
             }
         }
         
@@ -60,6 +65,8 @@ extension SettingsView {
                     Text("Products")
                 case .resetData:
                     ResetDataButton()
+                case .legalInfo:
+                    LegalInfoView()
                 }
             }
         }
