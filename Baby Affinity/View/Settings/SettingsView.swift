@@ -9,7 +9,9 @@ import SwiftUI
 
 extension SettingsView {
     enum Item: Int, CaseIterable {
-        case appCard, about, contact, products, resetData
+        case appCard
+        case about, contact, products
+        case resetData
         
         var label: String {
             switch self {
