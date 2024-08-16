@@ -39,7 +39,7 @@ struct LoadingIndicator: View {
         }
         .frame(maxWidth: .infinity, minHeight: 140, alignment: .center)
         .onAppear {
-            isLoading = true
+            isLoading.toggle()
         }
     }
 }
