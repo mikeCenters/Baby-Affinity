@@ -114,4 +114,11 @@ extension Name {
     func toggleFavorite() {
         self.isFavorite.toggle()
     }
+    
+    /// Reset all attributes to default state.
+    func resetValues() {
+        affinityRating = Self.defaultAffinityRating
+        evaluated = Self.defaultEvaluationCount
+        isFavorite = Self.defaultFavoriteStatus
+    }
 }

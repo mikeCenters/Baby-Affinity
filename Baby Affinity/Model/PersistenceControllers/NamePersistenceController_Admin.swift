@@ -90,6 +90,10 @@ protocol NamePersistenceController_Admin: NamePersistenceController {
     /// - Parameter context: The model context used for inserting data.
     /// - Throws: An error if the insert operation fails.
     func loadDefaultNames(into context: ModelContext) throws
+    
+    /// Resets all data associated with `Name` objects
+    /// - Parameter context: The model context used for managing data.
+    func resetNameData(in context: ModelContext) throws
 }
 
 
@@ -216,4 +220,21 @@ extension NamePersistenceController_Admin {
 //            try insert(defaultNames, context: context)
 //        }
 //    }
+}
+
+
+// MARK: - Methods
+
+extension NamePersistenceController_Admin {
+    
+    func resetNameData(in context: ModelContext) {
+        do {
+            let names = try fetchNames(context: context)
+            names.forEach { $0.resetValues() }
+            
+        }
+        catch {
+            logError("Unable to reset data: \(error)")
+        }
+    }
 }

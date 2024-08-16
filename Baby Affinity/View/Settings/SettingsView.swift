@@ -42,7 +42,8 @@ extension SettingsView {
 }
 
 
-struct SettingsView: View {
+struct SettingsView: View, NamePersistenceController_Admin {
+    @Environment(\.modelContext) var modelContext
     
     @State private var isShowingDataConfirmation: Bool = false
     
@@ -90,7 +91,9 @@ struct SettingsView: View {
                     .foregroundColor(.red)
                     .confirmationDialog("Reset data",
                                         isPresented: $isShowingDataConfirmation) {
-                        Button("Yes", role: .destructive) {  }
+                        Button("Yes", role: .destructive) { 
+                            resetNameData(in: modelContext)
+                        }
                         Button("Cancel", role: .cancel) { }
                     } message: {
                         Text("You are about to reset all data. Are you sure?")
