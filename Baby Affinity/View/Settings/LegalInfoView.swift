@@ -71,4 +71,18 @@ struct LegalInfoView: View {
     }
 }
 
+#Preview("Legal Info View in Footer") {
+    VStack(spacing: 0) {
+        List {
+            ForEach(1..<10) { i in
+                Text("Some Background Data")
+            }
+        }
+        
+        LegalInfoView()
+            .frame(height: 44)
+            .padding()
+    }
+}
+
 #endif
