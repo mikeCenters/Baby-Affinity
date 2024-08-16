@@ -89,7 +89,9 @@ struct NamesView: View {
     
     /// Load names from the query to the view.
     private func loadNames() {
-        names = namesQuery.filter { $0.sex == selectedSex }
+        names = namesQuery
+            .filter { $0.sex == selectedSex }
+            .sorted { $0.affinityRating > $1.affinityRating }
     }
 }
 
