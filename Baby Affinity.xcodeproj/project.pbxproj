@@ -34,6 +34,7 @@
 		BAEBE3282C6B3E5F00035488 /* NamePersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBE3272C6B3E5F00035488 /* NamePersistenceController.swift */; };
 		BAEBE32A2C6C134B00035488 /* NameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBE3292C6C134B00035488 /* NameTests.swift */; };
 		BAF3C6712C6EB1C2004F9E46 /* NamePersistenceController_Admin.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF3C6702C6EB1C2004F9E46 /* NamePersistenceController_Admin.swift */; };
+		BAF3C6732C6F886A004F9E46 /* ResetDataButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF3C6722C6F886A004F9E46 /* ResetDataButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +85,7 @@
 		BAEBE3272C6B3E5F00035488 /* NamePersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePersistenceController.swift; sourceTree = "<group>"; };
 		BAEBE3292C6C134B00035488 /* NameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameTests.swift; sourceTree = "<group>"; };
 		BAF3C6702C6EB1C2004F9E46 /* NamePersistenceController_Admin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePersistenceController_Admin.swift; sourceTree = "<group>"; };
+		BAF3C6722C6F886A004F9E46 /* ResetDataButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetDataButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				BA5EED332C6B0C4C00267AD1 /* SettingsView.swift */,
+				BAF3C6722C6F886A004F9E46 /* ResetDataButton.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -403,6 +406,7 @@
 				BA9BAFE72C5ED484008D88A2 /* FavoriteNamesView.swift in Sources */,
 				BAE858A22C6335A400177BA8 /* NameCellView.swift in Sources */,
 				BACC30632C48C34A003CEC7C /* DefaultBabyNames.swift in Sources */,
+				BAF3C6732C6F886A004F9E46 /* ResetDataButton.swift in Sources */,
 				BA5EED342C6B0C4C00267AD1 /* SettingsView.swift in Sources */,
 				BAE8589B2C6271C400177BA8 /* AffinityCalculator.swift in Sources */,
 				BACC30662C5C7B7B003CEC7C /* TopNamesView.swift in Sources */,
