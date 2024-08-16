@@ -9,9 +9,15 @@ import SwiftUI
 
 struct AboutView: View {
     
+    // MARK: - Properties
+    
+    /// The selected sex for which the names are filtered, stored in `AppStorage`.
+    @AppStorage("selectedSex") private var selectedSex = Sex.male
+    
     private var wikiURL: URL {
         URL(string: "https://en.wikipedia.org/wiki/Elo_rating_system")!
     }
+    
     
     // MARK: - Body
     
@@ -19,6 +25,13 @@ struct AboutView: View {
         ScrollView {
             VStack(spacing: 0) {
                 VStack(alignment: .leading, spacing: 16) {
+                    HStack {
+                        Spacer()
+                        Image(systemName: "info.bubble")
+                            .headerSymbolStyle(selectedSex == .male ? .blue : .pink)
+                        Spacer()
+                    }
+                    
                     Text("About")
                         .font(.title).bold()
                     
@@ -33,6 +46,13 @@ struct AboutView: View {
             
             VStack(spacing: 0) {
                 VStack(alignment: .leading, spacing: 16) {
+                    HStack {
+                        Spacer()
+                        Image(systemName: "medal")
+                            .headerSymbolStyle(selectedSex == .male ? .blue : .pink)
+                        Spacer()
+                    }
+                    
                     Text("Mission")
                         .font(.title).bold()
                     
@@ -47,6 +67,13 @@ struct AboutView: View {
             
             VStack(spacing: 0) {
                 VStack(alignment: .leading, spacing: 16) {
+                    HStack {
+                        Spacer()
+                        Image(systemName: "lock.shield")
+                            .headerSymbolStyle(selectedSex == .male ? .blue : .pink)
+                        Spacer()
+                    }
+                    
                     Text("Privacy")
                         .font(.title).bold()
                     
@@ -61,6 +88,13 @@ struct AboutView: View {
             
             VStack(spacing: 0) {
                 VStack(alignment: .leading, spacing: 16) {
+                    HStack {
+                        Spacer()
+                        Image(systemName: "list.number")
+                            .headerSymbolStyle(selectedSex == .male ? .blue : .pink)
+                        Spacer()
+                    }
+                    
                     Text("Affinity Rating")
                         .font(.title).bold()
                     

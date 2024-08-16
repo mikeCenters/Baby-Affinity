@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 
 // MARK: - Array
@@ -52,5 +53,25 @@ extension Decimal {
     func convertToInt(roundBehavior: NSDecimalNumberBehaviors? = nil) -> Int {
         let nsDecimalNumber = NSDecimalNumber(decimal: self)
         return nsDecimalNumber.rounding(accordingToBehavior: roundBehavior).intValue
+    }
+}
+
+
+// MARK: - Image
+
+extension Image {
+    /// Applies a common style to the image, including resizing, scaling, framing, and setting symbol rendering mode and foreground color.
+    ///
+    /// This modifier is intended for images used in header or similar sections where a consistent style is desired.
+    ///
+    /// - Parameter secondaryColor: The color to use for the secondary foreground style of the image. This is typically used to differentiate between selected or unselected states.
+    /// - Returns: A view that applies the specified style to the image.
+    func headerSymbolStyle(_ secondaryColor: Color) -> some View {
+        self
+            .resizable()
+            .scaledToFit()
+            .frame(width: 64, height: 64)
+            .symbolRenderingMode(.palette)
+            .foregroundStyle(.primary, secondaryColor)
     }
 }
