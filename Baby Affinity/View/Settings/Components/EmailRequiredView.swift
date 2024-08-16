@@ -22,8 +22,7 @@ struct EmailRequiredView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 16) {
-                Spacer()
-                    .frame(height: 100)
+                Spacer().frame(height: 100)
                 
                 Image(systemName: "envelope.fill")
                     .resizable()
@@ -62,31 +61,29 @@ struct EmailRequiredView: View {
 
 // MARK: - Previews
 
-extension EmailRequiredView {
-    /// Previews the EmailRequiredView presented in a sheet.
-    #Preview("Presented in a Sheet") {
-        struct Preview: View {
-            @State var isShown = true
-            
-            var body: some View {
-                Button {
-                    isShown.toggle()
-                } label: {
-                    Text("Show Email Required View")
-                }
-                .sheet(isPresented: $isShown) {
-                    EmailRequiredView()
-                }
+/// Previews the EmailRequiredView presented in a sheet.
+#Preview("Presented in a Sheet") {
+    struct Preview: View {
+        @State var isShown = true
+        
+        var body: some View {
+            Button {
+                isShown.toggle()
+            } label: {
+                Text("Show Email Required View")
+            }
+            .sheet(isPresented: $isShown) {
+                EmailRequiredView()
             }
         }
-        
-        return Preview()
     }
+    
+    return Preview()
+}
 
-    /// Previews the EmailRequiredView.
-    #Preview("Email Required View") {
-        EmailRequiredView()
-    }
+/// Previews the EmailRequiredView.
+#Preview("Email Required View") {
+    EmailRequiredView()
 }
 
 #endif
