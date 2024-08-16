@@ -35,20 +35,16 @@ struct LegalInfoView: View {
         VStack {
             HStack(spacing: 16) {
                 // Link to the Privacy Policy
-                Link(destination: privacyPolicyURL) {
-                    Text("Privacy Policy")
-                }
-                .buttonStyle(.borderless)
-                .frame(maxWidth: .infinity, alignment: .trailing)
+                Link("Privacy Policy", destination: privacyPolicyURL)
+                    .buttonStyle(.borderless)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
                 
                 Divider()
                 
                 // Link to the Terms of Service
-                Link(destination: termsServiceURL) {
-                    Text("Terms of Service")
-                }
-                .buttonStyle(.borderless)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                Link("Terms of Service", destination: termsServiceURL)
+                    .buttonStyle(.borderless)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
             .font(.caption).fontWeight(.semibold)
             
