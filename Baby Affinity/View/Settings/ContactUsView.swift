@@ -9,10 +9,34 @@ import SwiftUI
 
 struct ContactUsView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("Hello, World!")
     }
 }
 
-#Preview {
-    ContactUsView()
+
+#if DEBUG
+
+// MARK: - Previews
+
+#Preview("Contact Us View in a Tab View") {
+    TabView {
+        NavigationStack {
+            ContactUsView()
+        }
+        .tabItem {
+            Label {
+                Text("Settings")
+            } icon: {
+                Image(systemName: "gearshape")
+            }
+        }
+    }
 }
+
+#Preview("Contact Us View") {
+    NavigationStack {
+        AboutView()
+    }
+}
+
+#endif

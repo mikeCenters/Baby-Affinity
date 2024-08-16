@@ -127,7 +127,6 @@
 				BAF3C67A2C6FB357004F9E46 /* Components */,
 				BA5EED332C6B0C4C00267AD1 /* SettingsView.swift */,
 				BAF3C6762C6F9994004F9E46 /* AboutView.swift */,
-				BAF3C6782C6FAC45004F9E46 /* LegalInfoView.swift */,
 				BAF3C67B2C6FB3C2004F9E46 /* ContactUsView.swift */,
 			);
 			path = Settings;
@@ -284,6 +283,7 @@
 		BAF3C67A2C6FB357004F9E46 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				BAF3C6782C6FAC45004F9E46 /* LegalInfoView.swift */,
 				BAF3C6742C6F941E004F9E46 /* AppCard.swift */,
 				BAF3C6722C6F886A004F9E46 /* ResetDataButton.swift */,
 			);
