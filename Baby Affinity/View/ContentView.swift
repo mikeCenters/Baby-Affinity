@@ -32,7 +32,7 @@ struct ContentView: View {
                     Label {
                         Text("Home")
                     } icon: {
-                        Image(systemName: "house")
+                        Image(systemName: "list.bullet.below.rectangle")
                     }
                 }
             

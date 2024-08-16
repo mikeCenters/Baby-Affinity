@@ -37,10 +37,10 @@ struct HomeView: View {
                 // FIXME: Add Name Selection Card.
                 /// A card view, with a full name option, due date, etc.
                 
-                /// Displays the top names based on affinity rating for the selected sex.
-                TopNamesView(sex: selectedSex)
+                /// Displays the top names based on affinity rating.
+                TopNamesView()
                     
-                /// Displays the favorite names for the selected sex.
+                /// Displays the favorite names.
                 FavoriteNamesView()
                 
                 HStack {
