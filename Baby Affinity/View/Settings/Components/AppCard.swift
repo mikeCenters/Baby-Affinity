@@ -14,6 +14,8 @@ struct AppCard: View {
     
     var body: some View {
         VStack(spacing: 8) {
+            
+            // FIXME: Replace with AppIcon.
             RoundedRectangle(cornerRadius: 60/3.14)
                 .frame(width: 60, height: 60)
             
