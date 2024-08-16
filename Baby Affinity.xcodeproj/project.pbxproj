@@ -39,6 +39,8 @@
 		BAF3C6772C6F9994004F9E46 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF3C6762C6F9994004F9E46 /* AboutView.swift */; };
 		BAF3C6792C6FAC45004F9E46 /* LegalInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF3C6782C6FAC45004F9E46 /* LegalInfoView.swift */; };
 		BAF3C67C2C6FB3C2004F9E46 /* ContactUsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF3C67B2C6FB3C2004F9E46 /* ContactUsView.swift */; };
+		BAF3C67E2C6FD351004F9E46 /* MailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF3C67D2C6FD351004F9E46 /* MailView.swift */; };
+		BAF3C6802C6FD41B004F9E46 /* EmailRequiredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF3C67F2C6FD41B004F9E46 /* EmailRequiredView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +96,8 @@
 		BAF3C6762C6F9994004F9E46 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		BAF3C6782C6FAC45004F9E46 /* LegalInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegalInfoView.swift; sourceTree = "<group>"; };
 		BAF3C67B2C6FB3C2004F9E46 /* ContactUsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactUsView.swift; sourceTree = "<group>"; };
+		BAF3C67D2C6FD351004F9E46 /* MailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailView.swift; sourceTree = "<group>"; };
+		BAF3C67F2C6FD41B004F9E46 /* EmailRequiredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailRequiredView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -286,6 +290,8 @@
 				BAF3C6782C6FAC45004F9E46 /* LegalInfoView.swift */,
 				BAF3C6742C6F941E004F9E46 /* AppCard.swift */,
 				BAF3C6722C6F886A004F9E46 /* ResetDataButton.swift */,
+				BAF3C67D2C6FD351004F9E46 /* MailView.swift */,
+				BAF3C67F2C6FD41B004F9E46 /* EmailRequiredView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -429,8 +435,10 @@
 				BACC30632C48C34A003CEC7C /* DefaultBabyNames.swift in Sources */,
 				BAF3C6732C6F886A004F9E46 /* ResetDataButton.swift in Sources */,
 				BA5EED342C6B0C4C00267AD1 /* SettingsView.swift in Sources */,
+				BAF3C6802C6FD41B004F9E46 /* EmailRequiredView.swift in Sources */,
 				BAE8589B2C6271C400177BA8 /* AffinityCalculator.swift in Sources */,
 				BAF3C6752C6F941E004F9E46 /* AppCard.swift in Sources */,
+				BAF3C67E2C6FD351004F9E46 /* MailView.swift in Sources */,
 				BAF3C67C2C6FB3C2004F9E46 /* ContactUsView.swift in Sources */,
 				BACC30662C5C7B7B003CEC7C /* TopNamesView.swift in Sources */,
 				BA9BF0B82C60A2CC0056334E /* Extensions.swift in Sources */,
