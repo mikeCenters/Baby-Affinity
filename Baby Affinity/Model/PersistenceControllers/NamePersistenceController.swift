@@ -8,13 +8,15 @@
 import Foundation
 import SwiftData
 
-// FIXME: Persistent Controller needs to throw errors, log them, and attempt to handle them. Then, build tests.
+// MARK: - Error
 
 enum NamePersistenceError: Error {
     case duplicateNameInserted(_ name: String)
     case noNamesInPersistence
 }
 
+
+// MARK: - Name Persistence Controller
 
 /// A protocol for managing name data in the Baby Affinity app.
 ///
@@ -28,6 +30,8 @@ enum NamePersistenceError: Error {
 /// mechanisms, ensuring that the data operations are executed asynchronously and can throw errors if any
 /// operation fails.
 protocol NamePersistenceController {
+    
+    // MARK: - Methods
     
     /// Fetches all `Name` objects.
     /// - Parameter context: The model context used for fetching data.
@@ -54,11 +58,19 @@ protocol NamePersistenceController {
     /// Fetches a `Name` object by its text property.
     /// - Parameters:
     ///   - text: The `String` representation of the name to be fetched.
-    ///   - context: The model context used for fetching data.
     ///   - sex: The `Sex` of the `Name` object.
-    /// - Returns: The `Name` object with the specified identifier, or `nil` if not found.
+    ///   - context: The model context used for fetching data.
+    /// - Returns: The `Name` object with the specified text and sex, or `nil` if not found.
     /// - Throws: An error if the fetch operation fails.
     func fetchName(byText text: String, sex: Sex, context: ModelContext) throws -> Name?
+    
+    /// Fetches `Name` objects by a partial match on the text property.
+    /// - Parameters:
+    ///   - partialText: The `String` that represents the partial text to match against the names. This method performs a search for names that contain this partial text.
+    ///   - context: The `ModelContext` used for fetching data from the persistence layer.
+    /// - Returns: An array of `Name` objects whose text property contains the provided partial text. The results may include names with varying degrees of match to the partial text.
+    /// - Throws: An error if the fetch operation fails due to issues with the data context or other reasons.
+    func fetchNames(byPartialText partialText: String, context: ModelContext) throws -> [Name]
     
     /// Fetches `Name` objects that are marked as favorites filtered by sex.
     /// - Parameters:
@@ -77,23 +89,39 @@ protocol NamePersistenceController {
     func getRank(of name: Name, from context: ModelContext) throws -> Int?
 }
 
+
 extension NamePersistenceController {
     
-    // MARK: - Fetch
+    // MARK: - Defined Methods
     
     func fetchNames(context: ModelContext) throws -> [Name] {
         let descriptor = FetchDescriptor<Name>()
-        return try context.fetch(descriptor)
+        do {
+            return try context.fetch(descriptor)
+        } catch {
+            logError("Failed to fetch names: \(error.localizedDescription)")
+            throw error
+        }
     }
     
     func fetchNames(_ sex: Sex, context: ModelContext) throws -> [Name] {
         let descriptor = FetchDescriptor<Name>(predicate: #Predicate { $0.sexRawValue == sex.rawValue })
-        return try context.fetch(descriptor)
+        do {
+            return try context.fetch(descriptor)
+        } catch {
+            logError("Failed to fetch names for sex \(sex.rawValue): \(error.localizedDescription)")
+            throw error
+        }
     }
     
     func fetchNames(evaluatedCount: Int, context: ModelContext) throws -> [Name] {
         let descriptor = FetchDescriptor<Name>(predicate: #Predicate { $0.evaluated == evaluatedCount })
-        return try context.fetch(descriptor)
+        do {
+            return try context.fetch(descriptor)
+        } catch {
+            logError("Failed to fetch names with evaluated count \(evaluatedCount): \(error.localizedDescription)")
+            throw error
+        }
     }
     
     func fetchName(byText text: String, sex: Sex, context: ModelContext) throws -> Name? {
@@ -102,13 +130,32 @@ extension NamePersistenceController {
                 $0.text == text &&
                 $0.sexRawValue == sex.rawValue
             })
-        let namesFetch = try context.fetch(descriptor)
-        
-        /// Check for multiple names being found.
-        if namesFetch.count > 1 {
-            logError("Multiple \(sex.sexNamingConvention.lowercased()) names of `\(text.capitalized)` were fetched!")
+        do {
+            let namesFetch = try context.fetch(descriptor)
+            
+            // Check for multiple names being found.
+            if namesFetch.count > 1 {
+                logError("Multiple \(sex.sexNamingConvention.lowercased()) names of `\(text.capitalized)` were fetched!")
+            }
+            return namesFetch.first
+        } catch {
+            logError("Failed to fetch name by text '\(text)' and sex \(sex.rawValue): \(error.localizedDescription)")
+            throw error
         }
-        return namesFetch.first
+    }
+    
+    func fetchNames(byPartialText partialText: String, context: ModelContext) throws -> [Name] {
+        let descriptor = FetchDescriptor<Name>(
+            predicate: #Predicate {
+                $0.text.contains(partialText)
+            }
+        )
+        do {
+            return try context.fetch(descriptor)
+        } catch {
+            logError("Failed to fetch names by partial text '\(partialText)': \(error.localizedDescription)")
+            throw error
+        }
     }
     
     func fetchFavoriteNames(sex: Sex, context: ModelContext) throws -> [Name] {
@@ -117,10 +164,13 @@ extension NamePersistenceController {
                 $0.isFavorite &&
                 $0.sexRawValue == sex.rawValue
             })
-        return try context.fetch(descriptor)
+        do {
+            return try context.fetch(descriptor)
+        } catch {
+            logError("Failed to fetch favorite names for sex \(sex.rawValue): \(error.localizedDescription)")
+            throw error
+        }
     }
-    
-    // MARK: - Methods
     
     func getRank(of name: Name, from context: ModelContext) throws -> Int? {
         let sex = name.sexRawValue
@@ -130,9 +180,12 @@ extension NamePersistenceController {
                 .init(\.affinityRating, order: .reverse)
             ]
         )
-        
-        let names = try context.fetch(descriptor)
-        
-        return names.firstIndex(of: name).map { $0 + 1 }
+        do {
+            let names = try context.fetch(descriptor)
+            return names.firstIndex(of: name).map { $0 + 1 }
+        } catch {
+            logError("Failed to get rank for name '\(name.text)' of sex \(sex): \(error.localizedDescription)")
+            throw error
+        }
     }
 }
