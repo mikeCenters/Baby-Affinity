@@ -46,15 +46,19 @@ class MailViewCoordinator: NSObject, MFMailComposeViewControllerDelegate, UINavi
 
  - Parameters:
     - isPresented: A binding to a Boolean value that indicates whether the mail compose view controller is presented.
-    - recipients: A binding to an array of recipient email addresses.
-    - subject: A binding to the subject of the email.
-    - body: A binding to the body text of the email.
+    - recipients: An array of recipient email addresses.
+    - subject: The subject of the email.
+    - body: The body text of the email.
  */
 struct MailView: UIViewControllerRepresentable {
+    /// A binding to a Boolean value that indicates whether the mail compose view controller is presented.
     @Binding var isPresented: Bool
-    @Binding var recipients: [String]
-    @Binding var subject: String
-    @Binding var body: String
+    /// An array of recipient email addresses.
+    var recipients: [String]
+    /// The subject of the email.
+    var subject: String
+    /// The body text of the email.
+    var body: String
     
     /**
      Creates the coordinator instance for managing the mail compose view controller.
