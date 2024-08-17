@@ -7,12 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BA07475B2C7026AA002C8425 /* SectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA07475A2C7026AA002C8425 /* SectionView.swift */; };
 		BA5EED312C69B5A400267AD1 /* NamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5EED302C69B5A400267AD1 /* NamesView.swift */; };
 		BA5EED342C6B0C4C00267AD1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5EED332C6B0C4C00267AD1 /* SettingsView.swift */; };
 		BA719A162C6C2C5600A552FA /* LogError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA719A152C6C2C5600A552FA /* LogError.swift */; };
 		BA719A182C6C542800A552FA /* NamePersistenceControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA719A172C6C542800A552FA /* NamePersistenceControllerTests.swift */; };
 		BA9BAFE72C5ED484008D88A2 /* FavoriteNamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9BAFE62C5ED484008D88A2 /* FavoriteNamesView.swift */; };
 		BA9BF0B82C60A2CC0056334E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9BF0B72C60A2CC0056334E /* Extensions.swift */; };
+		BAC0B4A02C705F1F008B3141 /* SendEmailButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC0B49F2C705F1F008B3141 /* SendEmailButton.swift */; };
 		BACC30302C48A977003CEC7C /* Baby_AffinityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC302F2C48A977003CEC7C /* Baby_AffinityApp.swift */; };
 		BACC30322C48A977003CEC7C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC30312C48A977003CEC7C /* ContentView.swift */; };
 		BACC30362C48A978003CEC7C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BACC30352C48A978003CEC7C /* Assets.xcassets */; };
@@ -61,12 +63,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		BA07475A2C7026AA002C8425 /* SectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionView.swift; sourceTree = "<group>"; };
 		BA5EED302C69B5A400267AD1 /* NamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamesView.swift; sourceTree = "<group>"; };
 		BA5EED332C6B0C4C00267AD1 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		BA719A152C6C2C5600A552FA /* LogError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogError.swift; sourceTree = "<group>"; };
 		BA719A172C6C542800A552FA /* NamePersistenceControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePersistenceControllerTests.swift; sourceTree = "<group>"; };
 		BA9BAFE62C5ED484008D88A2 /* FavoriteNamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteNamesView.swift; sourceTree = "<group>"; };
 		BA9BF0B72C60A2CC0056334E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		BAC0B49F2C705F1F008B3141 /* SendEmailButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendEmailButton.swift; sourceTree = "<group>"; };
 		BACC302C2C48A976003CEC7C /* Baby Affinity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Baby Affinity.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BACC302F2C48A977003CEC7C /* Baby_AffinityApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Baby_AffinityApp.swift; sourceTree = "<group>"; };
 		BACC30312C48A977003CEC7C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -125,6 +129,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BA0747592C70268A002C8425 /* ScrollSectionView */ = {
+			isa = PBXGroup;
+			children = (
+				BA07475A2C7026AA002C8425 /* SectionView.swift */,
+			);
+			path = ScrollSectionView;
+			sourceTree = "<group>";
+		};
 		BA5EED322C6B0C3900267AD1 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -287,11 +299,13 @@
 		BAF3C67A2C6FB357004F9E46 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				BA0747592C70268A002C8425 /* ScrollSectionView */,
 				BAF3C6782C6FAC45004F9E46 /* LegalInfoView.swift */,
 				BAF3C6742C6F941E004F9E46 /* AppCard.swift */,
 				BAF3C6722C6F886A004F9E46 /* ResetDataButton.swift */,
 				BAF3C67D2C6FD351004F9E46 /* MailView.swift */,
 				BAF3C67F2C6FD41B004F9E46 /* EmailRequiredView.swift */,
+				BAC0B49F2C705F1F008B3141 /* SendEmailButton.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -449,7 +463,9 @@
 				BACC305F2C48A9FF003CEC7C /* Sex.swift in Sources */,
 				BACC305D2C48A9C1003CEC7C /* Name.swift in Sources */,
 				BAEBE3282C6B3E5F00035488 /* NamePersistenceController.swift in Sources */,
+				BAC0B4A02C705F1F008B3141 /* SendEmailButton.swift in Sources */,
 				BAE858A42C6349B900177BA8 /* LoadingIndicator.swift in Sources */,
+				BA07475B2C7026AA002C8425 /* SectionView.swift in Sources */,
 				BACC30302C48A977003CEC7C /* Baby_AffinityApp.swift in Sources */,
 				BAF3C6712C6EB1C2004F9E46 /* NamePersistenceController_Admin.swift in Sources */,
 				BAE8589D2C62BC4B00177BA8 /* NamePickerViewModel.swift in Sources */,
