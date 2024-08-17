@@ -20,7 +20,6 @@ final class Name {
     enum NameError: Error, Equatable {
         case nameIsEmpty
         case ratingBelowMinimum(_ minimumRating: Int)
-        case unableToInitialize
     }
     
     
