@@ -107,7 +107,7 @@ struct AboutView: View {
                     Link(destination: wikiURL, label: {
                         Text("Wikipedia: Elo Rating System")
                             .font(.callout)
-                            .foregroundColor(.blue)
+                            .foregroundStyle(.tint)
                     })
                     .frame(maxWidth: .infinity, alignment: .center)
                 }
