@@ -129,14 +129,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		BA0747592C70268A002C8425 /* ScrollSectionView */ = {
-			isa = PBXGroup;
-			children = (
-				BA07475A2C7026AA002C8425 /* SectionView.swift */,
-			);
-			path = ScrollSectionView;
-			sourceTree = "<group>";
-		};
 		BA5EED322C6B0C3900267AD1 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -299,7 +291,7 @@
 		BAF3C67A2C6FB357004F9E46 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				BA0747592C70268A002C8425 /* ScrollSectionView */,
+				BA07475A2C7026AA002C8425 /* SectionView.swift */,
 				BAF3C6782C6FAC45004F9E46 /* LegalInfoView.swift */,
 				BAF3C6742C6F941E004F9E46 /* AppCard.swift */,
 				BAF3C6722C6F886A004F9E46 /* ResetDataButton.swift */,
