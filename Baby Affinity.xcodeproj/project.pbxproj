@@ -19,7 +19,6 @@
 		BACC30322C48A977003CEC7C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC30312C48A977003CEC7C /* ContentView.swift */; };
 		BACC30362C48A978003CEC7C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BACC30352C48A978003CEC7C /* Assets.xcassets */; };
 		BACC30392C48A978003CEC7C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BACC30382C48A978003CEC7C /* Preview Assets.xcassets */; };
-		BACC30432C48A979003CEC7C /* Baby_AffinityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC30422C48A979003CEC7C /* Baby_AffinityTests.swift */; };
 		BACC304D2C48A979003CEC7C /* Baby_AffinityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC304C2C48A979003CEC7C /* Baby_AffinityUITests.swift */; };
 		BACC304F2C48A979003CEC7C /* Baby_AffinityUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC304E2C48A979003CEC7C /* Baby_AffinityUITestsLaunchTests.swift */; };
 		BACC305D2C48A9C1003CEC7C /* Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC305C2C48A9C1003CEC7C /* Name.swift */; };
@@ -77,7 +76,6 @@
 		BACC30352C48A978003CEC7C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BACC30382C48A978003CEC7C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		BACC303E2C48A979003CEC7C /* Baby AffinityTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Baby AffinityTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		BACC30422C48A979003CEC7C /* Baby_AffinityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Baby_AffinityTests.swift; sourceTree = "<group>"; };
 		BACC30482C48A979003CEC7C /* Baby AffinityUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Baby AffinityUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BACC304C2C48A979003CEC7C /* Baby_AffinityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Baby_AffinityUITests.swift; sourceTree = "<group>"; };
 		BACC304E2C48A979003CEC7C /* Baby_AffinityUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Baby_AffinityUITestsLaunchTests.swift; sourceTree = "<group>"; };
@@ -193,7 +191,6 @@
 		BACC30412C48A979003CEC7C /* Baby AffinityTests */ = {
 			isa = PBXGroup;
 			children = (
-				BACC30422C48A979003CEC7C /* Baby_AffinityTests.swift */,
 				BAEBE3292C6C134B00035488 /* NameTests.swift */,
 				BA719A172C6C542800A552FA /* NamePersistenceControllerTests.swift */,
 			);
@@ -469,7 +466,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				BAEBE32A2C6C134B00035488 /* NameTests.swift in Sources */,
-				BACC30432C48A979003CEC7C /* Baby_AffinityTests.swift in Sources */,
 				BA719A182C6C542800A552FA /* NamePersistenceControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
