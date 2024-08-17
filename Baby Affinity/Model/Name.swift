@@ -96,7 +96,7 @@ extension Name {
     
     /// Increase the evaluation count by one.
     func increaseEvaluationCount() {
-        self.evaluated += 1
+        evaluated += 1
     }
     
     /// Set the affinity rating to the provided value.
@@ -106,12 +106,12 @@ extension Name {
         guard rating >= Name.minimumAffinityRating else {
             throw NameError.ratingBelowMinimum(Name.minimumAffinityRating)
         }
-        self.affinityRating = rating
+        affinityRating = rating
     }
     
     /// Toggle the `isFavorite` status between true and false.
     func toggleFavorite() {
-        self.isFavorite.toggle()
+        isFavorite.toggle()
     }
     
     /// Reset all attributes to default state.

@@ -12,67 +12,208 @@ final class NameTests: XCTestCase {
     
     // MARK: - Initialization Tests
     
-    /// Tests successful initialization of a `Name` instance.
-    /// - Throws: An error if the initialization fails.
-    func testInitialization_Success() throws {
-        let name = try Name("Mike", sex: .male)
-        XCTAssertNotNil(name, "Name should be initialized successfully.")
-        XCTAssertEqual(name?.text, "Mike", "Name text should be 'Mike'.")
-        XCTAssertEqual(name?.sex, .male, "Name sex should be .male.")
-        XCTAssertEqual(name?.affinityRating, Name.defaultAffinityRating, "Affinity rating should match the default value.")
-        XCTAssertEqual(name?.evaluated, Name.defaultEvaluationCount, "Evaluation count should match the default value.")
-        XCTAssertEqual(name?.isFavorite, Name.defaultFavoriteStatus, "Favorite status should match the default value.")
-    }
-    
-    /// Tests that initialization fails when the provided name text is empty.
-    func testInitialization_Failure_EmptyText() {
-        XCTAssertThrowsError(try Name("", sex: .male)) { error in
-            XCTAssertEqual(error as? Name.NameError, .nameIsEmpty, "Error should be nameIsEmpty.")
+    // Test successful initialization with valid parameters for both sexes
+    func testInitializationWithValidParameters() {
+        do {
+            let femaleName = try Name("Remi", sex: .female, affinityRating: 1300)
+            XCTAssertNotNil(femaleName)
+            XCTAssertEqual(femaleName?.text, "Remi")
+            XCTAssertEqual(femaleName?.sex, .female)
+            XCTAssertEqual(femaleName?.affinityRating, 1300)
+            XCTAssertEqual(femaleName?.evaluated, Name.defaultEvaluationCount)
+            XCTAssertEqual(femaleName?.isFavorite, Name.defaultFavoriteStatus)
+            
+            let maleName = try Name("Alex", sex: .male, affinityRating: 1300)
+            XCTAssertNotNil(maleName)
+            XCTAssertEqual(maleName?.text, "Alex")
+            XCTAssertEqual(maleName?.sex, .male)
+            XCTAssertEqual(maleName?.affinityRating, 1300)
+            XCTAssertEqual(maleName?.evaluated, Name.defaultEvaluationCount)
+            XCTAssertEqual(maleName?.isFavorite, Name.defaultFavoriteStatus)
+        } catch {
+            XCTFail("Initialization failed with valid parameters")
         }
     }
     
-    /// Tests that initialization fails when the provided affinity rating is negative.
-    func testInitialization_Failure_NegativeAffinityRating() {
-        XCTAssertThrowsError(try Name("Mike", sex: .male, affinityRating: -1)) { error in
-            XCTAssertEqual(error as? Name.NameError, .ratingBelowMinimum(Name.minimumAffinityRating), "Error should be ratingBelowMinimum with the minimum rating.")
+    // Test successful initialization with default affinity rating for both sexes
+    func testInitializationWithDefaultAffinityRating() {
+        do {
+            let femaleName = try Name("Remi", sex: .female)
+            XCTAssertNotNil(femaleName)
+            XCTAssertEqual(femaleName?.text, "Remi")
+            XCTAssertEqual(femaleName?.sex, .female)
+            XCTAssertEqual(femaleName?.affinityRating, Name.defaultAffinityRating)
+            XCTAssertEqual(femaleName?.evaluated, Name.defaultEvaluationCount)
+            XCTAssertEqual(femaleName?.isFavorite, Name.defaultFavoriteStatus)
+            
+            let maleName = try Name("Alex", sex: .male)
+            XCTAssertNotNil(maleName)
+            XCTAssertEqual(maleName?.text, "Alex")
+            XCTAssertEqual(maleName?.sex, .male)
+            XCTAssertEqual(maleName?.affinityRating, Name.defaultAffinityRating)
+            XCTAssertEqual(maleName?.evaluated, Name.defaultEvaluationCount)
+            XCTAssertEqual(maleName?.isFavorite, Name.defaultFavoriteStatus)
+        } catch {
+            XCTFail("Initialization failed with default affinity rating")
+        }
+    }
+    
+    // Test initialization failure with empty text for both sexes
+    func testInitializationWithEmptyText() {
+        XCTAssertThrowsError(try Name("", sex: .female)) { error in
+            XCTAssertEqual(error as? Name.NameError, Name.NameError.nameIsEmpty)
+        }
+        XCTAssertThrowsError(try Name("", sex: .male)) { error in
+            XCTAssertEqual(error as? Name.NameError, Name.NameError.nameIsEmpty)
+        }
+    }
+    
+    // Test initialization failure with negative affinity rating for both sexes
+    func testInitializationWithNegativeAffinityRating() {
+        XCTAssertThrowsError(try Name("Remi", sex: .female, affinityRating: -1)) { error in
+            XCTAssertEqual(error as? Name.NameError, Name.NameError.ratingBelowMinimum(Name.minimumAffinityRating))
+        }
+        XCTAssertThrowsError(try Name("Alex", sex: .male, affinityRating: -1)) { error in
+            XCTAssertEqual(error as? Name.NameError, Name.NameError.ratingBelowMinimum(Name.minimumAffinityRating))
         }
     }
     
     
     // MARK: - Attribute Update Tests
     
-    /// Tests successful updating of the affinity rating for a `Name` instance.
-    /// - Throws: An error if updating the affinity rating fails.
-    func testSetAffinity_Success() throws {
-        let name = try Name("Mike", sex: .male)
-        try name?.setAffinity(1500)
-        XCTAssertEqual(name?.affinityRating, 1500, "Affinity rating should be updated to 1500.")
-    }
-    
-    /// Tests that updating the affinity rating fails when the new rating is negative.
-    /// - Throws: An error if updating the affinity rating fails.
-    func testSetAffinity_Failure_NegativeRating() throws {
-        let name = try Name("Mike", sex: .male)
-        XCTAssertThrowsError(try name?.setAffinity(-1)) { error in
-            XCTAssertEqual(error as? Name.NameError, .ratingBelowMinimum(Name.minimumAffinityRating), "Error should be ratingBelowMinimum with the minimum rating.")
+    // Test increasing the evaluation count for both sexes
+    func testIncreaseEvaluationCount() {
+        do {
+            let femaleName = try Name("Remi", sex: .female)
+            XCTAssertNotNil(femaleName)
+            femaleName?.increaseEvaluationCount()
+            XCTAssertEqual(femaleName?.evaluated, 1)
+            
+            let maleName = try Name("Alex", sex: .male)
+            XCTAssertNotNil(maleName)
+            maleName?.increaseEvaluationCount()
+            XCTAssertEqual(maleName?.evaluated, 1)
+        } catch {
+            XCTFail("Initialization failed")
         }
     }
     
-    /// Tests that the evaluation count increases correctly when the method is called.
-    /// - Throws: An error if the name initialization fails.
-    func testIncreaseEvaluationCount() throws {
-        let name = try Name("Mike", sex: .male)
-        name?.increaseEvaluationCount()
-        XCTAssertEqual(name?.evaluated, 1, "Evaluation count should be incremented to 1.")
+    // Test setting the affinity rating for both sexes
+    func testSetAffinity() {
+        do {
+            let femaleName = try Name("Remi", sex: .female)
+            XCTAssertNotNil(femaleName)
+            try femaleName?.setAffinity(1500)
+            XCTAssertEqual(femaleName?.affinityRating, 1500)
+            
+            let maleName = try Name("Alex", sex: .male)
+            XCTAssertNotNil(maleName)
+            try maleName?.setAffinity(1500)
+            XCTAssertEqual(maleName?.affinityRating, 1500)
+        } catch {
+            XCTFail("Initialization or setting affinity failed")
+        }
     }
     
-    /// Tests the toggling of the favorite status for a `Name` instance.
-    /// - Throws: An error if the name initialization fails.
-    func testToggleFavorite() throws {
-        let name = try Name("Mike", sex: .male)!
-        name.toggleFavorite()
-        XCTAssertTrue(name.isFavorite, "Favorite status should be true after toggling once.")
-        name.toggleFavorite()
-        XCTAssertFalse(name.isFavorite, "Favorite status should be false after toggling twice.")
+    // Test setting the affinity rating to a negative value for both sexes
+    func testSetNegativeAffinity() {
+        do {
+            let femaleName = try Name("Remi", sex: .female)
+            XCTAssertNotNil(femaleName)
+            XCTAssertThrowsError(try femaleName?.setAffinity(-1)) { error in
+                XCTAssertEqual(error as? Name.NameError, Name.NameError.ratingBelowMinimum(Name.minimumAffinityRating))
+            }
+            
+            let maleName = try Name("Alex", sex: .male)
+            XCTAssertNotNil(maleName)
+            XCTAssertThrowsError(try maleName?.setAffinity(-1)) { error in
+                XCTAssertEqual(error as? Name.NameError, Name.NameError.ratingBelowMinimum(Name.minimumAffinityRating))
+            }
+        } catch {
+            XCTFail("Initialization failed")
+        }
+    }
+    
+    // Test toggling the favorite status for both sexes
+    func testToggleFavorite() {
+        do {
+            let femaleName = try Name("Remi", sex: .female)
+            XCTAssertNotNil(femaleName)
+            femaleName?.toggleFavorite()
+            XCTAssertEqual(femaleName?.isFavorite, true)
+            femaleName?.toggleFavorite()
+            XCTAssertEqual(femaleName?.isFavorite, false)
+            
+            let maleName = try Name("Alex", sex: .male)
+            XCTAssertNotNil(maleName)
+            maleName?.toggleFavorite()
+            XCTAssertEqual(maleName?.isFavorite, true)
+            maleName?.toggleFavorite()
+            XCTAssertEqual(maleName?.isFavorite, false)
+        } catch {
+            XCTFail("Initialization failed")
+        }
+    }
+    
+    // Test resetting values to default for both sexes
+    func testResetValues() {
+        do {
+            let femaleName = try Name("Remi", sex: .female)
+            XCTAssertNotNil(femaleName)
+            try femaleName?.setAffinity(1500)
+            femaleName?.increaseEvaluationCount()
+            femaleName?.toggleFavorite()
+            femaleName?.resetValues()
+            XCTAssertEqual(femaleName?.affinityRating, Name.defaultAffinityRating)
+            XCTAssertEqual(femaleName?.evaluated, Name.defaultEvaluationCount)
+            XCTAssertEqual(femaleName?.isFavorite, Name.defaultFavoriteStatus)
+            
+            let maleName = try Name("Alex", sex: .male)
+            XCTAssertNotNil(maleName)
+            try maleName?.setAffinity(1500)
+            maleName?.increaseEvaluationCount()
+            maleName?.toggleFavorite()
+            maleName?.resetValues()
+            XCTAssertEqual(maleName?.affinityRating, Name.defaultAffinityRating)
+            XCTAssertEqual(maleName?.evaluated, Name.defaultEvaluationCount)
+            XCTAssertEqual(maleName?.isFavorite, Name.defaultFavoriteStatus)
+        } catch {
+            XCTFail("Initialization or resetting values failed")
+        }
+    }
+    
+    // Test setting the affinity rating to the minimum allowed value for both sexes
+    func testSetMinimumAffinity() {
+        do {
+            let femaleName = try Name("Remi", sex: .female)
+            XCTAssertNotNil(femaleName)
+            try femaleName?.setAffinity(Name.minimumAffinityRating)
+            XCTAssertEqual(femaleName?.affinityRating, Name.minimumAffinityRating)
+            
+            let maleName = try Name("Alex", sex: .male)
+            XCTAssertNotNil(maleName)
+            try maleName?.setAffinity(Name.minimumAffinityRating)
+            XCTAssertEqual(maleName?.affinityRating, Name.minimumAffinityRating)
+        } catch {
+            XCTFail("Initialization or setting minimum affinity failed")
+        }
+    }
+    
+    // Test setting the affinity rating to a very high value for both sexes
+    func testSetHighAffinity() {
+        let highAffinityRating = Int.max
+        do {
+            let femaleName = try Name("Remi", sex: .female)
+            XCTAssertNotNil(femaleName)
+            try femaleName?.setAffinity(highAffinityRating)
+            XCTAssertEqual(femaleName?.affinityRating, highAffinityRating)
+            
+            let maleName = try Name("Alex", sex: .male)
+            XCTAssertNotNil(maleName)
+            try maleName?.setAffinity(highAffinityRating)
+            XCTAssertEqual(maleName?.affinityRating, highAffinityRating)
+        } catch {
+            XCTFail("Initialization or setting high affinity failed")
+        }
     }
 }
