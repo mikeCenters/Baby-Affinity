@@ -18,6 +18,7 @@ final class Name {
     /// Errors that can occur during `Name` initialization or modification.
     enum NameError: Error, Equatable {
         case nameIsEmpty
+        case invalidCharactersInName(_ allowedSpecialCharacters: String)
         case ratingBelowMinimum(_ minimumRating: Int)
     }
     
@@ -36,6 +37,8 @@ final class Name {
     /// Minimum value allowed for the affinity rating.
     static let minimumAffinityRating = 0
     
+    /// Allowed characters in name text
+    static let allowedSpecialCharacters = CharacterSet(charactersIn: "-' ")
     
     
     // MARK: - Attributes
@@ -71,6 +74,12 @@ final class Name {
         // Check if text is empty
         guard !text.isEmpty else {
             throw NameError.nameIsEmpty
+        }
+        
+        // Check for invalid characters
+        let invalidCharacterSet = CharacterSet.letters.union(Name.allowedSpecialCharacters).inverted
+        if text.rangeOfCharacter(from: invalidCharacterSet) != nil {
+            throw NameError.invalidCharactersInName(Name.allowedSpecialCharacters.description)
         }
         
         // Check if affinity rating is valid
