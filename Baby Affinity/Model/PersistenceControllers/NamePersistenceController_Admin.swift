@@ -10,6 +10,14 @@ import SwiftData
 
 // FIXME: Persistent Controller_Admin needs to throw errors, log them, and attempt to handle them. Then, build tests.
 
+// MARK: - Error
+
+enum NamePersistenceError: Error {
+    case duplicateNameInserted(_ name: String)
+    case noNamesInPersistence
+    case unableToFetch(_ error: Error)
+}
+
 /// A protocol for administrative operations on name data in the Baby Affinity app.
 ///
 /// The `NamePersistenceController_Admin` protocol extends the `NamePersistenceController` protocol by adding methods
@@ -21,79 +29,21 @@ import SwiftData
 /// correctly and efficiently, handling any errors that may occur during the process.
 protocol NamePersistenceController_Admin: NamePersistenceController {
     
-    /// Creates a `Name` object.
-    /// - Parameters:
-    ///   - name: The `String` representation of the name to be created. This must not be empty.
-    ///   - sex: The `Sex` associated with the name, which determines its gender classification.
-    ///   - affinityRating: The initial affinity rating for the name. This must be a non-negative integer.
-    /// - Returns: A `Name` object if the creation is successful, or `nil` if an error occurs during initialization.
-    func createName(_ name: String, sex: Sex, affinityRating: Int) -> Name?
+    func createName(_ name: String, sex: Sex, affinityRating: Int) -> Result<Name, Name.NameError>
     
-    /// Deletes a `Name` object.
-    /// - Parameters:
-    ///   - name: The `Name` object to be deleted.
-    ///   - context: The model context used for deleting data.
-    /// - Throws: An error if the delete operation fails.
-    func delete(_ name: Name, context: ModelContext) throws
+    func delete(_ name: Name, context: ModelContext)
     
-    /// Deletes multiple `Name` objects.
-    /// - Parameters:
-    ///   - names: An array of `Name` objects to be deleted.
-    ///   - context: The model context used for deleting data.
-    /// - Throws: An error if the delete operation fails.
-    func delete(_ names: [Name], context: ModelContext) throws
+    func delete(_ names: [Name], context: ModelContext)
     
-    /// Inserts a `Name` object.
-    /// - Parameters:
-    ///   - name: The `Name` object to be inserted.
-    ///   - context: The model context used for inserting data.
-    /// - Throws: An error if the insert operation fails.
+    func insert(_ name: Name, context: ModelContext) -> Result<Void, NamePersistenceError>
     
-    /**
-     Inserts a `Name` into the given context if it does not already exist.
-
-     This method checks if a `Name` with the same text and sex already exists in the context.
-     If it does, it throws a `NamePersistenceError.duplicateNameInserted` error. If not,
-     it inserts the `Name`.
-
-     - Parameters:
-       - name: The `Name` object to be inserted.
-       - context: The `ModelContext` where the `Name` should be inserted.
-
-     - Throws:
-       - `NamePersistenceError.duplicateNameCreated` if a `Name` with the same text and sex already exists.
-     */
-    func insert(_ name: Name, context: ModelContext) throws
+    func insert(_ names: [Name], context: ModelContext) -> [Result<Void, NamePersistenceError>]
     
-    /**
-     Inserts multiple `Name` objects into the given context if it does not already exist.
-
-     This method checks if a `Name` with the same text and sex already exists in the context.
-     If it does, it throws a `NamePersistenceError.duplicateNameInserted` error. If not,
-     it inserts the `Name`.
-
-     - Parameters:
-       - name: The `Name` object to be inserted.
-       - context: The `ModelContext` where the `Name` should be inserted.
-
-     - Throws:
-       - `NamePersistenceError.duplicateNameCreated` if a `Name` with the same text and sex already exists.
-     */
-    func insert(_ names: [Name], context: ModelContext) throws
-    
-    /// Retrieves a list of default `Name` objects, optionally filtered by sex.
-    /// - Parameter sex: An optional `Sex` value to filter the names by. If `nil`, both male and female names are returned.
-    /// - Returns: An array of `Name` objects. If `sex` is provided, only names of that sex are returned. If `sex` is `nil`, names of both sexes are returned.
     func getDefaultNames(_ sex: Sex?) -> [Name]
     
-    /// Loads default `Name` objects into the data context.
-    /// - Parameter context: The model context used for inserting data.
-    /// - Throws: An error if the insert operation fails.
-    func loadDefaultNames(into context: ModelContext) throws
+    func loadDefaultNames(into context: ModelContext) async
     
-    /// Resets all data associated with `Name` objects
-    /// - Parameter context: The model context used for managing data.
-    func resetNameData(in context: ModelContext) throws
+    func resetNameData(in context: ModelContext) async
 }
 
 
@@ -101,47 +51,69 @@ extension NamePersistenceController_Admin {
     
     // MARK: - Create
     
-    func createName(_ name: String, sex: Sex, affinityRating: Int = Name.defaultAffinityRating) -> Name? {
+    func createName(_ name: String, sex: Sex, affinityRating: Int = Name.defaultAffinityRating) -> Result<Name, Name.NameError> {
         do {
-            return try Name(name, sex: sex, affinityRating: affinityRating)
+            let name = try Name(name, sex: sex, affinityRating: affinityRating)
+            return .success(name)
+            
         } catch Name.NameError.nameIsEmpty {
             logError("Error: The name cannot be empty. Skipping: \(name)")
-        } catch Name.NameError.ratingBelowMinimum(let minimum) {
-            logError("Error: The affinity rating is below the minimum (\(minimum)). Skipping: \(name)")
+            return .failure(.nameIsEmpty)
+            
+        } catch Name.NameError.ratingBelowMinimum(Name.minimumAffinityRating) {
+            logError("Error: The affinity rating is below the minimum (\(Name.minimumAffinityRating)). Skipping: \(name)")
+            return .failure(.ratingBelowMinimum(Name.minimumAffinityRating))
+            
         } catch {
             logError("Unexpected error initializing Name: \(error.localizedDescription). Skipping: \(name)")
+            return .failure(.nameIsEmpty)
         }
-        return nil
     }
     
     
     // MARK: - Delete
     
-    func delete(_ name: Name, context: ModelContext) throws {
+    func delete(_ name: Name, context: ModelContext) {
         context.delete(name)
     }
     
-    func delete(_ names: [Name], context: ModelContext) throws {
+    func delete(_ names: [Name], context: ModelContext) {
         for name in names {
-            try delete(name, context: context)
+            delete(name, context: context)
         }
     }
     
     
     // MARK: - Insert
     
-    func insert(_ name: Name, context: ModelContext) throws {
-        guard try fetchName(byText: name.text, sex: name.sex!, context: context) == nil
-        else {
-            throw NamePersistenceError.duplicateNameInserted(name.text)
+    func insert(_ name: Name, context: ModelContext) -> Result<Void, NamePersistenceError> {
+        do {
+            guard try fetchName(byText: name.text, sex: name.sex!, context: context) == nil
+            else {
+                logError("Attempted to insert a duplicate \(name.sex!.sexNamingConvention) name. Name: \(name.text)")
+                return .failure(NamePersistenceError.duplicateNameInserted(name.text))
+            }
+            
+            context.insert(name)
+            return .success(())
+            
+        } catch {
+            logError("Unable to fetch names while attempting to insert name. Name: \(name)")
+            return .failure(.unableToFetch(error))
         }
-        context.insert(name)
     }
     
-    func insert(_ names: [Name], context: ModelContext) throws {
+    func insert(_ names: [Name], context: ModelContext) -> [Result<Void, NamePersistenceError>] {
+        var results: [Result<Void, NamePersistenceError>] = []
         for name in names {
-            try insert(name, context: context)
+            switch insert(name, context: context) {
+            case .success(): 
+                results.append(.success(()))
+            case .failure(let error): 
+                results.append(.failure(error))
+            }
         }
+        return results
     }
 }
 
@@ -152,89 +124,102 @@ extension NamePersistenceController_Admin {
     
     func getDefaultNames(_ sex: Sex? = nil) -> [Name] {
         var names: [Name] = []
+        let nameData = DefaultBabyNames()               /// Default data is local.
         
         switch sex {
-        case .female:   // Female Names
-            for (_, name) in DefaultBabyNames().girlNames {
-                if let newName = createName(name, sex: .female) {
+        case .female:                                   // Female Names
+            for name in nameData.girlNames {
+                switch createName(name, sex: .female) {
+                case .success(let newName):             /// Should always succeed with local data.
                     names.append(newName)
+                    
+                case .failure(let error):               /// The default names data should not fail; local data.
+                    switch error {                      /// Switch is used to handle future implementations.
+                    case .nameIsEmpty: break            /// The error is logged.
+                    case .ratingBelowMinimum(_): break  /// The error is logged.
+                    }
                 }
             }
-        case .male:     // Male Names
-            for (_, name) in DefaultBabyNames().boyNames {
-                if let newName = createName(name, sex: .male) {
+        case .male:                                     // Male Names
+            for name in nameData.girlNames {
+                switch createName(name, sex: .male) {
+                case .success(let newName):             /// Should always succeed with local data.
                     names.append(newName)
+                    
+                case .failure(let error):               /// The default names data should not fail; local data.
+                    switch error {                      /// Switch is used to handle future implementations.
+                    case .nameIsEmpty: break            /// The error is logged.
+                    case .ratingBelowMinimum(_): break  /// The error is logged.
+                    }
                 }
             }
-        default:        // All Names
-            for (_, name) in DefaultBabyNames().girlNames {
-                if let newName = createName(name, sex: .female) {
-                    names.append(newName)
-                }
-            }
-            for (_, name) in DefaultBabyNames().boyNames {
-                if let newName = createName(name, sex: .male) {
-                    names.append(newName)
-                }
-            }
+        default:                                        // All Names
+            names = getDefaultNames(.female) + getDefaultNames(.male)
         }
+        
         return names
     }
     
-    func loadDefaultNames(into context: ModelContext) throws {
-        let nameData = DefaultBabyNames()
+    func loadDefaultNames(into context: ModelContext) async {
+        let names = getDefaultNames()
+        let results = insert(names, context: context)
         
-        /// Add girl names.
-        for (_, name) in nameData.girlNames {
-            let n = try! Name(name, sex: .female)!
-            context.insert(n)
+        for result in results {
+            switch result {
+            case .success: break
+            case .failure(let error):   /// Placeholder for if needed. Errors are handled deeper in the method.
+                switch error {
+                case .duplicateNameInserted(_): break
+                case .noNamesInPersistence: break
+                case .unableToFetch(_): break
+                }
+            }
         }
         
-        /// Add boy names.
-        for (_, name) in nameData.boyNames {
-            let n = try! Name(name, sex: .male)!
-            context.insert(n)
-        }
+        
+//        let nameData = DefaultBabyNames()
+//        
+//        // Add girl names.
+//        for name in nameData.girlNames {
+//            guard let n = createName(name, sex: .female) else {
+//                logError("Failed to create name \(name) for female.")
+//                continue
+//            }
+//            do {
+//                try insert(n, context: context)
+//            } catch {
+//                logError("Failed to insert name \(name) for female: \(error.localizedDescription)")
+//            }
+//        }
+//        
+//        // Add boy names.
+//        for name in nameData.boyNames {
+//            guard let n = createName(name, sex: .male) else {
+//                logError("Failed to create name \(name) for male.")
+//                continue
+//            }
+//            do {
+//                try insert(n, context: context)
+//            } catch {
+//                logError("Failed to insert name \(name) for male: \(error.localizedDescription)")
+//            }
+//        }
     }
     
-    // FIXME: - LoadDefaultNames should use the admin methods to insert the Names. Performance is sluggish in this method.
     
-//    func _loadDefaultNames(into context: ModelContext) throws {
-//        let nameData = DefaultBabyNames()
-//        let totalNamesCount = nameData.girlNames.count + nameData.boyNames.count
-//        
-//        /// Add girl names.
-//        for (_, name) in nameData.girlNames {
-//            let n = try! Name(name, sex: .female)!
-//            context.insert(n)
-//        }
-//        
-//        /// Add boy names.
-//        for (_, name) in nameData.boyNames {
-//            let n = try! Name(name, sex: .male)!
-//            context.insert(n)
-//        }
-//        
-//        try context.transaction {
-//            let defaultNames = getDefaultNames()
-//            try insert(defaultNames, context: context)
-//        }
-//    }
-}
-
-
-// MARK: - Methods
-
-extension NamePersistenceController_Admin {
+    // MARK: - Methods
     
-    func resetNameData(in context: ModelContext) {
+    func resetNameData(in context: ModelContext) async {
         do {
-            let names = try fetchNames(context: context)
-            names.forEach { $0.resetValues() }
+            let names = try fetchNames(context: context)    /// Get all names to reset.
+            for name in names {
+                name.resetValues()                          /// Reset the name data.
+            }
             
-        }
-        catch {
-            logError("Unable to reset data: \(error)")
+            await loadDefaultNames(into: context)           /// Recover lost names.
+            
+        } catch {
+            logError("Unable to fetch names while attempting to reset name data. Error: \(error)")
         }
     }
 }
