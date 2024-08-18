@@ -42,18 +42,40 @@ struct Baby_AffinityApp: App {
 
 
 // MARK: - Persistence Management
+import SwiftUI
 
+/// The main application class for Baby Affinity, which conforms to `NamePersistenceController_Admin`
+/// to manage the persistence of name data.
+@MainActor
 extension Baby_AffinityApp: NamePersistenceController_Admin {
-    @MainActor
+
+    /// Loads initial data into the application. This method checks if there are existing names in the context.
+    /// If no names are found, it loads default names into the context. This method is invoked during
+    /// the initial app launch to ensure that the app starts with the necessary data.
+    ///
+    /// The method runs asynchronously in a `Task` to handle potential asynchronous operations such as
+    /// fetching and loading data. It is marked with `@MainActor` to ensure that all operations are executed
+    /// on the main thread, which is important for thread safety with UI and context-related operations.
+    ///
+    /// **Note:** This implementation currently ignores potential data-racing issues related to using `ModelContext`
+    /// in asynchronous contexts. It is advisable to review and address these issues in future Xcode releases,
+    /// particularly Xcode 16 and beyond, for improved concurrency safety.
     private func loadData() {
-        do {
-            if try fetchNames(context: sharedModelContainer.mainContext).isEmpty {
-                try loadDefaultNames(into: sharedModelContainer.mainContext)
+        Task {
+            do {
+                // Access the main context from the shared model container
+                let context = sharedModelContainer.mainContext
+                
+                // Check if there are existing names in the context
+                if try fetchNames(context: context).isEmpty {
+                    // If no names are found, load default names into the context
+                    await loadDefaultNames(into: context)
+                }
+            } catch {
+                // Handle any errors that occur during data loading
+                fatalError("Unable to load default data on initial app launch: \(error)")
             }
-        } catch {
-            fatalError("Unable to load default data on initial app launch: \(error)")
         }
-        
     }
 }
 
@@ -79,15 +101,15 @@ let previewModelContainer: ModelContainer = {
             let names = DefaultBabyNames()
             
             /// Add girl names.
-            for (sex, name) in names.girlNames {
-                let n = try! Name(name, sex: .female)!
+            for name in names.girlNames {
+                let n = try! Name(name, sex: .female)
                 try! n.setAffinity((900...1500).randomElement() ?? 1200)
                 context.insert(n)
             }
             
             /// Add boy names.
-            for (sex, name) in names.boyNames {
-                let n = try! Name(name, sex: .male)!
+            for name in names.boyNames {
+                let n = try! Name(name, sex: .male)
                 try! n.setAffinity((900...1500).randomElement() ?? 1200)
                 context.insert(n)
             }
@@ -117,16 +139,16 @@ let previewModelContainer_WithFavorites: ModelContainer = {
             let names = DefaultBabyNames()
             
             /// Add girl names.
-            for (sex, name) in names.girlNames {
-                let n = try! Name(name, sex: .female)!
+            for name in names.girlNames {
+                let n = try! Name(name, sex: .female)
                 if n.text.contains("e") { n.toggleFavorite() }
                 try! n.setAffinity((900...1500).randomElement() ?? 1200)
                 context.insert(n)
             }
             
             /// Add boy names.
-            for (sex, name) in names.boyNames {
-                let n = try! Name(name, sex: .male)!
+            for name in names.boyNames {
+                let n = try! Name(name, sex: .male)
                 if n.text.contains("e") { n.toggleFavorite() }
                 try! n.setAffinity((900...1500).randomElement() ?? 1200)
                 context.insert(n)

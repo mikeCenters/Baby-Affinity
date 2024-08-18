@@ -7,8 +7,12 @@
 
 import SwiftUI
 
-/// A button that resets the name data within the app.
-/// This view conforms to `NamePersistenceController_Admin` to access the reset functionality.
+/// A view that provides a button to reset the name data within the app.
+/// This view conforms to `NamePersistenceController_Admin` to access the functionality for resetting name data.
+/// It presents a confirmation dialog to ensure that the user wants to proceed with resetting all data.
+///
+/// The `ResetDataButton` view is designed to be used in contexts where the user needs
+/// an option to reset the name data, such as in settings or administration panels.
 struct ResetDataButton: View, NamePersistenceController_Admin {
     
     // MARK: - Properties
@@ -35,12 +39,22 @@ struct ResetDataButton: View, NamePersistenceController_Admin {
         .confirmationDialog("Reset data", isPresented: $isShowingConfirmation) {
             Button("Yes", role: .destructive) {
                 withAnimation {
-                    resetNameData(in: modelContext)
+                    resetNameData()
                 }
             }
             Button("Cancel", role: .cancel) { }
         } message: {
             Text("You are about to reset all data!\nAre you sure?")
+        }
+    }
+    
+    
+    // MARK: - Methods
+    
+    /// Initiates the process to reset the name data in the model context.
+    private func resetNameData() {
+        Task {
+            await resetNameData(in: modelContext)
         }
     }
 }

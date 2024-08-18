@@ -109,24 +109,24 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
     
     // MARK: - Create
     func testCreateName() throws {
-        let name = createName("Mike", sex: .male)
+        let name = try createName("Mike", sex: .male)
         XCTAssertNotNil(name, "Name should have been created with default values.")
     }
     
     func testCreateName_NilOnBelowMinimumAffinityRating() {
-        let name = createName("Mike", sex: .male, affinityRating: -1)
+        let name = try? createName("Mike", sex: .male, affinityRating: -1)
         XCTAssertNil(name, "Name should not be created with a rating below the minimum.")
     }
     
     func testCreateName_NilOnEmptyString() {
-        let name = createName("", sex: .male)
+        let name = try? createName("", sex: .male)
         XCTAssertNil(name, "Name should not be created with an empty string.")
     }
     
     // MARK: - Insert
     
     func testInsertName() throws {
-        guard let name = createName("Mike", sex: .male) else {
+        guard let name = try createName("Mike", sex: .male) else {
             XCTFail("Unable to create a new Name.")
             return
         }
@@ -140,7 +140,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
     func testInsertNames() throws {
         var names: [Name] = []
         (0..<10).forEach {
-            guard let name = createName("Name \($0 + 1)", sex: .male) else {
+            guard let name = try? createName("Name \($0 + 1)", sex: .male) else {
                 XCTFail("Unable to create a new Name.")
                 return
             }
@@ -157,8 +157,8 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
     }
     
     func testInsertName_ThrowsDuplicateNameInserted() throws {
-        guard let maleName = createName("Mike", sex: .male),
-              let femaleName = createName("Mike", sex: .female)
+        guard let maleName = try createName("Mike", sex: .male),
+              let femaleName = try createName("Mike", sex: .female)
         else {
             XCTFail("Unable to create a new Name.")
             return
@@ -197,8 +197,8 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
     }
     
     func testFetchNames_BySex() throws {
-        guard let maleName = createName("Mike", sex: .male),
-              let femaleName = createName("Lily", sex: .female)
+        guard let maleName = try createName("Mike", sex: .male),
+              let femaleName = try createName("Lily", sex: .female)
         else {
             XCTFail("Unable to create a new Name.")
             return
@@ -245,7 +245,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         var names: [Name] = []
         /// Create 10 favorite male names.
         (0..<10).forEach {
-            guard let name = createName("Male Favorite Name \($0 + 1)", sex: .male) else {
+            guard let name = try? createName("Male Favorite Name \($0 + 1)", sex: .male) else {
                 XCTFail("Unable to create a new Name.")
                 return
             }
@@ -255,7 +255,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         
         /// Create 10 non-favorite male names.
         (0..<10).forEach {
-            guard let name = createName("Male Non-Favorite Name \($0 + 1)", sex: .male) else {
+            guard let name = try? createName("Male Non-Favorite Name \($0 + 1)", sex: .male) else {
                 XCTFail("Unable to create a new Name.")
                 return
             }
@@ -264,7 +264,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         
         /// Create 10 favorite female names.
         (0..<10).forEach {
-            guard let name = createName("Female Favorite Name \($0 + 1)", sex: .female) else {
+            guard let name = try? createName("Female Favorite Name \($0 + 1)", sex: .female) else {
                 XCTFail("Unable to create a new Name.")
                 return
             }
@@ -274,7 +274,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         
         /// Create 10 non-favorite female names.
         (0..<10).forEach {
-            guard let name = createName("Female Non-Favorite Name \($0 + 1)", sex: .female) else {
+            guard let name = try? createName("Female Non-Favorite Name \($0 + 1)", sex: .female) else {
                 XCTFail("Unable to create a new Name.")
                 return
             }
@@ -317,7 +317,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
     func testDeleteMultipleNames() throws {
         var names: [Name] = []
         (0..<10).forEach {
-            guard let name = createName("Name \($0 + 1)", sex: .male) else {
+            guard let name = try? createName("Name \($0 + 1)", sex: .male) else {
                 XCTFail("Unable to create a new Name.")
                 return
             }
@@ -328,7 +328,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         let fetchedNames = try fetchNames(context: context)
         XCTAssertEqual(fetchedNames.count, names.count, "10 names should be in the context.")
         
-        try delete(fetchedNames, context: context)
+        delete(fetchedNames, context: context)
         
         let emptyNames = try fetchNames(context: context)
         XCTAssertTrue(emptyNames.isEmpty, "The names should be deleted from the context")

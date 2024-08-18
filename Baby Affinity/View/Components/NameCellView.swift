@@ -91,7 +91,7 @@ import SwiftData
 
 #Preview {
     let names = (1...10).map {
-        try! Name("Name \($0)", sex: .male)!
+        try! Name("Name \($0)", sex: .male)
     }
     
     return List {
