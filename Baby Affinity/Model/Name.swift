@@ -9,7 +9,6 @@ import Foundation
 import SwiftData
 
 // FIXME: - Add Tags to create categories.
-// FIXME: - Add ability to reference the same name with variant spellings.
 
 @Model
 final class Name {
@@ -73,7 +72,6 @@ final class Name {
         guard !text.isEmpty else {
             throw NameError.nameIsEmpty
         }
-        // FIXME: Throw error when name exists for the sex.
         
         // Check if affinity rating is valid
         guard affinityRating >= Name.minimumAffinityRating else {
