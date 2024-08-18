@@ -8,14 +8,6 @@
 import Foundation
 import SwiftData
 
-// MARK: - Error
-
-enum NamePersistenceError: Error {
-    case duplicateNameInserted(_ name: String)
-    case noNamesInPersistence
-}
-
-
 // MARK: - Name Persistence Controller
 
 /// A protocol for managing name data in the Baby Affinity app.
