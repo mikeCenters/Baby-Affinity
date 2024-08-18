@@ -68,7 +68,7 @@ final class Name {
     ///   - sex: The `Sex` of the name, represented as an enum value.
     ///   - affinityRating: The rating representing the user's fondness towards the name. Defaults to `Name.defaultAffinityRating`. Must be non-negative.
     /// - Throws: `NameError` if `text` is empty or`affinityRating` is below the minimum.
-    init?(_ text: String, sex: Sex, affinityRating: Int = Name.defaultAffinityRating) throws {
+    init(_ text: String, sex: Sex, affinityRating: Int = Name.defaultAffinityRating) throws {
         // Check if text is empty
         guard !text.isEmpty else {
             throw NameError.nameIsEmpty
