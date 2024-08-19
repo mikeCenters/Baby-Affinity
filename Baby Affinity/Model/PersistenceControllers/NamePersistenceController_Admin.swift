@@ -60,9 +60,13 @@ extension NamePersistenceController_Admin {
             logError("Error: The name cannot be empty. Skipping: \(name)")
             return .failure(.nameIsEmpty)
             
-        } catch Name.NameError.ratingBelowMinimum(Name.minimumAffinityRating) {
-            logError("Error: The affinity rating is below the minimum (\(Name.minimumAffinityRating)). Skipping: \(name)")
+        } catch Name.NameError.ratingBelowMinimum(let minimumRating) {
+            logError("Error: The affinity rating is below the minimum (\(minimumRating)). Skipping: \(name)")
             return .failure(.ratingBelowMinimum(Name.minimumAffinityRating))
+            
+        } catch Name.NameError.invalidCharactersInName(let chars) {
+            logError("Error: The provided name string contained non-alphabet characters or the allowed special characters (\(chars)). Skipping: \(name)")
+            return .failure(.invalidCharactersInName(chars))
             
         } catch {
             logError("Unexpected error initializing Name: \(error.localizedDescription). Skipping: \(name)")
@@ -124,36 +128,38 @@ extension NamePersistenceController_Admin {
     
     func getDefaultNames(_ sex: Sex? = nil) -> [Name] {
         var names: [Name] = []
-        let nameData = DefaultBabyNames()               /// Default data is local.
+        let nameData = DefaultBabyNames()                   /// Default data is local.
         
         switch sex {
-        case .female:                                   // Female Names
+        case .female:                                       // Female Names
             for name in nameData.girlNames {
                 switch createName(name, sex: .female) {
-                case .success(let newName):             /// Should always succeed with local data.
+                case .success(let newName):                 /// Should always succeed with local data.
                     names.append(newName)
                     
-                case .failure(let error):               /// The default names data should not fail; local data.
-                    switch error {                      /// Switch is used to handle future implementations.
-                    case .nameIsEmpty: break            /// The error is logged.
-                    case .ratingBelowMinimum(_): break  /// The error is logged.
+                case .failure(let error):                   /// The default names data should not fail; local data.
+                    switch error {                          /// Switch is used to handle future implementations.
+                    case .nameIsEmpty: break                /// The error is logged.
+                    case .ratingBelowMinimum(_): break      /// The error is logged.
+                    case .invalidCharactersInName: break    /// The error is logged.
                     }
                 }
             }
-        case .male:                                     // Male Names
+        case .male:                                         // Male Names
             for name in nameData.girlNames {
                 switch createName(name, sex: .male) {
-                case .success(let newName):             /// Should always succeed with local data.
+                case .success(let newName):                 /// Should always succeed with local data.
                     names.append(newName)
                     
-                case .failure(let error):               /// The default names data should not fail; local data.
-                    switch error {                      /// Switch is used to handle future implementations.
-                    case .nameIsEmpty: break            /// The error is logged.
-                    case .ratingBelowMinimum(_): break  /// The error is logged.
+                case .failure(let error):                   /// The default names data should not fail; local data.
+                    switch error {                          /// Switch is used to handle future implementations.
+                    case .nameIsEmpty: break                /// The error is logged.
+                    case .ratingBelowMinimum(_): break      /// The error is logged.
+                    case .invalidCharactersInName(_): break /// The error is logged.
                     }
                 }
             }
-        default:                                        // All Names
+        default:                                            // All Names
             names = getDefaultNames(.female) + getDefaultNames(.male)
         }
         
@@ -161,49 +167,57 @@ extension NamePersistenceController_Admin {
     }
     
     func loadDefaultNames(into context: ModelContext) async {
-        let names = getDefaultNames()
-        let results = insert(names, context: context)
+//        let names = getDefaultNames()
+//        try? context.transaction {
+//            let results = insert(names, context: context)
+//            for result in results {
+//                switch result {
+//                case .success: break
+//                case .failure(let error):   /// Placeholder for if needed. Errors are handled deeper in the method.
+//                    switch error {
+//                    case .duplicateNameInserted(_): break
+//                    case .noNamesInPersistence: break
+//                    case .unableToFetch(_): break
+//                    }
+//                }
+//            }
+//        }
         
-        for result in results {
-            switch result {
-            case .success: break
-            case .failure(let error):   /// Placeholder for if needed. Errors are handled deeper in the method.
-                switch error {
-                case .duplicateNameInserted(_): break
-                case .noNamesInPersistence: break
-                case .unableToFetch(_): break
+        
+        
+        let nameData = DefaultBabyNames()
+        
+        // Add girl names.
+        for name in nameData.girlNames {
+            switch createName(name, sex: .female) {
+            case .success(let success):
+                switch insert(success, context: context) {
+                case .success: continue
+                case .failure(let error): 
+                    print(error.localizedDescription)
                 }
+                
+            case .failure(let failure):
+                print(failure.localizedDescription)
+                continue
             }
         }
         
-        
-//        let nameData = DefaultBabyNames()
-//        
-//        // Add girl names.
-//        for name in nameData.girlNames {
-//            guard let n = createName(name, sex: .female) else {
-//                logError("Failed to create name \(name) for female.")
-//                continue
-//            }
-//            do {
-//                try insert(n, context: context)
-//            } catch {
-//                logError("Failed to insert name \(name) for female: \(error.localizedDescription)")
-//            }
-//        }
-//        
-//        // Add boy names.
-//        for name in nameData.boyNames {
-//            guard let n = createName(name, sex: .male) else {
-//                logError("Failed to create name \(name) for male.")
-//                continue
-//            }
-//            do {
-//                try insert(n, context: context)
-//            } catch {
-//                logError("Failed to insert name \(name) for male: \(error.localizedDescription)")
-//            }
-//        }
+        // Add boy names.
+        for name in nameData.boyNames {
+            switch createName(name, sex: .male) {
+            case .success(let success):
+                switch insert(success, context: context) {
+                case .success: continue
+                case .failure(let error): 
+                    print(error.localizedDescription)
+                }
+                
+            case .failure(let failure):
+                print(failure.localizedDescription)
+                continue
+            }
+        }
     }
     
     
