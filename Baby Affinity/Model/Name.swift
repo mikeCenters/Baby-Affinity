@@ -16,10 +16,11 @@ final class Name {
     // MARK: - Errors
     
     /// Errors that can occur during `Name` initialization or modification.
-    enum NameError: Error, Equatable {
+    enum NameError: Error {
         case nameIsEmpty
         case invalidCharactersInName(_ allowedSpecialCharacters: String)
         case ratingBelowMinimum(_ minimumRating: Int)
+        case unexpectedError(_ error: Error)
     }
     
     
