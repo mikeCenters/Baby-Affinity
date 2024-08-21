@@ -57,7 +57,7 @@ struct FavoriteNamesView: View, NamePersistenceController {
                     
                 case .showNames:        /// Favorites are available
                     ForEach(presentedNames.randomElements(count: Self.nameLimit), id: \.self) { name in
-                        let rank = try? getRank(of: name, from: modelContext)
+                        let rank = try? getRank(of: name, from: modelContext.container)
                         NameCellView(name: name, rank: rank ?? 0)
                     }
                 }
@@ -152,7 +152,7 @@ extension FavoriteNamesView {
         presentedNames = []
         
         do {
-            let names = try fetchFavoriteNames(sex: selectedSex, context: modelContext)
+            let names = try fetchFavoriteNames(sex: selectedSex, container: modelContext.container)
             let namesToShow = names.randomElements(count: Self.nameLimit)
             presentedNames = namesToShow.sorted { $0.affinityRating > $1.affinityRating }
             
