@@ -16,11 +16,27 @@ final class Name {
     // MARK: - Errors
     
     /// Errors that can occur during `Name` initialization or modification.
-    enum NameError: Error {
+    enum NameError: Error, Equatable {
         case nameIsEmpty
         case invalidCharactersInName(_ allowedSpecialCharacters: String)
         case ratingBelowMinimum(_ minimumRating: Int)
         case unexpectedError(_ error: Error)
+        
+        
+        static func == (lhs: Name.NameError, rhs: Name.NameError) -> Bool {
+            switch (lhs, rhs) {
+            case (.nameIsEmpty, .nameIsEmpty):
+                return true
+            case (.invalidCharactersInName(_), .invalidCharactersInName(_)):
+                return true
+            case (.ratingBelowMinimum(_), .ratingBelowMinimum(_)):
+                return true
+            case (.unexpectedError(let lhsError as NSError), .unexpectedError(let rhsError as NSError)):
+                return lhsError == rhsError
+            default:
+                return false
+            }
+        }
     }
     
     
