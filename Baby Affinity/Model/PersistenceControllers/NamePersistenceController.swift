@@ -42,10 +42,11 @@ protocol NamePersistenceController {
     ///
     /// - Parameters:
     ///   - evaluatedCount: The number of times the `Name` objects have been evaluated.
+    ///   - sex: The sex to filter the `Name` objects by.
     ///   - container: The model container used for fetching data.
     /// - Returns: An array of `Name` objects with the specified evaluation count.
     /// - Throws: An error if the fetch operation fails.
-    func fetchNames(evaluatedCount: Int, container: ModelContainer) throws -> [Name]
+    func fetchNames(evaluatedCount: Int, sex: Sex, container: ModelContainer) throws -> [Name]
     
     /// Fetches a `Name` object by its text property.
     ///
@@ -68,7 +69,7 @@ protocol NamePersistenceController {
     ///   - container: The `ModelContainer` used for fetching data.
     /// - Returns: An array of `Name` objects whose text property contains the provided partial text.
     /// - Throws: An error if the fetch operation fails.
-    func fetchNames(byPartialText partialText: String, container: ModelContainer) throws -> [Name]
+    func fetchNames(byPartialText partialText: String, sex: Sex, container: ModelContainer) throws -> [Name]
     
     /// Fetches `Name` objects that are marked as favorites filtered by sex.
     ///
@@ -104,8 +105,9 @@ extension NamePersistenceController {
         
         do {
             return try context.fetch(descriptor)
+            
         } catch {
-            logError("Failed to fetch names: \(error.localizedDescription)")
+            logError("Failed to fetch all names of both sexes: \(error.localizedDescription)")
             throw NamePersistenceError.unableToFetch(error)
         }
     }
@@ -113,27 +115,30 @@ extension NamePersistenceController {
     func fetchNames(_ sex: Sex, container: ModelContainer) throws -> [Name] {
         let context = ModelContext(container)
         let descriptor = FetchDescriptor<Name>(
-            predicate: #Predicate { $0.sexRawValue == sex.rawValue }
-        )
+            predicate: #Predicate { $0.sexRawValue == sex.rawValue })
         
         do {
             return try context.fetch(descriptor)
+            
         } catch {
-            logError("Failed to fetch names for sex \(sex.rawValue): \(error.localizedDescription)")
+            logError("Failed to fetch all \(sex.sexNamingConvention) names: \(error.localizedDescription)")
             throw NamePersistenceError.unableToFetch(error)
         }
     }
     
-    func fetchNames(evaluatedCount: Int, container: ModelContainer) throws -> [Name] {
+    func fetchNames(evaluatedCount: Int, sex: Sex, container: ModelContainer) throws -> [Name] {
         let context = ModelContext(container)
         let descriptor = FetchDescriptor<Name>(
-            predicate: #Predicate { $0.evaluated == evaluatedCount }
-        )
+            predicate: #Predicate {
+                $0.sexRawValue == sex.rawValue &&
+                $0.evaluated == evaluatedCount
+            })
         
         do {
             return try context.fetch(descriptor)
+            
         } catch {
-            logError("Failed to fetch names with evaluated count \(evaluatedCount): \(error.localizedDescription)")
+            logError("Failed to fetch \(sex.sexNamingConvention) names with evaluated count \(evaluatedCount): \(error.localizedDescription)")
             throw NamePersistenceError.unableToFetch(error)
         }
     }
@@ -142,10 +147,9 @@ extension NamePersistenceController {
         let context = ModelContext(container)
         let descriptor = FetchDescriptor<Name>(
             predicate: #Predicate {
-                $0.text == text &&
-                $0.sexRawValue == sex.rawValue
-            }
-        )
+                $0.sexRawValue == sex.rawValue &&
+                $0.text == text
+            })
         
         do {
             let namesFetch = try context.fetch(descriptor)
@@ -155,24 +159,26 @@ extension NamePersistenceController {
             }
             
             return namesFetch.first
+            
         } catch {
-            logError("Failed to fetch name by text '\(text)' and sex \(sex.rawValue): \(error.localizedDescription)")
+            logError("Failed to fetch \(sex.sexNamingConvention) name by text '\(text)': \(error.localizedDescription)")
             throw NamePersistenceError.unableToFetch(error)
         }
     }
     
-    func fetchNames(byPartialText partialText: String, container: ModelContainer) throws -> [Name] {
+    func fetchNames(byPartialText partialText: String, sex: Sex, container: ModelContainer) throws -> [Name] {
         let context = ModelContext(container)
         let descriptor = FetchDescriptor<Name>(
             predicate: #Predicate {
+                $0.sexRawValue == sex.rawValue &&
                 $0.text.contains(partialText)
-            }
-        )
+            })
         
         do {
             return try context.fetch(descriptor)
+            
         } catch {
-            logError("Failed to fetch names by partial text '\(partialText)': \(error.localizedDescription)")
+            logError("Failed to fetch \(sex.sexNamingConvention) names by partial text '\(partialText)': \(error.localizedDescription)")
             throw NamePersistenceError.unableToFetch(error)
         }
     }
@@ -181,15 +187,15 @@ extension NamePersistenceController {
         let context = ModelContext(container)
         let descriptor = FetchDescriptor<Name>(
             predicate: #Predicate {
-                $0.isFavorite &&
-                $0.sexRawValue == sex.rawValue
-            }
-        )
+                $0.sexRawValue == sex.rawValue &&
+                $0.isFavorite
+            })
         
         do {
             return try context.fetch(descriptor)
+            
         } catch {
-            logError("Failed to fetch favorite names for sex \(sex.rawValue): \(error.localizedDescription)")
+            logError("Failed to fetch favorite \(sex.sexNamingConvention) names: \(error.localizedDescription)")
             throw NamePersistenceError.unableToFetch(error)
         }
     }
@@ -206,14 +212,14 @@ extension NamePersistenceController {
             predicate: #Predicate { $0.sexRawValue == name.sexRawValue },
             sortBy: [
                 .init(\.affinityRating, order: .reverse)
-            ]
-        )
+            ])
         
         do {
             let names = try context.fetch(descriptor)
             return names.firstIndex(of: name).map { $0 + 1 }
+            
         } catch {
-            logError("Failed to get rank for name '\(name.text)' of sex \(name.sex?.sexNamingConvention ?? "Unknown Sex"): \(error.localizedDescription)")
+            logError("Failed to get rank for \(name.sex!.sexNamingConvention) name '\(name.text)' due to a failed fetch request: \(error.localizedDescription)")
             throw NamePersistenceError.unableToFetch(error)
         }
     }
