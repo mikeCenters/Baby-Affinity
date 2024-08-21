@@ -42,11 +42,7 @@ struct Baby_AffinityApp: App {
 
 
 // MARK: - Persistence Management
-import SwiftUI
 
-/// The main application class for Baby Affinity, which conforms to `NamePersistenceController_Admin`
-/// to manage the persistence of name data.
-@MainActor
 extension Baby_AffinityApp: NamePersistenceController_Admin {
 
     /// Loads initial data into the application. This method checks if there are existing names in the context.
@@ -54,26 +50,18 @@ extension Baby_AffinityApp: NamePersistenceController_Admin {
     /// the initial app launch to ensure that the app starts with the necessary data.
     ///
     /// The method runs asynchronously in a `Task` to handle potential asynchronous operations such as
-    /// fetching and loading data. It is marked with `@MainActor` to ensure that all operations are executed
-    /// on the main thread, which is important for thread safety with UI and context-related operations.
-    ///
-    /// **Note:** This implementation currently ignores potential data-racing issues related to using `ModelContext`
-    /// in asynchronous contexts. It is advisable to review and address these issues in future Xcode releases,
-    /// particularly Xcode 16 and beyond, for improved concurrency safety.
+    /// fetching and loading data.
     private func loadData() {
         Task {
             do {
-                // Access the main context from the shared model container
-                let context = sharedModelContainer.mainContext
-                
                 // Check if there are existing names in the context
-                if try fetchNames(context: context).isEmpty {
+                if try fetchNames(container: sharedModelContainer).isEmpty {
                     // If no names are found, load default names into the context
-                    await loadDefaultNames(into: context)
+                    await loadDefaultNames(into: sharedModelContainer)
                 }
             } catch {
                 // Handle any errors that occur during data loading
-                fatalError("Unable to load default data on initial app launch: \(error)")
+                logError("Unable to load default data on initial app launch: \(error)")
             }
         }
     }
