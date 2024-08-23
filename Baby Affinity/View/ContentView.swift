@@ -24,7 +24,6 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
-            
             // MARK: - Home Feed
             
             HomeView()

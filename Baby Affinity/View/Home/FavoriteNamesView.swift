@@ -21,7 +21,7 @@ struct FavoriteNamesView: View, NamePersistenceController {
     // MARK: - Properties
     
     /// The environment's model context.
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.modelContext) var modelContext
     
     /// The selected sex for which the names are filtered, stored in `AppStorage`.
     @AppStorage("selectedSex") private var selectedSex = Sex.male
@@ -57,7 +57,7 @@ struct FavoriteNamesView: View, NamePersistenceController {
                     
                 case .showNames:        /// Favorites are available
                     ForEach(presentedNames.randomElements(count: Self.nameLimit), id: \.self) { name in
-                        let rank = try? getRank(of: name, from: modelContext.container)
+                        let rank = try? getRank(of: name)
                         NameCellView(name: name, rank: rank ?? 0)
                     }
                 }
@@ -152,7 +152,7 @@ extension FavoriteNamesView {
         presentedNames = []
         
         do {
-            let names = try fetchFavoriteNames(sex: selectedSex, container: modelContext.container)
+            let names = try fetchFavoriteNames(sex: selectedSex)
             let namesToShow = names.randomElements(count: Self.nameLimit)
             presentedNames = namesToShow.sorted { $0.affinityRating > $1.affinityRating }
             

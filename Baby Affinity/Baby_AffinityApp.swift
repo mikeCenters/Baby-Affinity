@@ -31,8 +31,8 @@ struct Baby_AffinityApp: App {
         WindowGroup {
             ContentView()
                 .onAppear {
-                    withAnimation {
-                        loadData()
+                    Task {
+                        await loadData()
                     }
                 }
         }
@@ -44,6 +44,10 @@ struct Baby_AffinityApp: App {
 // MARK: - Persistence Management
 
 extension Baby_AffinityApp: NamePersistenceController_Admin {
+    var modelContext: ModelContext {
+        ModelContext(sharedModelContainer)
+    }
+    
 
     /// Loads initial data into the application. This method checks if there are existing names in the context.
     /// If no names are found, it loads default names into the context. This method is invoked during
@@ -51,18 +55,16 @@ extension Baby_AffinityApp: NamePersistenceController_Admin {
     ///
     /// The method runs asynchronously in a `Task` to handle potential asynchronous operations such as
     /// fetching and loading data.
-    private func loadData() {
-        Task {
-            do {
-                // Check if there are existing names in the context
-                if try fetchNames(container: sharedModelContainer).isEmpty {
-                    // If no names are found, load default names into the context
-                    await loadDefaultNames(into: sharedModelContainer)
-                }
-            } catch {
-                // Handle any errors that occur during data loading
-                logError("Unable to load default data on initial app launch: \(error)")
+    private func loadData() async {
+        do {
+            // Check if there are existing names in the context
+            if try fetchNames().isEmpty {
+                // If no names are found, load default names into the context
+                await loadDefaultNames(into: sharedModelContainer)
             }
+        } catch {
+            // Handle any errors that occur during data loading
+            logError("Unable to load default data on initial app launch: \(error)")
         }
     }
 }
