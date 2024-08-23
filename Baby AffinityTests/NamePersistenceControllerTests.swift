@@ -4,6 +4,8 @@ import SwiftData
 
 final class NamePersistenceControllerTests: XCTestCase, NamePersistenceController_Admin {
     
+    // MARK: - Properties
+    
     var modelContext: ModelContext {
         ModelContext(container)
     }
@@ -29,7 +31,6 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
     
     func testAppStartsEmptyPersistence() throws {
         let context = modelContext
-        let names = try fetchNames(container: container)
         let fetchedNames = try fetchNames()
         
         XCTAssertTrue(fetchedNames.isEmpty, "Persistence should have no Name objects.")
