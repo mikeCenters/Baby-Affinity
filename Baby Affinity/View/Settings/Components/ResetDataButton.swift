@@ -39,7 +39,7 @@ struct ResetDataButton: View, NamePersistenceController_Admin {
         .confirmationDialog("Reset data", isPresented: $isShowingConfirmation) {
             Button("Yes", role: .destructive) {
                 withAnimation {
-                    resetNameData()
+                    resetData()
                 }
             }
             Button("Cancel", role: .cancel) { }
@@ -52,10 +52,8 @@ struct ResetDataButton: View, NamePersistenceController_Admin {
     // MARK: - Methods
     
     /// Initiates the process to reset the name data in the model context.
-    private func resetNameData() {
-        Task {
-            await resetNameData(in: modelContext.container)
-        }
+    func resetData() {
+        resetNameData()
     }
 }
 
