@@ -31,8 +31,8 @@ struct Baby_AffinityApp: App {
         WindowGroup {
             ContentView()
                 .onAppear {
-                    Task {
-                        await loadData()
+                    withAnimation {
+                        loadData()
                     }
                 }
         }
@@ -48,19 +48,12 @@ extension Baby_AffinityApp: NamePersistenceController_Admin {
         ModelContext(sharedModelContainer)
     }
     
-
-    /// Loads initial data into the application. This method checks if there are existing names in the context.
-    /// If no names are found, it loads default names into the context. This method is invoked during
-    /// the initial app launch to ensure that the app starts with the necessary data.
-    ///
-    /// The method runs asynchronously in a `Task` to handle potential asynchronous operations such as
-    /// fetching and loading data.
-    private func loadData() async {
+    private func loadData() {
         do {
             // Check if there are existing names in the context
             if try fetchNames().isEmpty {
                 // If no names are found, load default names into the context
-                await loadDefaultNames(into: sharedModelContainer)
+                loadDefaultNames()
             }
         } catch {
             // Handle any errors that occur during data loading
