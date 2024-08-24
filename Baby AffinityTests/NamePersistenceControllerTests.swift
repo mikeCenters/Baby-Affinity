@@ -449,7 +449,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
 //        }
 //    }
 //    
-    func testInsertNames_Success() async {
+    func testInsertNames_Success() {
         var names: [Name] = []
         for _ in 1...2000 {
             let random = String(generateRandomLetters(count: 10))
@@ -461,7 +461,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
             names.append(name)
         }
 
-        let results = await insert(names)
+        let results = insert(names)
         
         DispatchQueue.main.async {
             for result in results {
@@ -660,24 +660,24 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
 
     // MARK: - Default Data
     
-    func testDefaultNamesData_Girls() async {
-        let girlNames = await getDefaultNames(.female)
+    func testDefaultNamesData_Girls() {
+        let girlNames = getDefaultNames(.female)
         
         girlNames.forEach { XCTAssertEqual($0.sex, Sex.female, "Only girl names should exist in the array.") }
         XCTAssertEqual(girlNames.count, DefaultBabyNames().girlNames.count, "Not all girl names were created.")
     }
     
-    func testDefaultNamesData_Boys() async {
-        let boyNames = await getDefaultNames(.male)
+    func testDefaultNamesData_Boys() {
+        let boyNames = getDefaultNames(.male)
         
         boyNames.forEach { XCTAssertEqual($0.sex, Sex.male, "Only boy names should exist in the array.") }
         XCTAssertEqual(boyNames.count, DefaultBabyNames().boyNames.count, "Not all boy names were created.")
     }
     
-    func testDefaultNamesData_All() async {
+    func testDefaultNamesData_All() {
         let nameData = DefaultBabyNames()
         let totalCount = nameData.boyNames.count + nameData.girlNames.count
-        let allNames = await getDefaultNames()
+        let allNames = getDefaultNames()
         
         XCTAssertEqual(allNames.count, totalCount, "Not all names were created.")
     }
@@ -718,11 +718,11 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         XCTAssertTrue(duplicates.isEmpty, "No duplicates should be in the default data.")
     }
     
-    func testDefaultNames_AreLoaded() async {
-        await loadDefaultNames()
+    func testDefaultNames_AreLoaded() {
+        loadDefaultNames()
         
-        guard let maleNames = try? await self.fetchNames(.male),
-              let femaleNames = try? await self.fetchNames(.female)
+        guard let maleNames = try? self.fetchNames(.male),
+              let femaleNames = try? self.fetchNames(.female)
         else { XCTFail("Unable to fetch names."); return }
         
         XCTAssertEqual(maleNames.count, DefaultBabyNames().boyNames.count, "Not all boy names were inserted into the context.")
@@ -743,7 +743,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         return (0..<count).map { _ in generateRandomLetter() }
     }
     
-    private func saveChanges(in container: ModelContainer) async throws {
+    private func saveChanges(in container: ModelContainer) throws {
         let context = ModelContext(container)
         try context.save()
     }
