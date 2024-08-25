@@ -12,7 +12,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
     
     var container: ModelContainer = {       // In Memory
         let schema = Schema([
-            Name.self,
+            Name.self
         ])
         
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
@@ -108,204 +108,142 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         }
     }
     
-    func testCreateName_RemovesWhitespaces() {
-        // MARK: - FIXME: " Mike  Centers   " becomes "Mike Centers"
-    }
+    // MARK: - FIXME: " Mike  Centers   " becomes "Mike Centers"
+    //    func testCreateName_RemovesWhitespaces() {
+    //    }
     
     
-        // MARK: - Fetch
+    // MARK: - Fetch
     
-    func testFetchNames_All() {
-        var names: [Name] = []
-        for _ in 0..<5 {
-            let name = "Name ".appending(String(generateRandomLetters(count: 5)))
+    func testFetchNames_All() async {
+        /// Add Names into persistent layer
+        switch await _insertRandomNamesIntoContext(countPerSex: 100) {
+        case .success(let randomNames):
             
-            for sex in Sex.allCases {
-                switch createName(name, sex: sex) {
-                case .success(let name): names.append(name)
-                case .failure(let error):
-                    XCTFail("Unique name should be created: \(error.localizedDescription)")
-                }
-            }
-        }
-        
-        _ = insert(names)
-        
-        DispatchQueue.main.async {
-            guard let fetchedNames = try? self.fetchNames()
+            guard let fetchedNames = try? fetchNames()
             else { XCTFail("Unable to fetch names."); return }
             
-            XCTAssertEqual(fetchedNames.count, names.count, "All names should be fetched successfully.")
+            XCTAssertEqual(fetchedNames.count, randomNames.count, "All names should be fetched successfully.")
+            
+        case .failure(let error):
+            XCTFail("Unable to insert random Names into the context: \(error)")
         }
     }
     
-    func testFetchNames_BySex() {
-        let count = 5
-        var names: [Name] = []
-        for _ in 0..<count {
-            let name = "Name ".appending(String(generateRandomLetters(count: 5)))
+    func testFetchNames_BySex() async {
+        /// Add Names into persistent layer
+        switch await _insertRandomNamesIntoContext(countPerSex: 100) {
+        case .success(let randomNames):
             
             for sex in Sex.allCases {
-                switch createName(name, sex: sex) {
-                case .success(let name): names.append(name)
-                case .failure(let error):
-                    XCTFail("Unique name should be created: \(error.localizedDescription)")
-                }
-            }
-        }
-        
-        _ =  insert(names)
-        
-        for sex in Sex.allCases {
-            guard let fetchedNames = try? self.fetchNames(sex)
-            else { XCTFail("Unable to fetch names."); return }
-            
-            XCTAssertEqual(fetchedNames.count, count, "All \(sex.sexNamingConvention) names are not fetched.")
-        }
-        
-        DispatchQueue.main.async {
-            for sex in Sex.allCases {
-                guard let fetchedNames = try? self.fetchNames(sex)
+                let filteredNames = randomNames.filter { $0.sex == sex }
+                
+                guard let fetchedNames = try? fetchNames(sex)
                 else { XCTFail("Unable to fetch names."); return }
                 
-                XCTAssertEqual(fetchedNames.count, count, "All \(sex.sexNamingConvention) names are not fetched.")
+                XCTAssertEqual(filteredNames.count, fetchedNames.count, "All names should be fetched successfully.")
             }
+            
+        case .failure(let error):
+            XCTFail("Unable to insert random Names into the context: \(error)")
         }
     }
     
-    func testFetchName_ByText() {
-        guard let femaleName = try? Name("Lily", sex: .female),
-              let maleName = try? Name("Atlas", sex: .male)
-        else { XCTFail("Unable to create Names."); return }
-        
-        let names = [femaleName, maleName]
-        _ = insert(names)
-        
-        DispatchQueue.main.async {
-            for name in names {
-                guard let fetchedName = try? self.fetchName(byText: name.text, sex: name.sex!)
-                else { XCTFail("Unable to fetch the name."); return }
-                
-                XCTAssertEqual(fetchedName.text, name.text, "The fetched name should have the same text.")
-                XCTAssertEqual(fetchedName.sex, name.sex, "The fetched name should have the same sex.")
-            }
-        }
-    }
-    
-    func testFetchName_ByPartialText() {
-        // Names to test
-        guard let femaleName = try? Name("Lily", sex: .female),
-              let maleName = try? Name("Atlas", sex: .male)
-        else { XCTFail("Unable to create Names."); return }
-        
-        let testingNames = [femaleName, maleName]   // Names used for testing.
-        var namesToInsert = testingNames            // Names to insert in persistence.
-        
-        // Add extra names for filtering out.
-        for _ in 0..<5 {
-            let name = "Name ".appending(String(generateRandomLetters(count: 5)))
+    func testFetchName_ByText() async {
+        /// Add Names into persistent layer
+        switch await _insertRandomNamesIntoContext(countPerSex: 100) {
+        case .success(let randomNames):
             
             for sex in Sex.allCases {
-                switch createName(name, sex: sex) {
-                case .success(let name): namesToInsert.append(name)
+                
+                switch createName("Name", sex: sex) {
+                case .success(let name):
+                    
+                    _ = await insert(name)              // Insert unique name
+                    
+                    guard let fetchedName = try? fetchName(byText: "Name", sex: sex)
+                    else { XCTFail("Unable to fetch name."); return }
+                    
+                    XCTAssertEqual(fetchedName.text, name.text, "Names should have the same text.")
+                    XCTAssertEqual(fetchedName.sex, name.sex, "Names should be of the same sex.")
+                    
+                    
+                    
                 case .failure(let error):
-                    XCTFail("Unique name should be created: \(error.localizedDescription)")
+                    XCTFail("Unable to create a unique name: \(error)")
                 }
             }
+            
+        case .failure(let error):
+            XCTFail("Unable to insert random Names into the context: \(error)")
         }
-        
-        _ = insert(namesToInsert)
-        
-        DispatchQueue.main.async {
-            for name in testingNames {
-                let partial = String(name.text.prefix(2))
-                guard let fetchedNames = try? self.fetchNames(byPartialText: partial, sex: name.sex!)
-                else { XCTFail("Unable to fetch the name."); return }
-                XCTAssertEqual(fetchedNames.count, 1, "Only 1 name should appear from the provided names.")
+    }
+    
+    func testFetchName_ByPartialText() async {
+        /// Add Names into persistent layer
+        switch await _insertRandomNamesIntoContext(countPerSex: 100) {
+        case .success(let randomNames):
+            
+            for sex in Sex.allCases {
                 
-                guard let fetchedName = fetchedNames.first
-                else { XCTFail("One name should be found."); return }
-                XCTAssertEqual(fetchedName.text, name.text, "The fetched name should have the same text.")
-                XCTAssertEqual(fetchedName.sex, name.sex, "The fetched name should have the same sex.")
+                switch createName("Hadley", sex: sex) {
+                case .success(let name):
+                    
+                    _ = await insert(name)              // Insert unique name
+                    
+                    guard let fetchedNames = try? fetchNames(byPartialText: "Ha", sex: sex)
+                    else { XCTFail("Unable to fetch names."); return }
+                    
+                    XCTAssertFalse(fetchedNames.isEmpty, "At least one name should be fetched.")
+                    XCTAssert(fetchedNames.contains { $0.text == "Hadley" }, "The name should be found.")
+                    
+                case .failure(let error):
+                    XCTFail("Unable to create a unique name: \(error)")
+                }
             }
+            
+        case .failure(let error):
+            XCTFail("Unable to insert random Names into the context: \(error)")
         }
     }
     
-    func testFetchFavoriteNames() {
-        var names: [Name] = []
-        
-        // Create 10 favorite and non-favorite names for male and females.
-        for _ in 0..<10 {
-            let random = String(generateRandomLetters(count: 5))
-            let favoriteName = "Favorite Name \(random)"
-            let nonFavoriteName = "Non-Favorite Name \(random)"
+    func testFetchFavoriteNames() async {
+        /// Add Names into persistent layer
+        switch await _insertRandomFavoriteNamesIntoContext(10) {
+        case .success(_):
             
-            guard let maleFavoriteName = try? Name(favoriteName, sex: .male),
-                  let femaleFavoriteName = try? Name(favoriteName, sex: .female),
-                  let maleNonFavoriteName = try? Name(nonFavoriteName, sex: .male),
-                  let femaleNonFavoriteName = try? Name(nonFavoriteName, sex: .female)
-            else { XCTFail("Unable to create new Names."); return }
+            for sex in Sex.allCases {
+                guard let favoriteNames = try? self.fetchFavoriteNames(sex: sex)
+                else { XCTFail("Unable to fetch favorite names."); return }
+                
+                XCTAssertEqual(favoriteNames.count, 10, "Not all favorite \(sex.sexNamingConvention) names were fetched.")
+                XCTAssertEqual(favoriteNames.first?.isFavorite, true, "The \(sex.sexNamingConvention) name should be a favorite.")
+            }
             
-            maleFavoriteName.toggleFavorite()
-            femaleFavoriteName.toggleFavorite()
-            let allNames = [maleFavoriteName, maleNonFavoriteName,
-                         femaleFavoriteName, femaleNonFavoriteName]
-            
-            names.append(contentsOf: allNames)
-        }
-        
-        _ = insert(names)
-        
-        DispatchQueue.main.async {
-            guard let maleFavoriteNames = try? self.fetchFavoriteNames(sex: .male),
-                  let femaleFavoriteNames = try? self.fetchFavoriteNames(sex: .female)
-            else { XCTFail("Unable to fetch favorite names."); return }
-            
-            XCTAssertEqual(maleFavoriteNames.count, 10, "Not all favorite male names were fetched.")
-            XCTAssertEqual(maleFavoriteNames.first?.isFavorite, true, "The name should be a favorite.")
-            XCTAssertEqual(femaleFavoriteNames.count, 10, "Not all favorite female names were fetched.")
-            XCTAssertEqual(femaleFavoriteNames.first?.isFavorite, true, "The name should not be a favorite.")
+        case .failure(let error):
+            XCTFail("Unable to create and insert random favorite names: \(error)")
         }
     }
     
-    func testFetchNonFavoriteNames() {
-        var names: [Name] = []
-        
-        // Create 10 favorite and non-favorite names for male and females.
-        for _ in 0..<10 {
-            let random = String(generateRandomLetters(count: 5))
-            let favoriteName = "Favorite Name \(random)"
-            let nonFavoriteName = "Non-Favorite Name \(random)"
+    func testFetchNonFavoriteNames() async {
+        /// Add Names into persistent layer
+        switch await _insertRandomFavoriteNamesIntoContext(10) {
+        case .success(_):
             
-            guard let maleFavoriteName = try? Name(favoriteName, sex: .male),
-                  let femaleFavoriteName = try? Name(favoriteName, sex: .female),
-                  let maleNonFavoriteName = try? Name(nonFavoriteName, sex: .male),
-                  let femaleNonFavoriteName = try? Name(nonFavoriteName, sex: .female)
-            else { XCTFail("Unable to create new Names."); return }
+            for sex in Sex.allCases {
+                guard let nonFavoriteNames = try? self.fetchNonFavoriteNames(sex: sex)
+                else { XCTFail("Unable to fetch favorite names."); return }
+                
+                XCTAssertEqual(nonFavoriteNames.count, 10, "Not all favorite \(sex.sexNamingConvention) names were fetched.")
+                XCTAssertEqual(nonFavoriteNames.first?.isFavorite, false, "The \(sex.sexNamingConvention) name should be a favorite.")
+            }
             
-            maleFavoriteName.toggleFavorite()
-            femaleFavoriteName.toggleFavorite()
-            let allNames = [maleFavoriteName, maleNonFavoriteName,
-                         femaleFavoriteName, femaleNonFavoriteName]
-            
-            names.append(contentsOf: allNames)
-        }
-        
-        _ = insert(names)
-        
-        DispatchQueue.main.async {
-            guard let maleFavoriteNames = try? self.fetchNonFavoriteNames(sex: .male),
-                  let femaleFavoriteNames = try? self.fetchNonFavoriteNames(sex: .female)
-            else { XCTFail("Unable to fetch non-favorite names."); return }
-            
-            XCTAssertEqual(maleFavoriteNames.count, 10, "Not all non-favorite male names were fetched.")
-            XCTAssertEqual(maleFavoriteNames.first?.isFavorite, false, "The name should not be a favorite.")
-            XCTAssertEqual(femaleFavoriteNames.count, 10, "Not all non-favorite female names were fetched.")
-            XCTAssertEqual(femaleFavoriteNames.first?.isFavorite, false, "The name should not be a favorite.")
+        case .failure(let error):
+            XCTFail("Unable to create and insert random favorite names: \(error)")
         }
     }
     
-    func testFetchSortedNames_ByAffinity() {
+    func testFetchSortedNames_ByAffinity() async {
         let lowestRating = 1150
         let highestRating = 1250
         
@@ -322,70 +260,51 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
             }
         }
         
-        _ = insert(names)
+        _ = await insert(names)
         
-        DispatchQueue.main.async {
-            for sex in Sex.allCases {
-                guard let fetchedNames = try? self.fetchNamesSortedByAffinity(sex)
-                else { XCTFail("Unable to fetch sorted names."); return }
-                
-                guard let firstName = fetchedNames.first,
-                      let lastName = fetchedNames.last
-                else { XCTFail("Unable to get the first and last names."); return }
-                
-                XCTAssertEqual(firstName.affinityRating, highestRating)
-                XCTAssertEqual(lastName.affinityRating, lowestRating)
-            }
+        for sex in Sex.allCases {
+            guard let fetchedNames = try? self.fetchNamesSortedByAffinity(sex)
+            else { XCTFail("Unable to fetch sorted names."); return }
+            
+            guard let firstName = fetchedNames.first,
+                  let lastName = fetchedNames.last
+            else { XCTFail("Unable to get the first and last names."); return }
+            
+            XCTAssertEqual(firstName.affinityRating, highestRating)
+            XCTAssertEqual(lastName.affinityRating, lowestRating)
         }
     }
     
-    func testFetchNames_ByEvaluatedCount() {
-        var names: [Name] = []
-        for _ in 0..<10 {
-            let random = String(generateRandomLetters(count: 5))
-            let text = "Name \(random)"
+    func testFetchNames_ByEvaluatedCount() async {
+        /// Add Names into persistent layer
+        switch await _insertRandomNamesIntoContext(countPerSex: 100) {
+        case .success(let names):
             
             for sex in Sex.allCases {
-                guard let name = try? Name(text, sex: sex)
+                guard let testName = try? Name("Test Name", sex: sex)
                 else { XCTFail("Unable to create unique name."); return }
                 
-                names.append(name)
+                testName.increaseEvaluationCount()          // 1
+                _ = await insert(testName)
             }
-        }
-        
-        guard let femaleTestName = try? Name("Amara", sex: .female),
-              let maleTestName = try? Name("Atlas", sex: .male)
-        else { XCTFail("Unable to create unique name."); return }
-        
-        femaleTestName.increaseEvaluationCount()    // 1
-        maleTestName.increaseEvaluationCount()      // 1
-        
-        names.append(femaleTestName)
-        names.append(maleTestName)
-        
-        _ = insert(names)
-        
-        DispatchQueue.main.async {
+            
+            
             for sex in Sex.allCases {
-                guard let fetchedNames = try? self.fetchNames(evaluatedCount: 1, sex: sex)
+                guard let fetchedNames = try? self.fetchNames(evaluatedCount: 1, sex: sex),
+                      let firstName = fetchedNames.first
                 else { XCTFail("Unable to fetch names."); return }
                 
                 XCTAssertEqual(fetchedNames.count, 1, "Only 1 name should be found.")
-                
-                guard let firstName = fetchedNames.first
-                else { XCTFail("Unable to get the first and last names."); return }
-                
-                switch sex {
-                case .female:
-                    XCTAssertEqual(firstName.text, "Amara")
-                case .male:
-                    XCTAssertEqual(firstName.text, "Atlas")
-                }
+                XCTAssertEqual(firstName.text, "Test Name", "Test Name should be the only entry.")
+                XCTAssertEqual(firstName.evaluated, 1, "Evaluation should be set to `1`.")
             }
+            
+        case .failure(let error):
+            XCTFail("Unable to create and insert random names: \(error.localizedDescription)")
         }
     }
     
-    func testGetRankOfName() {
+    func testGetRankOfName() async {
         let nameToTest = "Hadley"
         let numberOfNames = 10
         let rankInPosition = 3
@@ -404,18 +323,16 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
             }
         }
         
-        _ = insert(names)
+        _ = await insert(names)
         
-        DispatchQueue.main.async {
-            for sex in Sex.allCases {
-                guard let name = try? self.fetchName(byText: nameToTest, sex: sex)
-                else { XCTFail("Unable to fetch name to test."); return }
-                
-                guard let rank = try? self.getRank(of: name)
-                else { XCTFail("Unable to get the rank of the name."); return }
-                
-                XCTAssertEqual(rank, rankOfName, "The rank is not correct.")
-            }
+        for sex in Sex.allCases {
+            guard let name = try? self.fetchName(byText: nameToTest, sex: sex)
+            else { XCTFail("Unable to fetch name to test."); return }
+            
+            guard let rank = try? self.getRank(of: name)
+            else { XCTFail("Unable to get the rank of the name."); return }
+            
+            XCTAssertEqual(rank, rankOfName, "The rank is not correct.")
         }
     }
     
@@ -743,8 +660,87 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         return (0..<count).map { _ in generateRandomLetter() }
     }
     
-    private func saveChanges(in container: ModelContainer) throws {
-        let context = ModelContext(container)
-        try context.save()
+    private func _createRandomNames(countPerSex namesCount: Int) async -> Result<[Name], Error> {
+        var names: [Name] = []
+        let randomLetterCount = 5
+        for _ in 0..<namesCount {
+            let randomText = String(generateRandomLetters(count: randomLetterCount))
+            let name = "Name \(randomText)"
+            
+            /// Create names for both male and females.
+            for sex in Sex.allCases {
+                
+                switch createName(name, sex: sex) {
+                case .success(let name):
+                    names.append(name)
+                    
+                case .failure(let error):
+                    return .failure(error)
+                }
+            }
+        }
+        return .success(names)
+    }
+    
+    private func _insertRandomNamesIntoContext(countPerSex namesCount: Int) async -> Result<[Name], Error> {
+        let context = modelContext
+        switch await _createRandomNames(countPerSex: namesCount) {
+        case .success(let names):
+            
+            let results = await insert(names)
+            for result in results {                 // Check for insertion errors.
+                switch result {
+                case .success: continue
+                case .failure(let error):
+                    print(error.localizedDescription)
+                    return .failure(error)          // If an error exists: Fail the method.
+                }
+            }
+            
+            return .success(names)                  // Names were created and inserted.
+            
+        case .failure(let error):
+            print(error.localizedDescription)
+            return .failure(error)
+        }
+    }
+    
+    private func _insertRandomFavoriteNamesIntoContext(_ numFavorites: Int) async -> Result<[Name], Error> {
+        let context = modelContext
+        
+        let favoriteNamesResult = await _createRandomNames(countPerSex: numFavorites)
+        let nonFavoriteNamesResult = await _createRandomNames(countPerSex: numFavorites)
+        var allNames: [Name] = []
+        
+        switch favoriteNamesResult {
+        case .success(let names):
+            for name in names {
+                name.toggleFavorite()
+                allNames.append(name)
+            }
+        case .failure(let error):
+            return .failure(error)
+        }
+        
+        switch nonFavoriteNamesResult {
+        case .success(let names):
+            for name in names {
+                allNames.append(name)
+            }
+        case .failure(let error):
+            return .failure(error)
+        }
+        
+        let results = await insert(allNames)
+        for result in results {                 // Check for insertion errors.
+            switch result {
+            case .success: continue
+            case .failure(let error):
+                print(error.localizedDescription)
+                return .failure(error)          // If an error exists: Fail the method.
+            }
+        }
+        
+        return .success(allNames)                  // Names were created and inserted.
     }
 }
