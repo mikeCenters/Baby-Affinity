@@ -105,7 +105,7 @@ final class Name {
         }
         
         // Set default values
-        self.text = text
+        self.text = text.capitalized
         self.sexRawValue = sex.rawValue
         self.affinityRating = affinityRating
         self.evaluated = Name.defaultEvaluationCount
