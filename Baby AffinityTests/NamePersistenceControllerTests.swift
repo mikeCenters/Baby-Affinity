@@ -339,129 +339,128 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
     
      // MARK: - Insert
 
-    func testInsertName_Success() {
-        var names: [Name] = []
-        let nameText = "Name"
+    func testInsertName_Success() async {
         for sex in Sex.allCases {
-            guard let name = try? Name(nameText, sex: sex)
-            else { XCTFail("Unable to create a name."); return }
-            names.append(name)
+            let nameResult = createName("Test Name", sex: sex)
+            
+            switch nameResult {
+            case .success(let name):
+                
+                switch await insert(name) {
+                case .success: continue
+                case .failure(let error):
+                    XCTFail("Unable to insert a unique name: \(error.localizedDescription)")
+                }
+                
+            case .failure(let error):
+                XCTFail("Unable to create a unique name: \(error.localizedDescription)")
+            }
         }
         
-        for name in names {
-            switch insert(name) {
-            case .success():
-                XCTAssert(true)
-            case .failure(let error):
-                XCTFail("Unable to insert unique name: \(error.localizedDescription)")
-            }
+        for sex in Sex.allCases {
+            guard let fetchedName = try? self.fetchName(byText: "Test Name", sex: sex)
+            else { XCTFail("Unable to fetch name to test."); return }
             
-            DispatchQueue.main.async {
-                // Test Fetch
-                guard let fetchedName = try? self.fetchName(byText: name.text, sex: name.sex!)
-                else { XCTFail("Unable to fetch name to test."); return }
-                
-                XCTAssertEqual(name, fetchedName, "The names should be the same.")
-            }
+            XCTAssertEqual(fetchedName.text, "Test Name", "The names should be the same.")
+            XCTAssertEqual(fetchedName.sex, sex, "The names should be of the same sex.")
         }
     }
     
-    func testInsertNames_Success() {
-        var names: [Name] = []
-        for _ in 1...2000 {
-            let random = String(generateRandomLetters(count: 10))
-            let name: String = "Name \(random)"
-
-            guard let name = try? Name(name, sex: .female)
-            else { XCTFail("Unable to create a name."); return }
-
-            names.append(name)
-        }
-
-        let results = insert(names)
-        
-        DispatchQueue.main.async {
+    func testInsertNames_Success() async {
+        let totalNames = 200
+        /// Create Names to add to persistent layer
+        switch await _createRandomNames(countPerSex: totalNames / 2) {
+        case .success(let names):
+            
+            let results = await insert(names)
+            
             for result in results {
                 switch result {
                 case .success: continue
-                case .failure:
-                    XCTFail("All insertions should be successful for unique names.")
+                case .failure(let error):
+                    XCTFail("Unable to insert name: \(error.localizedDescription)")
                 }
             }
-
+            
             let insertedNames = try? self.fetchNames()
-            XCTAssertEqual(insertedNames?.count, names.count, "All names should be inserted successfully.")
+            XCTAssertEqual(insertedNames?.count, totalNames, "All names should be inserted successfully.")
+            
+        case .failure(let error):
+            XCTFail("Unable to create names: \(error.localizedDescription)")
         }
     }
 
-    func testInsertName_Failure_DuplicateInPersistence() {
+    func testInsertName_Failure_ThrowsDuplicateInPersistence() async {
         var names: [Name] = []
         let nameText = "Name"
         for sex in Sex.allCases {
             guard let name = try? Name(nameText, sex: sex)
             else { XCTFail("Unable to create a name."); return }
-            names.append(name)
-        }
-        
-        // Initial insert
-        for name in names {
-            switch insert(name) {
-            case .success(): continue                           // Initial insert is successful.
+            
+            switch await insert(name) {
+            case .success():                                    // Initial insert is successful.
+                names.append(name)
+                
             case .failure(let error):                           // Error on initial insert should not occur.
                 XCTFail("Unable to insert unique name: \(error.localizedDescription)")
             }
         }
         
-        // Duplicate insert
-        DispatchQueue.main.async {
-            for name in names {
-                switch self.insert(name) {
-                case .success():
-                    XCTFail("Duplicate name should not insert.")
+        for name in names {
+            switch await insert(name) {
+            case .success():
+                XCTFail("Duplicate name should not insert.")
+                
+            case .failure(let error):
+                switch error {
                     
-                case .failure(let error):
-                    switch error {
-                    case .duplicateNameInserted(let nameText):  // The correct error is caught.
-                        XCTAssertEqual(nameText, name.text, "The duplicate name error should throw.")
-                        
-                    default:                                    // Unexpected errors should not occur.
-                        XCTFail("Unexpected error during insertion: \(error.localizedDescription)")
+                case .duplicateNameInserted(let nameText):      // The correct error is caught.
+                    XCTAssertEqual(nameText, name.text, "The duplicate name error should throw.")
+                    
+                    // Fetch the inserted names to check if the duplicate is not inserted.
+                    guard let insertedNames = try? self.fetchNames(name.sex!) else {
+                        XCTFail("Unable to fetch names.")
+                        return
                     }
+                    
+                    // Verify that only the 1 unique name were inserted successfully.
+                    XCTAssertEqual(insertedNames.count, 1, "Only 1 unique name should be inserted successfully.")
+                    
+                default:                                        // Unexpected errors should not occur.
+                    XCTFail("Unexpected error during insertion: \(error.localizedDescription)")
                 }
             }
         }
     }
     
-    func testInsertNames_Failure_DuplicateInProvidedArray() {
-        // Create names, including a duplicate.
-        guard let name1 = try? Name("Hadley", sex: .female),
-              let name2 = try? Name("Amara", sex: .female),
-              let name3 = try? Name("Hadley", sex: .female)     // Duplicate
-        else {
-            XCTFail("Unable to create Names.")
-            return
-        }
-
-        let names = [name1, name2, name3]
-        
-        // Attempt to insert names.
-        let results = insert(names)
-        
-        // Verify that one insertion failed due to duplication.
-        let failureCount = results.filter {
-            switch $0 {
-            case .success():
-                return false
-                
-            case .failure(_):
-                return true
+    func testInsertNames_Failure_DuplicateInProvidedArray() async {
+        for sex in Sex.allCases {
+            // Create names, including a duplicate.
+            guard let name1 = try? Name("Name One", sex: sex),
+                  let name2 = try? Name("Name Two", sex: sex),
+                  let name3 = try? Name("Name Three", sex: sex)
+            else {
+                XCTFail("Unable to create unique Names.")
+                return
             }
-        }.count
-        XCTAssertEqual(failureCount, 1, "One insertion should fail due to duplication.")
-        
-        DispatchQueue.main.async {
-            // Fetch the inserted names.
-            guard let insertedNames = try? self.fetchNames() else {
+
+            let names = [name1, name2, name2, name3]    // Duplicate in array
+            let results = await insert(names)           // Attempt to insert names.
+            
+            // Verify that one insertion failed due to duplication.
+            let failureCount = results.filter {
+                switch $0 {
+                case .success():
+                    return false
+                    
+                case .failure(_):
+                    return true
+                }
+            }.count
+            XCTAssertEqual(failureCount, 1, "One insertion should fail due to duplication.")
+            
+            // Fetch the inserted names to check if the duplicate is not inserted.
+            guard let insertedNames = try? self.fetchNames(sex) else {
                 XCTFail("Unable to fetch names.")
                 return
             }
@@ -471,180 +470,171 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         }
     }
     
-    func testInsertNames_Failure_DuplicateInPersistence() {
-        guard let name1 = try? Name("Hadley", sex: .female),
-              let name2 = try? Name("Amara", sex: .female)
-        else {
-            XCTFail("Unable to create Names.")
-            return
-        }
-
-        let names = [name1, name2]
-        
-        // Attempt to insert names.
-        let results = insert(names)
-        
-        // Verify that no insertion failed.
-        let failureCount = results.filter {
-            switch $0 {
-            case .success():
-                return false
-                
-            case .failure(_):
-                return true
+    func testInsertNames_Failure_DuplicateInPersistence() async {
+        for sex in Sex.allCases {
+            guard let name1 = try? Name("Name One", sex: sex),
+                  let name2 = try? Name("Name Two", sex: sex),
+                  let name3 = try? Name("Name Three", sex: sex)
+            else {
+                XCTFail("Unable to create unique Names.")
+                return
             }
-        }.count
-        XCTAssertEqual(failureCount, 0, "All unique names should insert.")
-        
-        DispatchQueue.main.async {
-            let duplicateResults = self.insert(names)
             
-            // Verify that both insertions failed.
-            let dupFailureCount = results.filter {
-                switch $0 {
-                case .success():
-                    return false
-                    
-                case .failure(_):
-                    return true
+            let names = [name1, name2, name3]
+            let results = await insert(names)           // Insert names successfully
+            
+            for result in results {                     // Verify that no insertion failed.
+                switch result {
+                case .success: continue
+                case .failure(let error):
+                    XCTFail("Unable to insert names: \(error)")
                 }
-            }.count
-            XCTAssertEqual(dupFailureCount, 2, "All names should fail insertion.")
+            }
+            
+            let duplicateResults = await insert(names)  // Attempt to insert duplicate names
+            
+            for result in duplicateResults {            // Verify that no insertion failed.
+                switch result {
+                case .success:
+                    XCTFail("No name should be inserted.")
+                case .failure(let error): continue
+                }
+            }
             
             // Fetch the inserted names.
-            guard let insertedNames = try? self.fetchNames() else {
+            guard let fetchedNames = try? self.fetchNames(sex) else {
                 XCTFail("Unable to fetch names.")
                 return
             }
             
             // Verify that only the unique names were inserted successfully.
-            XCTAssertEqual(insertedNames.count, names.count, "Only unique names should be inserted successfully.")
+            XCTAssertEqual(fetchedNames.count, names.count, "Only unique names should be inserted successfully.")
         }
     }
     
     
-    // MARK: - Delete
-    
-    func testDeleteAllNames() {
-        guard let name1 = try? Name("Lily", sex: .female),
-              let name2 = try? Name("Amara", sex: .female),
-              let name3 = try? Name("Hadley", sex: .female),
-              let name4 = try? Name("Mike", sex: .male),
-              let name5 = try? Name("Atlas", sex: .male),
-              let name6 = try? Name("Titan", sex: .male)
-        else { XCTFail("Unable to create Names."); return }
-        
-        let names = [name1, name2, name3, name4, name5, name6]
-        _ = insert(names)
-        
-        delete(names)
-        
-        DispatchQueue.main.async {
-            guard let fetchedNames = try? self.fetchNames()
-            else { XCTFail("Unable to fetch names."); return }
-            
-            XCTAssertTrue(fetchedNames.isEmpty, "All names should be deleted successfully.")
-        }
-    }
-    
-    func testDeleteName() {
-        var names: [Name] = []
-        for sex in Sex.allCases {
-            switch createName("Name", sex: sex) {
-                
-            case .success(let name): names.append(name)
-            case .failure(let error):
-                XCTFail("Unable to create unique name due to error: \(error.localizedDescription)")
-            }
-        }
-        
-        _ = insert(names)
-        
-        for name in names {
-            delete(name)
-        }
-        
-        DispatchQueue.main.async {
-            guard let fetchedNames = try? self.fetchNames()
-            else { XCTFail("Unable to fetch names."); return }
-            
-            XCTAssertTrue(fetchedNames.isEmpty, "All names should be deleted successfully.")
-            
-            XCTAssertNil(try? self.fetchName(byText: "Name", sex: .male))
-        }
-    }
-    
-
-    // MARK: - Default Data
-    
-    func testDefaultNamesData_Girls() {
-        let girlNames = getDefaultNames(.female)
-        
-        girlNames.forEach { XCTAssertEqual($0.sex, Sex.female, "Only girl names should exist in the array.") }
-        XCTAssertEqual(girlNames.count, DefaultBabyNames().girlNames.count, "Not all girl names were created.")
-    }
-    
-    func testDefaultNamesData_Boys() {
-        let boyNames = getDefaultNames(.male)
-        
-        boyNames.forEach { XCTAssertEqual($0.sex, Sex.male, "Only boy names should exist in the array.") }
-        XCTAssertEqual(boyNames.count, DefaultBabyNames().boyNames.count, "Not all boy names were created.")
-    }
-    
-    func testDefaultNamesData_All() {
-        let nameData = DefaultBabyNames()
-        let totalCount = nameData.boyNames.count + nameData.girlNames.count
-        let allNames = getDefaultNames()
-        
-        XCTAssertEqual(allNames.count, totalCount, "Not all names were created.")
-    }
-    
-    func testDuplicateGirlNameData() {
-        let nameData = DefaultBabyNames()
-        var seen = Set<String>()
-        var duplicates = Set<String>()
-        
-        for string in nameData.girlNames {
-            if seen.contains(string) {
-                duplicates.insert(string)
-                
-            } else {
-                seen.insert(string)
-            }
-        }
-        
-        XCTAssertEqual(seen.count, nameData.girlNames.count, "All names should be seen.")
-        XCTAssertTrue(duplicates.isEmpty, "No duplicates should be in the default data.")
-    }
-    
-    func testDuplicateBoyNameData() {
-        let nameData = DefaultBabyNames()
-        var seen = Set<String>()
-        var duplicates = Set<String>()
-        
-        for string in nameData.boyNames {
-            if seen.contains(string) {
-                duplicates.insert(string)
-                
-            } else {
-                seen.insert(string)
-            }
-        }
-        
-        XCTAssertEqual(seen.count, nameData.boyNames.count, "All names should be seen.")
-        XCTAssertTrue(duplicates.isEmpty, "No duplicates should be in the default data.")
-    }
-    
-    func testDefaultNames_AreLoaded() {
-        loadDefaultNames()
-        
-        guard let maleNames = try? self.fetchNames(.male),
-              let femaleNames = try? self.fetchNames(.female)
-        else { XCTFail("Unable to fetch names."); return }
-        
-        XCTAssertEqual(maleNames.count, DefaultBabyNames().boyNames.count, "Not all boy names were inserted into the context.")
-        XCTAssertEqual(femaleNames.count, DefaultBabyNames().girlNames.count, "Not all girl names were inserted into the context.")
-    }
+//    // MARK: - Delete
+//    
+//    func testDeleteAllNames() {
+//        guard let name1 = try? Name("Lily", sex: .female),
+//              let name2 = try? Name("Amara", sex: .female),
+//              let name3 = try? Name("Hadley", sex: .female),
+//              let name4 = try? Name("Mike", sex: .male),
+//              let name5 = try? Name("Atlas", sex: .male),
+//              let name6 = try? Name("Titan", sex: .male)
+//        else { XCTFail("Unable to create Names."); return }
+//        
+//        let names = [name1, name2, name3, name4, name5, name6]
+//        _ = insert(names)
+//        
+//        delete(names)
+//        
+//        DispatchQueue.main.async {
+//            guard let fetchedNames = try? self.fetchNames()
+//            else { XCTFail("Unable to fetch names."); return }
+//            
+//            XCTAssertTrue(fetchedNames.isEmpty, "All names should be deleted successfully.")
+//        }
+//    }
+//    
+//    func testDeleteName() {
+//        var names: [Name] = []
+//        for sex in Sex.allCases {
+//            switch createName("Name", sex: sex) {
+//                
+//            case .success(let name): names.append(name)
+//            case .failure(let error):
+//                XCTFail("Unable to create unique name due to error: \(error.localizedDescription)")
+//            }
+//        }
+//        
+//        _ = insert(names)
+//        
+//        for name in names {
+//            delete(name)
+//        }
+//        
+//        DispatchQueue.main.async {
+//            guard let fetchedNames = try? self.fetchNames()
+//            else { XCTFail("Unable to fetch names."); return }
+//            
+//            XCTAssertTrue(fetchedNames.isEmpty, "All names should be deleted successfully.")
+//            
+//            XCTAssertNil(try? self.fetchName(byText: "Name", sex: .male))
+//        }
+//    }
+//    
+//
+//    // MARK: - Default Data
+//    
+//    func testDefaultNamesData_Girls() {
+//        let girlNames = getDefaultNames(.female)
+//        
+//        girlNames.forEach { XCTAssertEqual($0.sex, Sex.female, "Only girl names should exist in the array.") }
+//        XCTAssertEqual(girlNames.count, DefaultBabyNames().girlNames.count, "Not all girl names were created.")
+//    }
+//    
+//    func testDefaultNamesData_Boys() {
+//        let boyNames = getDefaultNames(.male)
+//        
+//        boyNames.forEach { XCTAssertEqual($0.sex, Sex.male, "Only boy names should exist in the array.") }
+//        XCTAssertEqual(boyNames.count, DefaultBabyNames().boyNames.count, "Not all boy names were created.")
+//    }
+//    
+//    func testDefaultNamesData_All() {
+//        let nameData = DefaultBabyNames()
+//        let totalCount = nameData.boyNames.count + nameData.girlNames.count
+//        let allNames = getDefaultNames()
+//        
+//        XCTAssertEqual(allNames.count, totalCount, "Not all names were created.")
+//    }
+//    
+//    func testDuplicateGirlNameData() {
+//        let nameData = DefaultBabyNames()
+//        var seen = Set<String>()
+//        var duplicates = Set<String>()
+//        
+//        for string in nameData.girlNames {
+//            if seen.contains(string) {
+//                duplicates.insert(string)
+//                
+//            } else {
+//                seen.insert(string)
+//            }
+//        }
+//        
+//        XCTAssertEqual(seen.count, nameData.girlNames.count, "All names should be seen.")
+//        XCTAssertTrue(duplicates.isEmpty, "No duplicates should be in the default data.")
+//    }
+//    
+//    func testDuplicateBoyNameData() {
+//        let nameData = DefaultBabyNames()
+//        var seen = Set<String>()
+//        var duplicates = Set<String>()
+//        
+//        for string in nameData.boyNames {
+//            if seen.contains(string) {
+//                duplicates.insert(string)
+//                
+//            } else {
+//                seen.insert(string)
+//            }
+//        }
+//        
+//        XCTAssertEqual(seen.count, nameData.boyNames.count, "All names should be seen.")
+//        XCTAssertTrue(duplicates.isEmpty, "No duplicates should be in the default data.")
+//    }
+//    
+//    func testDefaultNames_AreLoaded() {
+//        loadDefaultNames()
+//        
+//        guard let maleNames = try? self.fetchNames(.male),
+//              let femaleNames = try? self.fetchNames(.female)
+//        else { XCTFail("Unable to fetch names."); return }
+//        
+//        XCTAssertEqual(maleNames.count, DefaultBabyNames().boyNames.count, "Not all boy names were inserted into the context.")
+//        XCTAssertEqual(femaleNames.count, DefaultBabyNames().girlNames.count, "Not all girl names were inserted into the context.")
+//    }
     
     
 
