@@ -50,14 +50,14 @@ protocol NamePersistenceController_Admin: NamePersistenceController {
     /// - Parameters:
     ///   - name: The `Name` object to delete.
     ///   - container: The `ModelContainer` managing the context.
-    func delete(_ name: Name)
+    func delete(_ name: Name) async
     
     /// Deletes an array of `Name` objects from the persistent store.
     ///
     /// - Parameters:
     ///   - names: The array of `Name` objects to delete.
     ///   - container: The `ModelContainer` managing the context.
-    func delete(_ names: [Name])
+    func delete(_ names: [Name]) async
     
     /// Inserts a new `Name` into the persistent store.
     ///
@@ -65,7 +65,7 @@ protocol NamePersistenceController_Admin: NamePersistenceController {
     ///   - name: The `Name` object to insert.
     ///   - container: The `ModelContainer` managing the context.
     /// - Returns: A `Result` indicating success or failure (`NamePersistenceError`).
-    func insert(_ name: Name) -> Result<Void, NamePersistenceError>
+    func insert(_ name: Name) async -> Result<Void, NamePersistenceError>
     
     /// Inserts an array of `Name` objects into the persistent store.
     ///
@@ -73,23 +73,23 @@ protocol NamePersistenceController_Admin: NamePersistenceController {
     ///   - names: The array of `Name` objects to insert.
     ///   - container: The `ModelContainer` managing the context.
     /// - Returns: An array of `Result` objects, each indicating the success or failure (`NamePersistenceError`) of an insertion.
-    func insert(_ names: [Name]) -> [Result<Void, NamePersistenceError>]
+    func insert(_ names: [Name]) async -> [Result<Void, NamePersistenceError>]
     
     /// Retrieves default names, optionally filtered by sex.
     ///
     /// - Parameter sex: The sex to filter names by (`.male`, `.female`, or `nil` for all).
     /// - Returns: An array of `Name` objects.
-    func getDefaultNames(_ sex: Sex?) -> [Name]
+    func getDefaultNames(_ sex: Sex?) async -> [Name]
     
     /// Loads the default names into the persistent store.
     ///
     /// - Parameter container: The `ModelContainer` managing the context.
-    func loadDefaultNames()
+    func loadDefaultNames() async
     
     /// Resets all name data in the persistent store, reloading the default names.
     ///
     /// - Parameter container: The `ModelContainer` managing the context.
-    func resetNameData()
+    func resetNameData() async
 }
 
 
@@ -124,7 +124,9 @@ extension NamePersistenceController_Admin {
     
     // MARK: - Insert
     
-    func insert(_ name: Name) -> Result<Void, NamePersistenceError> {
+    func insert(_ name: Name) async -> Result<Void, NamePersistenceError> {
+        let context = modelContext
+        
         do {
             guard try fetchName(byText: name.text, sex: name.sex!) == nil
             else {
@@ -132,8 +134,8 @@ extension NamePersistenceController_Admin {
                 return .failure(NamePersistenceError.duplicateNameInserted(name.text))
             }
             
-            modelContext.insert(name)
-            try modelContext.save()
+            context.insert(name)
+            try context.save()
             
             return .success(())
             
@@ -147,8 +149,10 @@ extension NamePersistenceController_Admin {
         }
     }
     
-    func insert(_ names: [Name]) -> [Result<Void, NamePersistenceError>] {
-        modelContext.autosaveEnabled = false
+    func insert(_ names: [Name]) async -> [Result<Void, NamePersistenceError>] {
+        let context = modelContext
+        context.autosaveEnabled = false
+        
         var results: [Result<Void, NamePersistenceError>] = []
         
         // Filter out duplicate `Name` objects within the provided array based on `text` and `sex` properties.
@@ -171,7 +175,7 @@ extension NamePersistenceController_Admin {
                     continue
                 }
                 
-                modelContext.insert(name)
+                context.insert(name)
                 results.append(.success(()))
                 
             } catch {
@@ -180,39 +184,42 @@ extension NamePersistenceController_Admin {
             }
         }
         
-        try? modelContext.save()                 // Save the insertions.
-        modelContext.autosaveEnabled = true
+        context.autosaveEnabled = true
+        try? context.save()                 // Save the insertions.
         return results
     }
     
     
     // MARK: - Delete
     
-    func delete(_ name: Name) {
+    func delete(_ name: Name) async {
+        let context = modelContext
+        
         do {
-            modelContext.delete(name)
-            try modelContext.save()
+            context.delete(name)
+            try context.save()
             
         } catch {
             logError("Unable to save the model context during the deletion of Name object: \(error.localizedDescription)")
         }
     }
     
-    func delete(_ names: [Name]) {
-        modelContext.autosaveEnabled = false
+    func delete(_ names: [Name]) async {
+        let context = modelContext
+        context.autosaveEnabled = false
         
         for name in names {
-            modelContext.delete(name)
+            context.delete(name)
         }
         
         do {
-            try modelContext.save()
+            try context.save()
             
         } catch {
             logError("Unable to save the model context during the deletion of multiple Name objects: \(error.localizedDescription)")
         }
         
-        modelContext.autosaveEnabled = true
+        context.autosaveEnabled = true
     }
 }
 
@@ -221,7 +228,7 @@ extension NamePersistenceController_Admin {
 
 extension NamePersistenceController_Admin {
     
-    func getDefaultNames(_ sex: Sex? = nil) -> [Name] {
+    func getDefaultNames(_ sex: Sex? = nil) async -> [Name] {
         var names: [Name] = []
         let nameData = DefaultBabyNames()  // Default data is local.
         
@@ -259,19 +266,18 @@ extension NamePersistenceController_Admin {
             }
             
         default:
-            let femaleNames = getDefaultNames(.female)
-            let maleNames = getDefaultNames(.male)
+            let femaleNames = await getDefaultNames(.female)
+            let maleNames = await getDefaultNames(.male)
             names = femaleNames + maleNames
         }
         
         return names
     }
     
-    func loadDefaultNames() {
-        let names = getDefaultNames()
+    func loadDefaultNames() async {
+        let names = await getDefaultNames()
         
-        let results = insert(names)
-        
+        let results = await insert(names)
         for result in results {
             switch result {
             case .success(_): continue
@@ -284,17 +290,23 @@ extension NamePersistenceController_Admin {
     
     // MARK: - Methods
     
-    func resetNameData() {
+    func resetNameData() async {
+        let context = modelContext
+        context.autosaveEnabled = false
+        
         do {
             let names = try fetchNames()
             for name in names {
                 name.resetValues()
             }
             
-            loadDefaultNames()
+            try context.save()
+            await loadDefaultNames()
             
         } catch {
             logError("Unable to fetch names while attempting to reset name data. Error: \(error)")
         }
+        
+        context.autosaveEnabled = true
     }
 }

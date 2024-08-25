@@ -53,7 +53,9 @@ extension Baby_AffinityApp: NamePersistenceController_Admin {
             // Check if there are existing names in the context
             if try fetchNames().isEmpty {
                 // If no names are found, load default names into the context
-                loadDefaultNames()
+                Task {
+                    await loadDefaultNames()
+                }
             }
         } catch {
             // Handle any errors that occur during data loading

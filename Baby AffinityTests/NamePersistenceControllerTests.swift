@@ -120,7 +120,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         switch await _insertRandomNamesIntoContext(countPerSex: 100) {
         case .success(let randomNames):
             
-            guard let fetchedNames = try? await fetchNames()
+            guard let fetchedNames = try? fetchNames()
             else { XCTFail("Unable to fetch names."); return }
             
             XCTAssertEqual(fetchedNames.count, randomNames.count, "All names should be fetched successfully.")
@@ -213,7 +213,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         case .success(_):
             
             for sex in Sex.allCases {
-                guard let favoriteNames = try? self.fetchFavoriteNames(sex: sex)
+                guard let favoriteNames = try? fetchFavoriteNames(sex: sex)
                 else { XCTFail("Unable to fetch favorite names."); return }
                 
                 XCTAssertEqual(favoriteNames.count, 10, "Not all favorite \(sex.sexNamingConvention) names were fetched.")
@@ -231,7 +231,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         case .success(_):
             
             for sex in Sex.allCases {
-                guard let nonFavoriteNames = try? self.fetchNonFavoriteNames(sex: sex)
+                guard let nonFavoriteNames = try? fetchNonFavoriteNames(sex: sex)
                 else { XCTFail("Unable to fetch favorite names."); return }
                 
                 XCTAssertEqual(nonFavoriteNames.count, 10, "Not all favorite \(sex.sexNamingConvention) names were fetched.")
@@ -263,7 +263,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         _ = await insert(names)
         
         for sex in Sex.allCases {
-            guard let fetchedNames = try? self.fetchNamesSortedByAffinity(sex)
+            guard let fetchedNames = try? fetchNamesSortedByAffinity(sex)
             else { XCTFail("Unable to fetch sorted names."); return }
             
             guard let firstName = fetchedNames.first,
@@ -290,7 +290,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
             
             
             for sex in Sex.allCases {
-                guard let fetchedNames = try? self.fetchNames(evaluatedCount: 1, sex: sex),
+                guard let fetchedNames = try? fetchNames(evaluatedCount: 1, sex: sex),
                       let firstName = fetchedNames.first
                 else { XCTFail("Unable to fetch names."); return }
                 
@@ -326,10 +326,10 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         _ = await insert(names)
         
         for sex in Sex.allCases {
-            guard let name = try? self.fetchName(byText: nameToTest, sex: sex)
+            guard let name = try? fetchName(byText: nameToTest, sex: sex)
             else { XCTFail("Unable to fetch name to test."); return }
             
-            guard let rank = try? self.getRank(of: name)
+            guard let rank = try? getRank(of: name)
             else { XCTFail("Unable to get the rank of the name."); return }
             
             XCTAssertEqual(rank, rankOfName, "The rank is not correct.")
@@ -358,7 +358,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         }
         
         for sex in Sex.allCases {
-            guard let fetchedName = try? self.fetchName(byText: "Test Name", sex: sex)
+            guard let fetchedName = try? fetchName(byText: "Test Name", sex: sex)
             else { XCTFail("Unable to fetch name to test."); return }
             
             XCTAssertEqual(fetchedName.text, "Test Name", "The names should be the same.")
@@ -382,7 +382,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
                 }
             }
             
-            let insertedNames = try? await self.fetchNames()
+            let insertedNames = try? fetchNames()
             XCTAssertEqual(insertedNames?.count, totalNames, "All names should be inserted successfully.")
             
         case .failure(let error):
@@ -418,7 +418,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
                     XCTAssertEqual(nameText, name.text, "The duplicate name error should throw.")
                     
                     // Fetch the inserted names to check if the duplicate is not inserted.
-                    guard let insertedNames = try? self.fetchNames(name.sex!) else {
+                    guard let insertedNames = try? fetchNames(name.sex!) else {
                         XCTFail("Unable to fetch names.")
                         return
                     }
@@ -460,7 +460,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
             XCTAssertEqual(failureCount, 1, "One insertion should fail due to duplication.")
             
             // Fetch the inserted names to check if the duplicate is not inserted.
-            guard let insertedNames = try? self.fetchNames(sex) else {
+            guard let insertedNames = try? fetchNames(sex) else {
                 XCTFail("Unable to fetch names.")
                 return
             }
@@ -502,7 +502,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
             }
             
             // Fetch the inserted names.
-            guard let fetchedNames = try? self.fetchNames(sex) else {
+            guard let fetchedNames = try? fetchNames(sex) else {
                 XCTFail("Unable to fetch names.")
                 return
             }
@@ -527,7 +527,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
             XCTFail("Unable to create and insert unique names: \(error.localizedDescription)")
         }
         
-        guard let deletedFetch = try? await self.fetchNames()
+        guard let deletedFetch = try? fetchNames()
         else { XCTFail("Unable to fetch names."); return }
         
         XCTAssertTrue(deletedFetch.isEmpty, "All names should be deleted.")
@@ -543,7 +543,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
             XCTFail("Unable to create and insert unique names: \(error.localizedDescription)")
         }
         
-        guard let deletedFetch = try? await self.fetchNames()
+        guard let deletedFetch = try? fetchNames()
         else { XCTFail("Unable to fetch names."); return }
         
         XCTAssertTrue(deletedFetch.isEmpty, "All names should be deleted.")
@@ -552,24 +552,24 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
     
     // MARK: - Default Data
     
-    func testDefaultNamesData_Girls() {
-        let girlNames = getDefaultNames(.female)
+    func testDefaultNamesData_Girls() async {
+        let girlNames = await getDefaultNames(.female)
         
         girlNames.forEach { XCTAssertEqual($0.sex, Sex.female, "Only girl names should exist in the array.") }
         XCTAssertEqual(girlNames.count, DefaultBabyNames().girlNames.count, "Not all girl names were created.")
     }
     
-    func testDefaultNamesData_Boys() {
-        let boyNames = getDefaultNames(.male)
+    func testDefaultNamesData_Boys() async {
+        let boyNames = await getDefaultNames(.male)
         
         boyNames.forEach { XCTAssertEqual($0.sex, Sex.male, "Only boy names should exist in the array.") }
         XCTAssertEqual(boyNames.count, DefaultBabyNames().boyNames.count, "Not all boy names were created.")
     }
     
-    func testDefaultNamesData_All() {
+    func testDefaultNamesData_All() async {
         let nameData = DefaultBabyNames()
         let totalCount = nameData.boyNames.count + nameData.girlNames.count
-        let allNames = getDefaultNames()
+        let allNames = await getDefaultNames()
         
         XCTAssertEqual(allNames.count, totalCount, "Not all names were created.")
     }
@@ -610,11 +610,11 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         XCTAssertTrue(duplicates.isEmpty, "No duplicates should be in the default data.")
     }
     
-    func testDefaultNames_AreLoaded() {
-        loadDefaultNames()
+    func testDefaultNames_AreLoaded() async {
+        await loadDefaultNames()
         
-        guard let maleNames = try? self.fetchNames(.male),
-              let femaleNames = try? self.fetchNames(.female)
+        guard let maleNames = try? fetchNames(.male),
+              let femaleNames = try? fetchNames(.female)
         else { XCTFail("Unable to fetch names."); return }
         
         XCTAssertEqual(maleNames.count, DefaultBabyNames().boyNames.count, "Not all boy names were inserted into the context.")

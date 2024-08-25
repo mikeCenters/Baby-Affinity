@@ -53,7 +53,9 @@ struct ResetDataButton: View, NamePersistenceController_Admin {
     
     /// Initiates the process to reset the name data in the model context.
     func resetData() {
-        resetNameData()
+        Task {
+            await resetNameData()
+        }
     }
 }
 
