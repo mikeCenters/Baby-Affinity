@@ -622,6 +622,28 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
     }
     
     
+    // MARK: - Data Management
+    
+    func testResetNameData() async {
+        switch await _insertRandomNamesIntoContext(countPerSex: 10) {
+        case .success(let names):
+            for name in names {
+                guard let randomAffinity: Int = (900...1500).randomElement()
+                else { XCTFail("Unable to get a random number."); return }
+                
+                try? name.setAffinity(randomAffinity)       // Number is a valid assignment
+                
+                await resetNameData()
+                
+                XCTAssertEqual(name.affinityRating, Name.defaultAffinityRating)
+            }
+            
+        case .failure(let error):
+            XCTFail("Unable to create and insert random names into the context: \(error.localizedDescription)")
+        }
+    }
+    
+    
     // MARK: - Helper Functions
     
     private func generateRandomLetter() -> Character {
