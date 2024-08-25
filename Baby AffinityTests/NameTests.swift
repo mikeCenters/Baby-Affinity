@@ -35,6 +35,23 @@ final class NameTests: XCTestCase {
         }
     }
     
+    // Test successful initialization with valid capitalization for both sexes.
+    func testInitializationWithCapitalization() {
+        do {
+            let femaleName = try Name("reMi", sex: .female)
+            XCTAssertNotNil(femaleName)
+            XCTAssertEqual(femaleName.text, "Remi")
+            XCTAssertEqual(femaleName.sex, .female)
+            
+            let maleName = try Name("aLex", sex: .male)
+            XCTAssertNotNil(maleName)
+            XCTAssertEqual(maleName.text, "Alex")
+            XCTAssertEqual(maleName.sex, .male)
+        } catch {
+            XCTFail("Initialization failed with valid parameters")
+        }
+    }
+    
     // Test successful initialization with default affinity rating for both sexes
     func testInitializationWithDefaultAffinityRating() {
         do {
