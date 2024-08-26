@@ -12,7 +12,7 @@ struct ContentView: View {
     
     // MARK: - Properties
     
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.modelContext) var modelContext
     
     
     // MARK: - Controls
@@ -61,9 +61,29 @@ struct ContentView: View {
         }
         .modelContext(modelContext)
         .tint(selectedSex == .male ? .blue : .pink)
+        .task {
+            await loadData()
+        }
     }
 }
 
+// MARK: - Persistence Management
+
+extension ContentView: NamePersistenceController_Admin {
+    
+    private func loadData() async {
+        do {
+            // Check if there are existing names in the context
+            if try fetchNames().isEmpty {
+                // If no names are found, load default names into the context
+                await loadDefaultNames()
+            }
+        } catch {
+            // Handle any errors that occur during data loading
+            logError("Unable to load default data on app launch: \(error)")
+        }
+    }
+}
 
 #if DEBUG
 
