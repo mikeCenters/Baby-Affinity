@@ -657,7 +657,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
     
     private func _createRandomNames(countPerSex namesCount: Int) async -> Result<[Name], Error> {
         var names: [Name] = []
-        let randomLetterCount = 5
+        let randomLetterCount = 20
         for _ in 0..<namesCount {
             let randomText = String(generateRandomLetters(count: randomLetterCount))
             let name = "Name \(randomText)"
