@@ -30,37 +30,8 @@ struct Baby_AffinityApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .onAppear {
-                    withAnimation {
-                        loadData()
-                    }
-                }
         }
         .modelContainer(sharedModelContainer)
-    }
-}
-
-
-// MARK: - Persistence Management
-
-extension Baby_AffinityApp: NamePersistenceController_Admin {
-    var modelContext: ModelContext {
-        ModelContext(sharedModelContainer)
-    }
-    
-    private func loadData() {
-        do {
-            // Check if there are existing names in the context
-            if try fetchNames().isEmpty {
-                // If no names are found, load default names into the context
-                Task {
-                    await loadDefaultNames()
-                }
-            }
-        } catch {
-            // Handle any errors that occur during data loading
-            logError("Unable to load default data on initial app launch: \(error)")
-        }
     }
 }
 
