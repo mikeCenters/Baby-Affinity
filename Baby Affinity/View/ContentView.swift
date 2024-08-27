@@ -68,6 +68,11 @@ struct ContentView: View {
         }
         .modelContext(modelContext)                     // FIXME: TEst removing
         .tint(selectedSex == .male ? .blue : .pink)
+        .onChange(of: namePersistenceIsEmpty) { oldValue, newValue in
+            if newValue && !isShowingOnboarding {
+                isShowingOnboarding = true
+            }
+        }
     }
 }
 
