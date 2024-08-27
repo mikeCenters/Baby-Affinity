@@ -23,6 +23,8 @@ struct ResetDataButton: View, NamePersistenceController_Admin {
     /// A state variable to control the presentation of the confirmation dialog.
     @State private var isShowingConfirmation = false
     
+    @AppStorage("isShowingOnboarding") var isShowingOnboarding: Bool = true
+    
     
     // MARK: - Body
     
@@ -53,10 +55,8 @@ struct ResetDataButton: View, NamePersistenceController_Admin {
     
     /// Initiates the process to reset the name data in the model context.
     func resetData() {
-        
-        
         try? modelContext.delete(model: Name.self)
-        
+        isShowingOnboarding = true
     }
 }
 
