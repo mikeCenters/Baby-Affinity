@@ -30,12 +30,19 @@ struct Baby_AffinityApp: App {
         }
     }()
     
+    @AppStorage("isShowingOnboarding") var isShowingOnboarding: Bool = true
+    
     
     // MARK: - Body
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if isShowingOnboarding {
+                OnboardingView(isShown: $isShowingOnboarding)
+                
+            } else {
+                ContentView()
+            }
         }
         .modelContainer(sharedModelContainer)
     }
