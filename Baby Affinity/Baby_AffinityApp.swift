@@ -10,6 +10,9 @@ import SwiftData
 
 @main
 struct Baby_AffinityApp: App {
+    
+    // MARK: - Properties
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Name.self,
@@ -26,7 +29,10 @@ struct Baby_AffinityApp: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
-
+    
+    
+    // MARK: - Body
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
