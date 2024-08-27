@@ -19,6 +19,8 @@ struct ContentView: View {
     
     @AppStorage("selectedSex") private var selectedSex: Sex = .male
     
+    @IsPersistentStoreEmpty<Name> private var isShowingOnboarding: Bool
+    
     
     // MARK: - View
     
@@ -59,11 +61,13 @@ struct ContentView: View {
                     }
                 }
         }
-        .modelContext(modelContext)
-        .tint(selectedSex == .male ? .blue : .pink)
-        .task {
-            await loadData()
+        .overlay {
+            if isShowingOnboarding {
+                OnboardingView()
+            }
         }
+        .modelContext(modelContext)                     // FIXME: TEst removing
+        .tint(selectedSex == .male ? .blue : .pink)
     }
 }
 
