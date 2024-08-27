@@ -8,7 +8,7 @@
 import SwiftUI
 
 
-struct OnboardingView: View {
+struct OnboardingView: View, NamePersistenceController_Admin {
     
     // MARK: - Properties
     
@@ -17,7 +17,7 @@ struct OnboardingView: View {
     
     // MARK: - Controls
     
-    @IsPersistentStoreEmpty<Name> private var isShowingOnboarding: Bool
+    @Binding var isShown: Bool
     
     @State private var isLoading: Bool = false
     
@@ -68,8 +68,11 @@ struct OnboardingView: View {
             .padding(.horizontal)
         }
         .transition(.move(edge: .bottom))
-        .animation(.easeInOut, value: isShowingOnboarding)
+        .animation(.easeInOut, value: isShown)
     }
+    
+    
+    // MARK: - View Components
     
     private var findNamesButton: some View {
         Button {
@@ -115,19 +118,16 @@ struct OnboardingView: View {
             }
         }
     }
-}
-
-extension OnboardingView: NamePersistenceController_Admin {
+    
+    
+    // MARK: - Methods
+    
     private func loadData() {
-        try? modelContext.transaction {
-            Task {
-                let allNames = await getDefaultNames()
-                
-                try? modelContext.transaction {
-                    for name in allNames {
-                        modelContext.insert(name)
-                    }
-                }
+        Task {
+            await loadDefaultNames()
+
+            withAnimation {
+                isShown = false
             }
         }
     }
@@ -139,7 +139,7 @@ extension OnboardingView: NamePersistenceController_Admin {
 // MARK: - Previews
 
 #Preview {
-    OnboardingView()
+    OnboardingView(isShown: .constant(true))
         .modelContainer(previewModelContainer)
 }
 
