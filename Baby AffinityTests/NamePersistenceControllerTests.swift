@@ -367,7 +367,7 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
     }
     
     func testInsertNames_Success() async {
-        let totalNames = 200
+        let totalNames = 2000
         /// Create Names to add to persistent layer
         switch await _createRandomNames(countPerSex: totalNames / 2) {
         case .success(let names):

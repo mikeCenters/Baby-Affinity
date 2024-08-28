@@ -151,41 +151,38 @@ extension NamePersistenceController_Admin {
     
     func insert(_ names: [Name]) async -> [Result<Void, NamePersistenceError>] {
         let context = modelContext
-        context.autosaveEnabled = false
-        
         var results: [Result<Void, NamePersistenceError>] = []
         
+        guard let fetchedNames = try? fetchNames()
+        else {
+            logError("Unable to fetch names during batch insertion.")
+            return results
+        }
+            
         // Filter out duplicate `Name` objects within the provided array based on `text` and `sex` properties.
         var seenNames: Set<(String)> = []
         
-        for name in names {
-            let nameKey = "\(name.text)-\(name.sex!.rawValue)"  // Create a unique key using text and sex
-            
-            guard seenNames.insert(nameKey).inserted else {
-                logError("Duplicate name found in the provided array. Name: \(name.text) with sex \(name.sex!.rawValue)")
-                results.append(.failure(NamePersistenceError.duplicateNameInserted(name.text)))
-                continue
-            }
-            
-            do {
-                guard try fetchName(byText: name.text, sex: name.sex!) == nil
-                else {
-                    logError("Attempted to insert a duplicate \(name.sex!.sexNamingConvention) name. Name: \(name.text)")
+        try? context.transaction {
+            for name in names {
+                let nameKey = "\(name.text)-\(name.sex!.rawValue)"  // Create a unique key using text and sex
+                
+                guard seenNames.insert(nameKey).inserted else {     // Attempt to insert a unique name to the seen array.
+                    logError("Duplicate name found in the provided array. Name: \(name.text) with sex \(name.sex!.rawValue)")
                     results.append(.failure(NamePersistenceError.duplicateNameInserted(name.text)))
                     continue
                 }
                 
-                context.insert(name)
-                results.append(.success(()))
-                
-            } catch {
-                logError("Unable to fetch names while attempting to insert name. Name: \(name)")
-                results.append(.failure(.unableToFetch(error)))
+                if fetchedNames.contains(                           // Check if the fetched names contains the new `Name`.
+                    where: { $0.text == name.text && $0.sex == name.sex }) {
+                    results.append(.failure(.duplicateNameInserted(name.text)))
+                    
+                } else {
+                    context.insert(name)                            // Insert unique `Name`.
+                    results.append(.success(()))
+                }
             }
         }
         
-        context.autosaveEnabled = true
-        try? context.save()                 // Save the insertions.
         return results
     }
     
