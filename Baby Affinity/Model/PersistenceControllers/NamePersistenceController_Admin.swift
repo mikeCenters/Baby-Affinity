@@ -162,25 +162,29 @@ extension NamePersistenceController_Admin {
         // Filter out duplicate `Name` objects within the provided array based on `text` and `sex` properties.
         var seenNames: Set<(String)> = []
         
-        try? context.transaction {
-            for name in names {
-                let nameKey = "\(name.text)-\(name.sex!.rawValue)"  // Create a unique key using text and sex
-                
-                guard seenNames.insert(nameKey).inserted else {     // Attempt to insert a unique name to the seen array.
-                    logError("Duplicate name found in the provided array. Name: \(name.text) with sex \(name.sex!.rawValue)")
-                    results.append(.failure(NamePersistenceError.duplicateNameInserted(name.text)))
-                    continue
-                }
-                
-                if fetchedNames.contains(                           // Check if the fetched names contains the new `Name`.
-                    where: { $0.text == name.text && $0.sex == name.sex }) {
-                    results.append(.failure(.duplicateNameInserted(name.text)))
+        do {
+            try context.transaction {
+                for name in names {
+                    let nameKey = "\(name.text)-\(name.sex!.rawValue)"  // Create a unique key using text and sex
                     
-                } else {
-                    context.insert(name)                            // Insert unique `Name`.
-                    results.append(.success(()))
+                    guard seenNames.insert(nameKey).inserted else {     // Attempt to insert a unique name to the seen array.
+                        logError("Duplicate name found in the provided array. Name: \(name.text) with sex \(name.sex!.rawValue)")
+                        results.append(.failure(NamePersistenceError.duplicateNameInserted(name.text)))
+                        continue
+                    }
+                    
+                    if fetchedNames.contains(                           // Check if the fetched names contains the new `Name`.
+                        where: { $0.text == name.text && $0.sex == name.sex }) {
+                        results.append(.failure(.duplicateNameInserted(name.text)))
+                        
+                    } else {
+                        context.insert(name)                            // Insert unique `Name`.
+                        results.append(.success(()))
+                    }
                 }
             }
+        } catch {
+            logError("Unable to batch insert Names: \(error.localizedDescription)")
         }
         
         return results
@@ -203,20 +207,22 @@ extension NamePersistenceController_Admin {
     
     func delete(_ names: [Name]) async {
         let context = modelContext
-        context.autosaveEnabled = false
-        
-        for name in names {
-            context.delete(name)
-        }
         
         do {
-            try context.save()
-            
-        } catch {
-            logError("Unable to save the model context during the deletion of multiple Name objects: \(error.localizedDescription)")
+            try context.transaction {
+                for name in names {
+                    context.delete(name)
+                }
+            }
         }
-        
-        context.autosaveEnabled = true
+        catch {
+            logError("Unable to batch delete Names: \(error.localizedDescription)")
+        }
+    }
+    
+    func __delete(_ names: [Name]) async {
+        let cache = PersistenceCacheHandler<Name>(modelContainer: modelContext.container)
+        await cache.delete(names)
     }
 }
 
