@@ -38,24 +38,12 @@ struct ContentView: View {
             
             // MARK: - Pick Names
             
-            NamePickerView(sex: selectedSex)
+            NamePickerView()
                 .tabItem {
                     Label {
                         Text("Pick Names")
                     } icon: {
                         Image(systemName: "hand.point.up.left.and.text")
-                    }
-                }
-            
-            
-            // MARK: - Settings
-            
-            SettingsView()
-                .tabItem {
-                    Label {
-                        Text("Settings")
-                    } icon: {
-                        Image(systemName: "gearshape")
                     }
                 }
         }
