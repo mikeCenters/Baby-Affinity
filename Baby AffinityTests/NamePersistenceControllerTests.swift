@@ -678,7 +678,6 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
     }
     
     private func _insertRandomNamesIntoContext(countPerSex namesCount: Int) async -> Result<[Name], Error> {
-        let context = modelContext
         switch await _createRandomNames(countPerSex: namesCount) {
         case .success(let names):
             
@@ -701,8 +700,6 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
     }
     
     private func _insertRandomFavoriteNamesIntoContext(_ numFavorites: Int) async -> Result<[Name], Error> {
-        let context = modelContext
-        
         let favoriteNamesResult = await _createRandomNames(countPerSex: numFavorites)
         let nonFavoriteNamesResult = await _createRandomNames(countPerSex: numFavorites)
         var allNames: [Name] = []

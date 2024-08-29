@@ -17,13 +17,10 @@ struct NamePickerView: View {
     // MARK: - Properties
     
     /// Environment variable for the model context.
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.modelContext) var modelContext
     
     /// App storage for the selected sex (male or female).
     @AppStorage("selectedSex") private var selectedSex = Sex.male
-    
-    /// Query for fetching `Name` objects.
-    @Query private var names: [Name]
     
     /// State object for managing the view model.
     @StateObject private var viewModel: NamePickerViewModel = .init()
@@ -36,21 +33,6 @@ struct NamePickerView: View {
     
     /// State variable for showing the instructions sheet.
     @State private var showInstructions = true
-    
-    
-    // MARK: - Init
-    
-    /// Initializes the `NamePickerView` with a specified sex.
-    ///
-    /// - Parameter sex: The sex of the names to be picked (male or female).
-    init(sex: Sex) {
-        let descriptor = FetchDescriptor<Name>(
-            predicate: #Predicate { $0.sexRawValue == sex.rawValue },
-            sortBy: [.init(\.affinityRating, order: .reverse)]
-        )
-        
-        _names = Query(descriptor)
-    }
     
     
     // MARK: - Body
@@ -103,19 +85,28 @@ struct NamePickerView: View {
             }
         }
         // MARK: - On Change
-        .onChange(of: selectedSex, { oldValue, newValue in
+        .onChange(of: selectedSex, {
             withAnimation {
                 loadNames()
             }
         })
     }
+}
+
+
+// MARK: - Methods
+
+extension NamePickerView: NamePersistenceController {
     
-    
-    // MARK: - Methods
-    
-    /// Loads the names based on the selected sex and updates the view model.
+    /// Fetch names based on the selected sex and updates the view model.
     private func loadNames() {
-        viewModel.load(names)
+        do {
+            let names = try fetchNames(selectedSex)
+            viewModel.load(names)
+            
+        } catch {
+            logError("Unable to fetch names for name picker view to load: \(error.localizedDescription)")
+        }
     }
 }
 
@@ -145,19 +136,12 @@ extension NamePickerView {
     }
     
     
-    /// A button for submitting chosen names or fetching new names.
+    /// A button for submitting selected names or fetching new names.
     private var submitNamesButton: some View {
         Button {
-            let winners = viewModel.selectedNames
-            let losers = viewModel.presentedNames
+            viewModel.updateRatings()
+            loadNames()
             
-            Task(priority: .medium) {
-                viewModel.updateRatings(winners: winners, losers: losers)
-            }
-            
-            withAnimation {
-                loadNames()
-            }
         } label: {
             Text(viewModel.selectedNames.isEmpty ? "New Names" : "Submit")
         }
@@ -214,7 +198,7 @@ extension NamePickerView {
 // MARK: - Preview
 
 #Preview {
-    NamePickerView(sex: .male)
+    NamePickerView()
         .modelContainer(previewModelContainer_WithFavorites)
 }
 

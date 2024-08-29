@@ -109,11 +109,9 @@ class NamePickerViewModel: ObservableObject {
     /// This method updates the affinity ratings of the provided winners and losers based on the group rating.
     /// The affinity ratings are recalculated using the `AffinityCalculator` based on the  group rating, and
     /// the evaluation count for each name is incremented.
-    ///
-    /// - Parameters:
-    ///   - winners: An array of `Name` objects that have been selected.
-    ///   - losers: An array of `Name` objects that have been presented but not selected.
-    func updateRatings(winners: [Name], losers: [Name]) {
+    func updateRatings() {
+        let winners = selectedNames
+        let losers = presentedNames
         // Get the group rating.
         let groupRating = calculateGroupRating(winners: winners, losers: losers)
         
