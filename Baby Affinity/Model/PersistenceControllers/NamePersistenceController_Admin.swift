@@ -121,8 +121,6 @@ extension NamePersistenceController_Admin {
     // MARK: - Insert
     
     func insert(_ name: Name) async -> Result<Void, NamePersistenceError> {
-        let context = modelContext
-        
         do {
             guard try fetchName(byText: name.text, sex: name.sex!) == nil
             else {
@@ -130,8 +128,8 @@ extension NamePersistenceController_Admin {
                 return .failure(NamePersistenceError.duplicateNameInserted(name.text))
             }
             
-            context.insert(name)
-            try context.save()
+            modelContext.insert(name)
+            try modelContext.save()
             
             return .success(())
             
@@ -146,7 +144,6 @@ extension NamePersistenceController_Admin {
     }
     
     func insert(_ names: [Name]) async -> [Result<Void, NamePersistenceError>] {
-        let context = modelContext
         var results: [Result<Void, NamePersistenceError>] = []
         
         guard let fetchedNames = try? fetchNames()
@@ -159,7 +156,7 @@ extension NamePersistenceController_Admin {
         var seenNames: Set<(String)> = []
         
         do {
-            try context.transaction {
+            try modelContext.transaction {
                 for name in names {
                     let nameKey = "\(name.text)-\(name.sex!.rawValue)"  // Create a unique key using text and sex
                     
@@ -174,7 +171,7 @@ extension NamePersistenceController_Admin {
                         results.append(.failure(.duplicateNameInserted(name.text)))
                         
                     } else {
-                        context.insert(name)                            // Insert unique `Name`.
+                        modelContext.insert(name)                       // Insert unique `Name`.
                         results.append(.success(()))
                     }
                 }
@@ -190,11 +187,9 @@ extension NamePersistenceController_Admin {
     // MARK: - Delete
     
     func delete(_ name: Name) async {
-        let context = modelContext
-        
         do {
-            context.delete(name)
-            try context.save()
+            modelContext.delete(name)
+            try modelContext.save()
             
         } catch {
             logError("Unable to save the model context during the deletion of Name object: \(error.localizedDescription)")
@@ -202,12 +197,10 @@ extension NamePersistenceController_Admin {
     }
     
     func delete(_ names: [Name]) async {
-        let context = modelContext
-        
         do {
-            try context.transaction {
+            try modelContext.transaction {
                 for name in names {
-                    context.delete(name)
+                    modelContext.delete(name)
                 }
             }
         }

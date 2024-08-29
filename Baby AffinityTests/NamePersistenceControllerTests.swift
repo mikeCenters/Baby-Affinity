@@ -125,7 +125,6 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
         /// Add Names into persistent layer
         switch await _insertRandomNamesIntoContext(countPerSex: 100) {
         case .success(let randomNames):
-            
             guard let fetchedNames = try? fetchNames()
             else { XCTFail("Unable to fetch names."); return }
             
@@ -521,42 +520,43 @@ final class NamePersistenceControllerTests: XCTestCase, NamePersistenceControlle
     
     // MARK: - Delete
     
-//    func testDeleteName() async {
-//        let context = modelContext
-//        switch await _insertRandomNamesIntoContext(countPerSex: 100) {
-//        case .success(let names):
-//            guard ((try? fetchNames().isEmpty) != nil)
-//            else { XCTFail("Fetched names is not empty."); return }
-//            
-//            for name in names {
-//                await delete(name)
-//            }
-//            try? context.save()
-//        case .failure(let error):
-//            XCTFail("Unable to create and insert unique names: \(error.localizedDescription)")
-//        }
-//        
-//        guard let deletedFetch = try? fetchNames()
-//        else { XCTFail("Unable to fetch names."); return }
-//        
-//        XCTAssertTrue(deletedFetch.isEmpty, "All names should be deleted.")
-//    }
+    func testDeleteName() async {
+        switch await _insertRandomNamesIntoContext(countPerSex: 100) {
+        case .success(let names):
+            guard ((try? fetchNames().isEmpty) != nil)
+            else { XCTFail("Fetched names is not empty."); return }
+            
+            for name in names {
+                await delete(name)          // Delete method for a single name.
+            }
+            
+            try? modelContext.save()
+            
+        case .failure(let error):
+            XCTFail("Unable to create and insert unique names: \(error.localizedDescription)")
+        }
+        
+        guard let deletedFetch = try? fetchNames()
+        else { XCTFail("Unable to fetch names."); return }
+        XCTAssertTrue(deletedFetch.isEmpty, "All names should be deleted.")
+    }
     
-//    func testDeleteAllNames() async {
-//        switch await _insertRandomNamesIntoContext(countPerSex: 100000) {
-//        case .success(let names):
-//            
-//            await delete(names)
-//            
-//        case .failure(let error):
-//            XCTFail("Unable to create and insert unique names: \(error.localizedDescription)")
-//        }
-//        
-//        guard let deletedFetch = try? fetchNames()
-//        else { XCTFail("Unable to fetch names."); return }
-//        
-//        XCTAssertTrue(deletedFetch.isEmpty, "All names should be deleted.")
-//    }
+    func testDeleteAllNames() async {
+        switch await _insertRandomNamesIntoContext(countPerSex: 100) {
+        case .success(let names):
+            guard ((try? fetchNames().isEmpty) != nil)
+            else { XCTFail("Fetched names is not empty."); return }
+            
+            await delete(names)
+            
+        case .failure(let error):
+            XCTFail("Unable to create and insert unique names: \(error.localizedDescription)")
+        }
+        
+        guard let deletedFetch = try? fetchNames()
+        else { XCTFail("Unable to fetch names."); return }
+        XCTAssertTrue(deletedFetch.isEmpty, "All names should be deleted.")
+    }
     
 //    func test_DeleteAllNames() async {
 //        switch await _insertRandomNamesIntoContext(countPerSex: 100000) {
