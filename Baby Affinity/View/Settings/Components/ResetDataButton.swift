@@ -20,10 +20,13 @@ struct ResetDataButton: View, NamePersistenceController_Admin {
     /// The environment's model context used for interacting with the data model.
     @Environment(\.modelContext) var modelContext
     
+    var beforeReset: () -> Void
+    var afterReset: () -> Void
+    
+    
+    // MARK: - Controls
     /// A state variable to control the presentation of the confirmation dialog.
     @State private var isShowingConfirmation = false
-    
-    @AppStorage("isShowingOnboarding") var isShowingOnboarding: Bool = true
     
     
     // MARK: - Body
@@ -40,9 +43,7 @@ struct ResetDataButton: View, NamePersistenceController_Admin {
         }
         .confirmationDialog("Reset data", isPresented: $isShowingConfirmation) {
             Button("Yes", role: .destructive) {
-                withAnimation {
-                    resetData()
-                }
+                resetData()
             }
             Button("Cancel", role: .cancel) { }
         } message: {
@@ -55,8 +56,13 @@ struct ResetDataButton: View, NamePersistenceController_Admin {
     
     /// Initiates the process to reset the name data in the model context.
     func resetData() {
-        try? modelContext.delete(model: Name.self)
-        isShowingOnboarding = true
+        withAnimation{
+            beforeReset()
+            
+        } completion: {
+            resetNameData()
+            afterReset()
+        }
     }
 }
 
@@ -71,7 +77,7 @@ import SwiftData
 #Preview("Reset Data Button in List") {
     List {
         Section {
-            ResetDataButton()
+            ResetDataButton(beforeReset: { }, afterReset: { })
         }
     }
     .modelContainer(previewModelContainer)
@@ -95,7 +101,7 @@ import SwiftData
     
     return List {
         Section {
-            ResetDataButton()
+            ResetDataButton(beforeReset: { }, afterReset: { })
         }
         Section("Debugging List") {
             PreviewNames()
