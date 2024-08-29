@@ -8,9 +8,6 @@
 import Foundation
 import SwiftData
 
-// FIXME: Persistent Controller_Admin needs to throw errors, log them, and attempt to handle them. Then, build tests.
-// FIXME: Fix batch methods to operate independent of the single entry methods. Turn off autosave after context creation, then save before exiting. Maybe test Transaction methods. Transaction is likely correct way to perform batch operations. Autosave off will improve performance.
-
 
 // MARK: - Error
 

@@ -59,7 +59,6 @@ struct ContentView: View {
                     }
                 }
         }
-        .modelContext(modelContext)                     // FIXME: Test removing
         .tint(selectedSex == .male ? .blue : .pink)
     }
 }
