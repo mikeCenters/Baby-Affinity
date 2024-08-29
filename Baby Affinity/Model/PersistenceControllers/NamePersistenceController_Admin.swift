@@ -89,7 +89,7 @@ protocol NamePersistenceController_Admin: NamePersistenceController {
     /// Resets all name data in the persistent store, reloading the default names.
     ///
     /// - Parameter container: The `ModelContainer` managing the context.
-    func resetNameData() async
+    func resetNameData()
 }
 
 
@@ -119,7 +119,6 @@ extension NamePersistenceController_Admin {
             return .failure(.unexpectedError(error))
         }
     }
-    
     
     
     // MARK: - Insert
@@ -219,11 +218,6 @@ extension NamePersistenceController_Admin {
             logError("Unable to batch delete Names: \(error.localizedDescription)")
         }
     }
-    
-    func __delete(_ names: [Name]) async {
-        let cache = PersistenceCacheHandler<Name>(modelContainer: modelContext.container)
-        await cache.delete(names)
-    }
 }
 
 
@@ -293,23 +287,19 @@ extension NamePersistenceController_Admin {
     
     // MARK: - Methods
     
-    func resetNameData() async {
-        let context = modelContext
-        context.autosaveEnabled = false
-        
+    func resetNameData() {
         do {
             let names = try fetchNames()
-            for name in names {
-                name.resetValues()
+            
+            try modelContext.transaction {
+                for name in names {
+                    name.resetValues()
+                }
             }
             
-            try context.save()
-            await loadDefaultNames()
-            
         } catch {
-            logError("Unable to fetch names while attempting to reset name data. Error: \(error)")
+            logError("Unable to reset Name data: \(error.localizedDescription)")
         }
         
-        context.autosaveEnabled = true
     }
 }
