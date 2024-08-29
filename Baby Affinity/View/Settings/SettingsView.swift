@@ -7,85 +7,21 @@
 
 import SwiftUI
 
-extension SettingsView {
-    enum Item: Int, CaseIterable {
-        case appCard
-        case about, contact, products
-        case resetData
-        case legalInfo
-        
-        var label: String {
-            switch self {
-            case .appCard:
-                "App Card"
-            case .about:
-                "About"
-            case .contact:
-                "Contact Us"
-            case .products:
-                "Products"
-            case .resetData:
-                "Reset Data"
-            case .legalInfo:
-                "Legal Info"
-            }
+
+
+struct SettingsLoadingIndicator: View {
+    var body: some View {
+        VStack {
+            ProgressView("Resetting Data...")
+                .progressViewStyle(CircularProgressViewStyle())
+                .foregroundColor(.white)
         }
-        
-        var sectionID: Int {
-            switch self {
-            case .appCard:
-                1
-            case .about:
-                2
-            case .contact:
-                2
-            case .products:
-                2
-            case .resetData:
-                3
-            case .legalInfo:
-                4
-            }
-        }
-        
-        var view: some View {
-            Group {
-                switch self {
-                case .appCard:
-                    AppCard()
-                case .about:
-                    NavigationLink {
-                        AboutView()
-                    } label: {
-                        Text("About")
-                    }
-                case .contact:
-                    NavigationLink {
-                        ContactUsView()
-                    } label: {
-                        Text("Contact Us")
-                    }
-                case .products:
-                    Text("Products")
-                case .resetData:
-                    ResetDataButton()
-                case .legalInfo:
-                    LegalInfoView()
-                }
-            }
-        }
-        
-        static func getLastSectionID() -> Int {
-            var sectionCount: Int = 0
-            for label in Item.allCases {
-                if label.sectionID > sectionCount {
-                    sectionCount = label.sectionID
-                }
-            }
-            return sectionCount
-        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.black.opacity(0.6))
+        .cornerRadius(10)
     }
 }
+
 
 
 struct SettingsView: View, NamePersistenceController_Admin {
@@ -95,24 +31,24 @@ struct SettingsView: View, NamePersistenceController_Admin {
     @Environment(\.modelContext) var modelContext
     
     
+    // MARK: - Controls
+    
+    @State private var isLoading: Bool = false
+    
+    
     // MARK: - Body
     
     var body: some View {
-        NavigationStack {
-            List {
-                /// Iterate over each section
-                ForEach(1...Item.getLastSectionID(), id: \.self) { sectionID in
-                    Section {
-                        /// Only display the items assigned to the sectionID.
-                        ForEach(Item.allCases, id: \.self) { item in
-                            if item.sectionID == sectionID {
-                                item.view
-                            }
-                        }
-                    }
-                }
+        ZStack {
+            SettingsNavigationStack(isLoading: $isLoading)
+                .disabled(isLoading)
+                .blur(radius: isLoading ? 3 : 0)
+            
+            if isLoading {
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
+                SettingsLoadingIndicator()
             }
-            .navigationTitle("Settings")
         }
     }
 }
