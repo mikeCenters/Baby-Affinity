@@ -46,6 +46,18 @@ struct ContentView: View {
                         Image(systemName: "hand.point.up.left.and.text")
                     }
                 }
+            
+            
+            // MARK: - Settings
+            
+            SettingsView()
+                .tabItem {
+                    Label {
+                        Text("Settings")
+                    } icon: {
+                        Image(systemName: "gearshape")
+                    }
+                }
         }
         .modelContext(modelContext)                     // FIXME: Test removing
         .tint(selectedSex == .male ? .blue : .pink)
