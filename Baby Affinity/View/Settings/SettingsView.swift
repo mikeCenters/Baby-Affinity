@@ -8,22 +8,6 @@
 import SwiftUI
 
 
-
-struct SettingsLoadingIndicator: View {
-    var body: some View {
-        VStack {
-            ProgressView("Resetting Data...")
-                .progressViewStyle(CircularProgressViewStyle())
-                .foregroundColor(.white)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.black.opacity(0.6))
-        .cornerRadius(10)
-    }
-}
-
-
-
 struct SettingsView: View, NamePersistenceController_Admin {
     
     // MARK: - Properties

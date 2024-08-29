@@ -11,6 +11,7 @@
 		BA33AF0A2C7E665B00EE6700 /* IsPersistentStoreEmpty.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AF092C7E665B00EE6700 /* IsPersistentStoreEmpty.swift */; };
 		BA33AF0C2C7E6A5400EE6700 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AF0B2C7E6A5400EE6700 /* OnboardingView.swift */; };
 		BA33AF0E2C8050DB00EE6700 /* SettingsNavigationStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AF0D2C8050DB00EE6700 /* SettingsNavigationStack.swift */; };
+		BA33AF102C8052BB00EE6700 /* SettingsLoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AF0F2C8052BB00EE6700 /* SettingsLoadingIndicator.swift */; };
 		BA5EED312C69B5A400267AD1 /* NamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5EED302C69B5A400267AD1 /* NamesView.swift */; };
 		BA5EED342C6B0C4C00267AD1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5EED332C6B0C4C00267AD1 /* SettingsView.swift */; };
 		BA719A162C6C2C5600A552FA /* LogError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA719A152C6C2C5600A552FA /* LogError.swift */; };
@@ -69,6 +70,7 @@
 		BA33AF092C7E665B00EE6700 /* IsPersistentStoreEmpty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsPersistentStoreEmpty.swift; sourceTree = "<group>"; };
 		BA33AF0B2C7E6A5400EE6700 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		BA33AF0D2C8050DB00EE6700 /* SettingsNavigationStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsNavigationStack.swift; sourceTree = "<group>"; };
+		BA33AF0F2C8052BB00EE6700 /* SettingsLoadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsLoadingIndicator.swift; sourceTree = "<group>"; };
 		BA5EED302C69B5A400267AD1 /* NamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamesView.swift; sourceTree = "<group>"; };
 		BA5EED332C6B0C4C00267AD1 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		BA719A152C6C2C5600A552FA /* LogError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogError.swift; sourceTree = "<group>"; };
@@ -304,6 +306,7 @@
 				BAC0B49F2C705F1F008B3141 /* SendEmailButton.swift */,
 				BA33AF0B2C7E6A5400EE6700 /* OnboardingView.swift */,
 				BA33AF0D2C8050DB00EE6700 /* SettingsNavigationStack.swift */,
+				BA33AF0F2C8052BB00EE6700 /* SettingsLoadingIndicator.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -451,6 +454,7 @@
 				BAF3C6802C6FD41B004F9E46 /* EmailRequiredView.swift in Sources */,
 				BAE8589B2C6271C400177BA8 /* AffinityCalculator.swift in Sources */,
 				BAF3C6752C6F941E004F9E46 /* AppCard.swift in Sources */,
+				BA33AF102C8052BB00EE6700 /* SettingsLoadingIndicator.swift in Sources */,
 				BAF3C67E2C6FD351004F9E46 /* MailView.swift in Sources */,
 				BAF3C67C2C6FB3C2004F9E46 /* ContactUsView.swift in Sources */,
 				BA33AF0E2C8050DB00EE6700 /* SettingsNavigationStack.swift in Sources */,
