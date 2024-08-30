@@ -43,29 +43,14 @@ struct HomeView: View {
                 /// Displays the favorite names.
                 FavoriteNamesView()
                 
-                HStack {
-                    Spacer()
-                    
-                    Button {
-                        withAnimation {
-                            showAllNames.toggle()
-                        }
-                    } label: {
-                        Text("Show all names")
-                    }
-                    .font(.headline)
-                    
-                    Spacer()
-                }
-                .listRowBackground(Color.clear)
-
-                
-                
                 // FIXME: Create Shared List
                 
                 // FIXME: Add precurated top names as a banner to add names to your favorites. These could be pulled from the global list as rising names or top 10 global names.
                 
                 // FIXME: Add most viewed names.
+                
+                /// Displays the sheet with all names of the selected sex.
+                showAllNamesButton
             }
             .navigationTitle(headerTitle)
             .toolbar {
@@ -76,6 +61,27 @@ struct HomeView: View {
                 NamesView(isShown: $showAllNames)
             }
         }
+    }
+    
+    
+    // MARK: - View Components
+    
+    var showAllNamesButton: some View {
+        HStack {
+            Spacer()
+            
+            Button {
+                withAnimation {
+                    showAllNames.toggle()
+                }
+            } label: {
+                Text("Show all names")
+            }
+            .font(.headline)
+            
+            Spacer()
+        }
+        .listRowBackground(Color.clear)
     }
 }
 
