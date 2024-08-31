@@ -225,7 +225,7 @@ protocol NamePersistenceController {
     ///     print("Failed to retrieve the rank of the name: \(error)")
     /// }
     /// ```
-    func getRank(of name: Name) throws -> Int?
+    func getRank(of name: Name) throws -> Int
 }
 
 
