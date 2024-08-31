@@ -59,6 +59,8 @@ struct NameCellView: View {
                     name.toggleFavorite()
                 }
                 
+                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                
             } label: {
                 /// Displays a filled star if the `Name` is a favorite, otherwise an empty star.
                 Image(systemName: name.isFavorite ? "star.fill" : "star")
@@ -68,7 +70,6 @@ struct NameCellView: View {
                     .scaleEffect(imageScale)
             }
             .frame(maxWidth: rankAndIconMaxWidth, alignment: .trailing)
-            .sensoryFeedback(.impact, trigger: name.isFavorite)
             .buttonStyle(.borderless)   /// Disable List cell tapping.
         }
         .onChange(of: name.isFavorite) {
