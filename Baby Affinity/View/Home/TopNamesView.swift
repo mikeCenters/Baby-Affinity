@@ -8,45 +8,73 @@
 import SwiftUI
 import SwiftData
 
-/// A list view of the top 10 `Name`s based on the Affinity Rating attribute.
+/// `Rank` is a typealias for an integer representing the position of an item in a list; lower is higher on the list.
+typealias Rank = Int
+
+/// `TopNamesView` is a view that displays the top names based on the selected sex (male or female).
+/// The names are fetched from the model context and displayed in a ranked list, with options to show more or fewer names and toggle the favorite status of the `Name`.
 struct TopNamesView: View {
     
     // MARK: - View States
     
-    enum States {
-        case isLoading, showNames
+    /// `ViewState` is an enum representing the different states of the view.
+    enum ViewState {
+        case isLoading  // The view is currently loading data.
+        case showNames  // The view is displaying the names.
+    }
+    
+    
+    // MARK: - Class Methods
+    
+    /// A class method that returns a `FetchDescriptor` to fetch names of a specific sex.
+    /// The names are sorted by affinity rating in descending order and limited to the top 10.
+    /// - Parameter sex: The sex for which names should be fetched.
+    /// - Returns: A configured `FetchDescriptor` for fetching names.
+    static func getFetchDescriptor(of sex: Sex) -> FetchDescriptor<Name> {
+        let sortDescriptors = [
+            SortDescriptor<Name>(\Name.affinityRating, order: .reverse)
+        ]
+        
+        var descriptor = FetchDescriptor<Name>(
+            predicate: #Predicate {
+                $0.sexRawValue == sex.rawValue
+            },
+            sortBy: sortDescriptors
+        )
+        
+        descriptor.fetchLimit = 10
+        return descriptor
     }
     
     
     // MARK: - Properties
     
-    /// The environment's model context.
+    /// The environment model context.
     @Environment(\.modelContext) private var modelContext
     
-    /// The selected sex for which the names are filtered, stored in `AppStorage`.
+    /// The selected sex stored in user defaults.
     @AppStorage("selectedSex") private var selectedSex = Sex.male
     
-    /// All names stored in persistence, ordered by the affinity rating.
-    @Query(sort: \Name.affinityRating, order: .reverse)
-    private var nameQuery: [Name]
+    /// The list of male names fetched from the model context.
+    @Query(getFetchDescriptor(of: .male)) var maleNames: [Name]
     
-    /// The top `nameLimit` of names to present.
-    @State private var presentedNames: [Name] = []
+    /// The list of female names fetched from the model context.
+    @Query(getFetchDescriptor(of: .female)) var femaleNames: [Name]
+    
+    /// The list of names to be presented, including their rank.
+    @State private var presentedNames: [(Rank, Name)] = []
     
     
     // MARK: - Controls and Constants
     
-    /// Boolean to control the visibility of additional names.
+    /// The current state of the view.
+    @State private var viewState: TopNamesView.ViewState = .isLoading
+    
+    /// A state to control whether more names are shown.
     @State private var showMore: Bool = false
     
-    /// The limit of names to be presented.
-    static private let nameLimit = 10
-    
-    /// The limit of names to show when the view is collapsed.
-    static private let abvLimit = 5
-    
-    /// The state of the view.
-    @State private var viewState: TopNamesView.States = .isLoading
+    /// The limit on the number of names to be displayed initially.
+    private let nameLimit = 5
     
     
     // MARK: - Body
@@ -57,45 +85,63 @@ struct TopNamesView: View {
             // MARK: - Cell View
             
             switch viewState {
-            case .isLoading:        /// Names are not loaded
-                LoadingIndicator()
+            case .isLoading:
+                LoadingIndicator()                              /// Show a loading indicator when the view is loading data.
                 
-            case .showNames:        /// Show the list of top names
-                ForEach(Array(presentedNames.enumerated()).prefix(showMore ? Self.nameLimit : Self.abvLimit), id: \.element) { (index, name) in
-                    /// The topNames array is arranged in descending order of the rank.
-                    /// The array is already set to reflect their rank, so index+1 gives the correct value.
-                    NameCellView(name: name, rank: index + 1)
+            case .showNames:
+                ForEach(presentedNames, id: \.0) { (rank, name) in
+                    if rank <= nameLimit {
+                        NameCellView(name: name, rank: rank)    /// Show the name cell view for the top names.
+                    } else if showMore {
+                        NameCellView(name: name, rank: rank)    /// Show the name cell view for additional names if "show more" is toggled.
+                    }
                 }
             }
-            
             
             // MARK: - Footer View
-            
-            HStack {
-                Spacer()
-                
-                Button {                    /// Toggle to expand and collapse the view..
-                    withAnimation {
-                        showMore.toggle()
-                    }
-                    
-                } label: {
-                    Image(systemName: showMore ? "chevron.up" : "chevron.down")
-                        .font(.headline)
-                }
-                .buttonStyle(.borderless)   /// Disable List cell tapping.
-            }
-            
+            collapseAndExpandButton
+                .disabled(viewState == .isLoading)              /// Disable the button if the view is still loading.
         }
         // MARK: - On Appear
         .onAppear {
-            presentNames()
-            handleViewState()
+            if viewState == .isLoading {
+                presentNames()                                  /// Present the names when the view appears.
+                handleViewState()                               /// Handle the view state based on the names presented.
+            }
         }
         // MARK: - On Change
-        .onChange(of: nameQuery) {
-            presentNames()
-            handleViewState()
+        .onChange(of: maleNames) {
+            presentNames()                                      /// Recalculate the presented names when the list of male names changes.
+            handleViewState()                                   /// Update the view state accordingly.
+        }
+        .onChange(of: femaleNames) {
+            presentNames()                                      /// Recalculate the presented names when the list of female names changes.
+            handleViewState()                                   /// Update the view state accordingly.
+        }
+    }
+}
+
+
+// MARK: - View Components
+
+extension TopNamesView {
+    
+    /// A view representing the collapse and expand button to toggle between showing more or fewer names.
+    var collapseAndExpandButton: some View {
+        
+        HStack {
+            Spacer()
+            
+            Button {
+                withAnimation {
+                    showMore.toggle()                   /// Toggle the state to show more or fewer names.
+                }
+                
+            } label: {
+                Image(systemName: showMore ? "chevron.up" : "chevron.down")
+                    .font(.headline)
+            }
+            .buttonStyle(.borderless)                   /// Apply a borderless button style.
         }
     }
 }
@@ -104,15 +150,36 @@ struct TopNamesView: View {
 // MARK: - Methods
 
 extension TopNamesView {
-    /// Set the view state based on whether names are queried.
+    
+    /// Handles the view state based on whether there are names to present.
+    /// If no names are available, the view stays in the `isLoading` state.
     private func handleViewState() {
-        viewState = nameQuery.isEmpty ? .isLoading : .showNames
+        withAnimation {
+            viewState = presentedNames.isEmpty ? .isLoading : .showNames
+            
+            if viewState == .isLoading {
+                showMore = false
+            }
+        }
     }
     
-    /// Present names from the query.
+    /// Updates the `presentedNames` state with the names to be displayed, based on the selected sex.
     private func presentNames() {
-        let names = nameQuery.filter { $0.sex == selectedSex }
-        presentedNames = Array(names.prefix(Self.nameLimit))
+        withAnimation {
+            presentedNames = getNamesToPresent()
+        }
+    }
+    
+    /// Returns a list of names with their ranks, based on the selected sex.
+    /// - Returns: A list of tuples containing the rank and the corresponding name.
+    private func getNamesToPresent() -> [(Rank, Name)] {
+        switch selectedSex {
+        case .male:
+            return maleNames.enumerated().map { ($0.offset + 1, $0.element) }
+            
+        case .female:
+            return femaleNames.enumerated().map { ($0.offset + 1, $0.element) }
+        }
     }
 }
 
@@ -121,7 +188,24 @@ extension TopNamesView {
 
 // MARK: - Preview
 
-#Preview {
+#Preview("Top Names View in a List and Tab View") {
+    TabView {
+        List {
+            TopNamesView()
+        }
+        .tabItem {
+            Label {
+                Text("Home")
+            } icon: {
+                Image(systemName: "list.bullet.below.rectangle")
+            }
+        }
+        
+    }
+    .modelContainer(previewModelContainer_WithFavorites)
+}
+
+#Preview("Top Names View in a List") {
     List {
         TopNamesView()
     }
