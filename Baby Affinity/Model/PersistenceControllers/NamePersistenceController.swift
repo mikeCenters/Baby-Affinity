@@ -375,10 +375,13 @@ typealias Rank = Int
 
 extension NamePersistenceController {
     
-    func getRank(of name: Name) throws -> Rank? {
+    func getRank(of name: Name) throws -> Rank {
         do {
             let names = try fetchNamesSortedByAffinity(name.sex!)
-            return names.firstIndex { $0.text == name.text }
+            guard let index = names.firstIndex(where: { $0.text == name.text })
+            else { return 0 }
+            
+            return index + 1
             
         } catch {
             logError("Failed to get rank for \(name.sex!.sexNamingConvention) name '\(name.text)' due to a failed fetch request: \(error.localizedDescription)")
