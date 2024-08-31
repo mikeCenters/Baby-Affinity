@@ -29,7 +29,8 @@ struct TopNamesView: View {
     /// - Returns: A configured `FetchDescriptor` for fetching names.
     static func getFetchDescriptor(of sex: Sex) -> FetchDescriptor<Name> {
         let sortDescriptors = [
-            SortDescriptor<Name>(\Name.affinityRating, order: .reverse)
+            SortDescriptor<Name>(\Name.affinityRating, order: .reverse),
+            SortDescriptor<Name>(\Name.evaluated, order: .reverse)
         ]
         
         var descriptor = FetchDescriptor<Name>(
@@ -115,13 +116,13 @@ struct TopNamesView: View {
                 handleViewState()           /// Update the view state accordingly.
             }
         }
-        .onChange(of: maleNames) {
+        .onChange(of: maleNames) {          // FIXME: Dont refresh on toggle of favorite
             withAnimation {
                 presentNames()              /// Recalculate the presented names when the list of male names changes.
                 handleViewState()           /// Update the view state accordingly.
             }
         }
-        .onChange(of: femaleNames) {
+        .onChange(of: femaleNames) {        // FIXME: Dont refresh on toggle of favorite
             withAnimation {
                 presentNames()              /// Recalculate the presented names when the list of female names changes.
                 handleViewState()           /// Update the view state accordingly.
@@ -137,7 +138,6 @@ extension TopNamesView {
     
     /// A view representing the collapse and expand button to toggle between showing more or fewer names.
     var collapseAndExpandButton: some View {
-        
         HStack {
             Spacer()
             
