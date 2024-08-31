@@ -101,23 +101,31 @@ struct TopNamesView: View {
         }
         // MARK: - On Appear
         .onAppear {
-            if viewState == .isLoading {
-                presentNames()                      /// Present the names when the view appears.
-                handleViewState()                   /// Handle the view state based on the names presented.
+            withAnimation {
+                if viewState == .isLoading {
+                    presentNames()          /// Present the names when the view appears.
+                    handleViewState()       /// Handle the view state based on the names presented.
+                }
             }
         }
         // MARK: - On Change
         .onChange(of: selectedSex) {
-            presentNames()              /// Recalculate the presented names when the list of seletced sex changes.
-            handleViewState()           /// Update the view state accordingly.
+            withAnimation {
+                presentNames()              /// Recalculate the presented names when the list of seletced sex changes.
+                handleViewState()           /// Update the view state accordingly.
+            }
         }
         .onChange(of: maleNames) {
-            presentNames()              /// Recalculate the presented names when the list of male names changes.
-            handleViewState()           /// Update the view state accordingly.
+            withAnimation {
+                presentNames()              /// Recalculate the presented names when the list of male names changes.
+                handleViewState()           /// Update the view state accordingly.
+            }
         }
         .onChange(of: femaleNames) {
-            presentNames()              /// Recalculate the presented names when the list of female names changes.
-            handleViewState()           /// Update the view state accordingly.
+            withAnimation {
+                presentNames()              /// Recalculate the presented names when the list of female names changes.
+                handleViewState()           /// Update the view state accordingly.
+            }
         }
     }
 }
@@ -155,20 +163,16 @@ extension TopNamesView {
     /// Handles the view state based on whether there are names to present.
     /// If no names are available, the view stays in the `isLoading` state.
     private func handleViewState() {
-        withAnimation {
-            viewState = presentedNames.isEmpty ? .isLoading : .showNames
-            
-            if viewState == .isLoading {
-                showMore = false
-            }
+        viewState = presentedNames.isEmpty ? .isLoading : .showNames
+        
+        if viewState == .isLoading {
+            showMore = false
         }
     }
     
     /// Updates the `presentedNames` state with the names to be displayed, based on the selected sex.
     private func presentNames() {
-        withAnimation {
-            presentedNames = getNamesToPresent()
-        }
+        presentedNames = getNamesToPresent()
     }
     
     /// Returns a list of names with their ranks, based on the selected sex.
