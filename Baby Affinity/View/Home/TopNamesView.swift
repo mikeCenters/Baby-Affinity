@@ -30,7 +30,8 @@ struct TopNamesView: View {
     static func getFetchDescriptor(of sex: Sex) -> FetchDescriptor<Name> {
         let sortDescriptors = [
             SortDescriptor<Name>(\Name.affinityRating, order: .reverse),
-            SortDescriptor<Name>(\Name.evaluated, order: .reverse)
+            SortDescriptor<Name>(\Name.evaluated, order: .reverse),
+            SortDescriptor<Name>(\Name.text, order: .forward)
         ]
         
         var descriptor = FetchDescriptor<Name>(
@@ -116,16 +117,20 @@ struct TopNamesView: View {
                 handleViewState()           /// Update the view state accordingly.
             }
         }
-        .onChange(of: maleNames) {          // FIXME: Dont refresh on toggle of favorite
-            withAnimation {
-                presentNames()              /// Recalculate the presented names when the list of male names changes.
-                handleViewState()           /// Update the view state accordingly.
+        .onChange(of: maleNames) { oldValue, newValue in
+            if newValue != oldValue {       /// Only update when the lists change.
+                withAnimation {
+                    presentNames()          /// Recalculate the presented names when the list of male names changes.
+                    handleViewState()       /// Update the view state accordingly.
+                }
             }
         }
-        .onChange(of: femaleNames) {        // FIXME: Dont refresh on toggle of favorite
-            withAnimation {
-                presentNames()              /// Recalculate the presented names when the list of female names changes.
-                handleViewState()           /// Update the view state accordingly.
+        .onChange(of: femaleNames) { oldValue, newValue in
+            if newValue != oldValue {       /// Only update when the lists change.
+                withAnimation {
+                    presentNames()          /// Recalculate the presented names when the list of male names changes.
+                    handleViewState()       /// Update the view state accordingly.
+                }
             }
         }
     }
