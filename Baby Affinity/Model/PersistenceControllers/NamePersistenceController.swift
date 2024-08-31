@@ -347,7 +347,8 @@ extension NamePersistenceController {
     func fetchNamesSortedByAffinity(_ sex: Sex) throws -> [Name] {
         let sortDescriptors = [
             SortDescriptor<Name>(\Name.affinityRating, order: .reverse),
-            SortDescriptor<Name>(\Name.evaluated, order: .reverse)
+            SortDescriptor<Name>(\Name.evaluated, order: .reverse),
+            SortDescriptor<Name>(\Name.text, order: .forward)
         ]
         let descriptor = FetchDescriptor<Name>(
             predicate: #Predicate {
