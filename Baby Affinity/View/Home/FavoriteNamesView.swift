@@ -8,100 +8,111 @@
 import SwiftUI
 import SwiftData
 
-/// A list view of the favorite `Name` objects.
+/// A view that displays the user's favorite names based on the selected sex.
+/// The names are fetched and displayed with their corresponding ranks. The view supports
+/// different states such as loading, showing names, or indicating that no favorites are available.
 struct FavoriteNamesView: View, NamePersistenceController {
     
     // MARK: - View States
     
-    enum States {
+    /// Enum representing the different states the view can be in.
+    enum ViewState {
         case isLoading, noFavorites, showNames
+    }
+    
+    
+    // MARK: - Class Methods
+    
+    /// A class method that returns a `FetchDescriptor` to fetch names of a specific sex.
+    /// The names are filtered to show only favorites and are sorted by affinity rating in descending order.
+    /// - Parameter sex: The sex for which names should be fetched.
+    /// - Returns: A configured `FetchDescriptor` for fetching names.
+    static func getFetchDescriptor(of sex: Sex) -> FetchDescriptor<Name> {
+        return FetchDescriptor<Name>(
+            predicate: #Predicate {
+                $0.sexRawValue == sex.rawValue &&
+                $0.isFavorite
+            }
+        )
     }
     
     
     // MARK: - Properties
     
-    /// The environment's model context.
+    /// The environment model context.
     @Environment(\.modelContext) var modelContext
     
-    /// The selected sex for which the names are filtered, stored in `AppStorage`.
+    /// The selected sex for filtering the names, stored in `AppStorage`.
     @AppStorage("selectedSex") private var selectedSex = Sex.male
     
-    /// The list of favorite names presented in the view.
-    @State private var presentedNames: [Name] = []
+    /// An array of favorite male names fetched from the model context.
+    @Query(getFetchDescriptor(of: .male)) var maleNames: [Name]
     
+    /// An array of favorite female names fetched from the model context.
+    @Query(getFetchDescriptor(of: .female)) var femaleNames: [Name]
     
-    // MARK: - Controls and Constants
+    /// The names to be presented in the view, each paired with its rank.
+    @State private var presentedNames: [(Rank, Name)] = []
     
-    /// The maximum number of names to be presented.
-    static private let nameLimit = 5
+    /// The current state of the view, determining which content is displayed.
+    @State private var viewState: FavoriteNamesView.ViewState = .isLoading
     
-    /// The state of the view.
-    @State private var viewState: FavoriteNamesView.States = .isLoading
+    /// The maximum number of names to display in the list.
+    private let nameLimit = 5
     
     
     // MARK: - Body
     
     var body: some View {
         Section(header: Text("Favorite \(selectedSex.childNaming) Names")) {
+            switch viewState {
                 
-                // MARK: - Body
+            case .isLoading:
+                LoadingIndicator()
                 
-                switch viewState {
-                case .isLoading:        /// View is loading names
-                    LoadingIndicator()
-                    
-                case .noFavorites:      /// No favorite names are available
-                    noFavoritesFound
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .padding()
-                    
-                case .showNames:        /// Favorites are available
-                    ForEach(presentedNames.randomElements(count: Self.nameLimit), id: \.self) { name in
-                        let rank = try? getRank(of: name)
-                        NameCellView(name: name, rank: rank ?? 0)
-                    }
-                }
+            case .noFavorites:
+                noFavoritesFound
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding()
                 
-                
-                // MARK: - Footer View
-                
-                HStack {
-                    Spacer()
-                    
-                    // Reload names
-                    Button {
-                        /// Only load names if the view state is not already loading names.
-                        if viewState != .isLoading {
-                            withAnimation {
-                                loadNames()
-                            }
-                        }
-                        
-                    } label: {
-                        Image(systemName: "arrow.clockwise")
-                            .font(.headline)
-                    }
-                    .buttonStyle(.borderless)
-                    .sensoryFeedback(.impact, trigger: presentedNames)
+            case .showNames:
+                ForEach(presentedNames, id: \.0) { (rank, name) in
+                    NameCellView(name: name, rank: rank)
                 }
             }
+            
+            // MARK: - Footer View
+            refreshButton
+        }
         // MARK: - On Appear
-            .onAppear {
+        .onAppear {
+            if viewState == .isLoading {
                 withAnimation {
-                    loadNames()
-                }
-            }
-        // MARK: - On Change
-            .onChange(of: selectedSex) {
-                withAnimation {
-                    loadNames()
-                }
-            }
-            .onChange(of: presentedNames) {
-                withAnimation {
+                    presentNames()
                     handleViewState()
                 }
             }
+        }
+        // MARK: - On Change
+        .onChange(of: selectedSex) {
+            withAnimation {
+                presentNames()
+            }
+        }
+        .onChange(of: maleNames) {
+            if viewState == .isLoading {
+                withAnimation {
+                    presentNames()
+                }
+            }
+        }
+        .onChange(of: femaleNames) {
+            if viewState == .isLoading {
+                withAnimation {
+                    presentNames()
+                }
+            }
+        }
     }
 }
 
@@ -110,14 +121,39 @@ struct FavoriteNamesView: View, NamePersistenceController {
 
 extension FavoriteNamesView {
     
-    // MARK: - Empty Favorites View
+    // MARK: - Refresh Button
     
-    /// The text to be displayed when no favorite `Name`s are found.
+    /// A button that refreshes the list of favorite names when pressed.
+    private var refreshButton: some View {
+        HStack {
+            Spacer()
+            
+            Button {
+                if viewState != .isLoading {
+                    withAnimation {
+                        presentNames()
+                    }
+                    
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                }
+                
+            } label: {
+                Image(systemName: "arrow.clockwise")
+                    .font(.headline)
+            }
+            .buttonStyle(.borderless)
+        }
+    }
+    
+    
+    // MARK: - Empty Favorites
+    
+    /// A text describing that no favorite names were found for the selected sex.
     private var noFavoritesText: String {
         "No favorite \(selectedSex.childNaming.lowercased()) names are found! Try adding them to your favorites to keep them available here."
     }
     
-    /// A view to display when no favorite `Name`s are found.
+    /// A view that displays a message indicating that no favorite names were found.
     private var noFavoritesFound: some View {
         VStack(spacing: 16) {
             Image(systemName: "sparkles")
@@ -135,34 +171,44 @@ extension FavoriteNamesView {
 
 extension FavoriteNamesView {
     
-    /**
-     Loads the favorite names to be presented in the view.
-     
-     This method randomly selects a subset of the favorite names from the `names` array, up to a maximum of `nameLimit`. The selected names are then assigned to `presentedNames` for display in the view.
-     
-     The selection is done each time the method is called, which can be triggered by user actions such as pressing a reload button.
-     
-     Example usage:
-     ```
-     loadNames()
-     ```
-     */
-    private func loadNames() {
-        viewState = .isLoading
-        presentedNames = []
+    /// Updates the `presentedNames` state with the names to be displayed, based on the selected sex.
+    private func presentNames() {
+        presentedNames = getNamesToPresent(for: selectedSex)
+        viewState = presentedNames.isEmpty ? .noFavorites : .showNames
+    }
+
+    /// Returns a list of names with their ranks, based on the selected sex.
+    /// - Parameter sex: The selected sex to filter the names.
+    /// - Returns: A list of tuples containing the rank and the corresponding name.
+    private func getNamesToPresent(for sex: Sex) -> [(Rank, Name)] {
+        let names = randomNames(for: sex, count: nameLimit)
         
-        do {
-            let names = try fetchFavoriteNames(sex: selectedSex)
-            let namesToShow = names.randomElements(count: Self.nameLimit)
-            presentedNames = namesToShow.sorted { $0.affinityRating > $1.affinityRating }
+        return names.map { name in
+            let rank = (try? getRank(of: name)) ?? 0
             
-            handleViewState()
-        } catch {
-            logError("Could not fetch names for the Favorite Names View: \(error)")
+            if rank == 0 {
+                logError("Unable to get the rank of \(String(describing: name.sex?.sexNamingConvention.description)) name \(name.text) for Favorite Name View.")
+            }
+            
+            return (rank, name)
         }
-        
+    }
+
+    /// Returns a random selection of names based on the selected sex.
+    /// - Parameters:
+    ///   - sex: The selected sex to filter the names.
+    ///   - count: The number of names to select.
+    /// - Returns: A list of random names.
+    private func randomNames(for sex: Sex, count: Int) -> [Name] {
+        switch sex {
+        case .male:
+            return maleNames.randomElements(count: count)
+        case .female:
+            return femaleNames.randomElements(count: count)
+        }
     }
     
+    /// Handles the view state based on the availability of names to present.
     private func handleViewState() {
         viewState = presentedNames.isEmpty ? .noFavorites : .showNames
     }
