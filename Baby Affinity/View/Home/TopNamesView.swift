@@ -105,18 +105,22 @@ struct TopNamesView: View {
         // MARK: - On Appear
         .onAppear {
             if viewState == .isLoading {
-                presentNames()                                  /// Present the names when the view appears.
-                handleViewState()                               /// Handle the view state based on the names presented.
+                presentNames()                      /// Present the names when the view appears.
+                handleViewState()                   /// Handle the view state based on the names presented.
             }
         }
         // MARK: - On Change
+        .onChange(of: selectedSex) {
+            presentNames()              /// Recalculate the presented names when the list of seletced sex changes.
+            handleViewState()           /// Update the view state accordingly.
+        }
         .onChange(of: maleNames) {
-            presentNames()                                      /// Recalculate the presented names when the list of male names changes.
-            handleViewState()                                   /// Update the view state accordingly.
+            presentNames()              /// Recalculate the presented names when the list of male names changes.
+            handleViewState()           /// Update the view state accordingly.
         }
         .onChange(of: femaleNames) {
-            presentNames()                                      /// Recalculate the presented names when the list of female names changes.
-            handleViewState()                                   /// Update the view state accordingly.
+            presentNames()              /// Recalculate the presented names when the list of female names changes.
+            handleViewState()           /// Update the view state accordingly.
         }
     }
 }
