@@ -201,27 +201,25 @@ protocol NamePersistenceController {
     /// ```
     func fetchNamesSortedByAffinity(_ sex: Sex) throws -> [Name]
     
-    /// Retrieves the rank of a given `Name` object based on its position in a ranked list of names of the same sex.
+    /// Retrieves the `Rank` of a given `Name` object based on its position in a ranked list of names of the same sex.
     ///
     /// This method fetches a list of `Name` objects sorted by their affinity rating in descending order from the persistence layer, filtered by the same sex as the provided `Name`.
-    /// It then determines the position of the given `Name` within that list, returning the rank as an integer.
+    /// It then determines the position of the given `Name` within that list, returning the `Rank` as an integer.
     /// The rank is 1-based, meaning the top-ranked name will return `1`.
     ///
     /// **Note:** This method uses the `modelContext` property.
     ///
     /// - Parameters:
     ///   - name: The `Name` object for which the rank is being retrieved. The `Name` must have a valid `sex` property.
-    /// - Returns: The rank of the `Name` object within the ranked list of names of the same sex, or `nil` if the name is not found in the list.
+    /// - Returns: The rank of the `Name` object within the ranked list of names of the same sex. Returns `0` when a `Rank` is not found.
     /// - Throws: A `NamePersistenceError.unableToFetch` error if the fetch operation fails. The underlying error is logged.
     ///
     /// Example usage:
     /// ```swift
     /// do {
-    ///     if let rank = try getRank(of: someName, from: container) {
-    ///         print("The rank of the name \(someName.text) is \(rank).")
-    ///     } else {
-    ///         print("The name \(someName.text) was not found in the ranked list.")
-    ///     }
+    ///     let rank = try getRank(of: someName, from: container)
+    ///     print("The rank of the \(someName.sex) name \(someName.text) is \(rank).")
+    ///
     /// } catch {
     ///     // Handle the error
     ///     print("Failed to retrieve the rank of the name: \(error)")
