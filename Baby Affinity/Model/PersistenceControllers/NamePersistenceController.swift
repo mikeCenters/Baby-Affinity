@@ -367,9 +367,12 @@ extension NamePersistenceController {
 
 // MARK: - Methods
 
+/// `Rank` is a typealias for an integer representing the position of an item in a list; lower is higher on the list.
+typealias Rank = Int
+
 extension NamePersistenceController {
     
-    func getRank(of name: Name) throws -> Int? {
+    func getRank(of name: Name) throws -> Rank? {
         do {
             let names = try fetchNamesSortedByAffinity(name.sex!)
             return names.firstIndex { $0.text == name.text }
