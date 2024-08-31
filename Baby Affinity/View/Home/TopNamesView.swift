@@ -8,9 +8,6 @@
 import SwiftUI
 import SwiftData
 
-/// `Rank` is a typealias for an integer representing the position of an item in a list; lower is higher on the list.
-typealias Rank = Int
-
 /// `TopNamesView` is a view that displays the top names based on the selected sex (male or female).
 /// The names are fetched from the model context and displayed in a ranked list, with options to show more or fewer names and toggle the favorite status of the `Name`.
 struct TopNamesView: View {
