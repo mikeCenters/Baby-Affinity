@@ -8,6 +8,8 @@
 import Foundation
 import SwiftData
 
+typealias FilteredString = String
+
 // FIXME: - Add Tags to create categories.
 
 @Model
@@ -37,6 +39,25 @@ final class Name {
                 return false
             }
         }
+    }
+    
+    
+    // MARK: - Class Methods
+    
+    /// Filters the input string to allow only letters and specific special characters. The filtered string can be used
+    /// to instantiate a `Name` object.
+    ///
+    /// - Parameter input: The string to be filtered.
+    /// - Returns: A new string containing only letters and characters from `allowedSpecialCharacters`.
+    ///
+    /// This method ensures that any character not in the `allowedCharacterSet` (letters or special characters)
+    /// is removed from the input string. The resulting string will contain only valid characters.
+    static func filter(_ input: String) -> FilteredString {
+        let allowedCharacterSet = CharacterSet.letters.union(allowedSpecialCharacters)
+        
+        let filtered = input.unicodeScalars.filter { allowedCharacterSet.contains($0) }
+        
+        return String(String.UnicodeScalarView(filtered))
     }
     
     
