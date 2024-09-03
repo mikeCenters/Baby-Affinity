@@ -32,7 +32,8 @@ struct NamePreviewCard: View, NamePersistenceController {
     
     // MARK: - Controls and Constants
     
-    @State private var rateOfNameChange: TimeInterval = 10
+    @State private var nameChangeTimer: Timer?
+    private let rateOfNameChange: TimeInterval = 10
     
     @State private var buttonsDisabled = false
     
@@ -74,21 +75,13 @@ struct NamePreviewCard: View, NamePersistenceController {
             .font(.title2).bold()
         }
         .listRowBackground(Color.accentColor.opacity(0.3))
-        // MARK: - Task
-        .task {
-            withAnimation {
-                getName()
-                setImagesInactive()
-            }
+        // MARK: - On Appear
+        .onAppear {
+            fetchAndStartTimer()
         }
-        // MARK: - On Change
-        .onChange(of: name) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + rateOfNameChange) {
-                withAnimation {
-                    getName()
-                    setImagesInactive()
-                }
-            }
+        // MARK: - On Disappear
+        .onDisappear {
+            nameChangeTimer?.invalidate()
         }
     }
     
@@ -166,7 +159,18 @@ struct NamePreviewCard: View, NamePersistenceController {
     
     // MARK: - Methods
     
-    private func getName() {
+    private func fetchAndStartTimer() {
+        fetchName()
+        
+        nameChangeTimer = Timer.scheduledTimer(withTimeInterval: rateOfNameChange, repeats: true) { _ in
+            withAnimation {
+                fetchName()
+                setImagesInactive()
+            }
+        }
+    }
+    
+    private func fetchName() {
         do {
             name = try fetchNames(selectedSex).randomElement()
             buttonsDisabled = false
