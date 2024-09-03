@@ -32,7 +32,7 @@ struct NamePreviewCard: View, NamePersistenceController {
     
     // MARK: - Controls and Constants
     
-    @State private var rateOfNameChange: TimeInterval = 25
+    @State private var rateOfNameChange: TimeInterval = 10
     
     @State private var buttonsDisabled = false
     
