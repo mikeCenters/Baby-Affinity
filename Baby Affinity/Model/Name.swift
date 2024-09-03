@@ -10,8 +10,6 @@ import SwiftData
 
 typealias FilteredString = String
 
-// FIXME: - Add Tags to create categories.
-
 @Model
 final class Name {
     

@@ -25,8 +25,12 @@ Baby Affinity is proud to be the first app to introduce a name rating system for
 ## ToDo
 - FIXME: Create Shared List
 - FIXME: Added App Icon
+- FIXME: Add Tags to create categories.
+
+
 - FIXME: Add precurated top names as a banner to add names to your favorites. These could be pulled from the global list as rising names or top 10 global names.
 - FIXME: Implement New App Store Receipt Authentication.
+- FIXME: Update the Unit Tests.
 
 
 # Change Log:

@@ -34,9 +34,6 @@ struct HomeView: View {
         NavigationStack {
             List {
                 
-                // FIXME: Add Name Selection Card.
-                /// A card view, with a full name option, due date, etc.
-                
                 /// Displays a first name and the stored last name for liking and disliking.
                 NamePreviewCard()
                 
@@ -45,12 +42,6 @@ struct HomeView: View {
                     
                 /// Displays the favorite names.
                 FavoriteNamesView()
-                
-                // FIXME: Create Shared List
-                
-                // FIXME: Add precurated top names as a banner to add names to your favorites. These could be pulled from the global list as rising names or top 10 global names.
-                
-                // FIXME: Add most viewed names.
                 
                 /// Displays the sheet with all names of the selected sex.
                 showAllNamesButton
