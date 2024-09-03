@@ -37,6 +37,9 @@ struct HomeView: View {
                 // FIXME: Add Name Selection Card.
                 /// A card view, with a full name option, due date, etc.
                 
+                /// Displays a first name and the stored last name for liking and disliking.
+                NamePreviewCard()
+                
                 /// Displays the top names based on affinity rating.
                 TopNamesView()
                     
