@@ -46,6 +46,10 @@ struct SettingsNavigationStack: View {
                 }
                 
                 Section {
+                    LastNameSetting()
+                }
+                
+                Section {
                     ResetDataButton(beforeReset: { isLoading = true },
                                     afterReset: { isLoading = false })
                 }
