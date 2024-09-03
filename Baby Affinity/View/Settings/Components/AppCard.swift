@@ -15,9 +15,10 @@ struct AppCard: View {
     var body: some View {
         VStack(spacing: 8) {
             
-            // FIXME: Replace with AppIcon.
-            RoundedRectangle(cornerRadius: 60/3.14)
+            Image(uiImage: UIImage(named: "AppIcon")!)
+                .resizable()
                 .frame(width: 60, height: 60)
+                .clipShape(RoundedRectangle(cornerRadius: 60 / 5.6, style: .continuous))
             
             Text("Baby Affinity")
                 .font(.title3).bold()
