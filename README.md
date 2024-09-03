@@ -7,18 +7,18 @@
 
 
 ## Overview
-Choosing a baby name has never been more fun and exciting! Baby Affinity helps you select your next baby name in a unique and engaging way. As you make selections, the app tracks the names you choose and assigns an Affinity Rating to each one. At any time, you can analyze these ratings to help guide your decision.
+Baby Affinity is an iOS app designed to help expectant parents find and choose the perfect baby name using an intuitive rating system. The app features a comprehensive database of over 2000 names and allows users to rate names based on their preferences. The app employs an adaptation of the ELO rating system to determine and display an Affinity Rating for each name, making it easier for users to discover names they love.
 
-Baby Affinity is proud to be the first app to introduce a name rating system for users. The app monitors your in-app selections to curate a personalized list of potential names for your baby. With over 2000 names available and growing, Baby Affinity is the perfect tool for anyone searching for the ideal baby name.
+Baby Affinity is proud to be the first app to introduce a name rating system for users. The app monitors your in-app selections to curate a personalized list of potential names for your baby.
 
 
 ## Features
-- Affinity Rating System: An adaptation of the ELO rating system designed to provide the best experience in determining your affinity for a name.
-- Over 2000 Names: A vast and expanding collection of names.
+- Affinity Rating System: Rate names and see how they rank according to your preferences using an advanced rating algorithm.
+- Over 2000 Names: Browse through a curated list of over 2000 baby names.
 - Reset Your Ratings: Easily reset your ratings if you want a fresh start.
-- Dark Mode Support: Enjoy the app in dark mode for a more comfortable experience.
+- Dark Mode Support: Enjoy a sleek and modern interface with full support for dark mode.
 - In-App Support: Get help and support directly within the app.
-- Privacy: Your data and choices are protected.
+- Privacy: Your data is kept secure and private within Apple's ecosystem.
 
 ## Upcoming Features
 
