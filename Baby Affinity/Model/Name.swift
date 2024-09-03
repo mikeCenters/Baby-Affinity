@@ -76,7 +76,7 @@ final class Name {
     static let minimumAffinityRating = 0
     
     /// Allowed characters in name text
-    static let allowedSpecialCharacters = CharacterSet(charactersIn: "-' ")
+    static let allowedSpecialCharacters = CharacterSet(charactersIn: " -',")
     
     
     // MARK: - Attributes
