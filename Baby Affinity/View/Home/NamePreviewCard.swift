@@ -160,7 +160,7 @@ struct NamePreviewCard: View, NamePersistenceController {
     // MARK: - Methods
     
     private func fetchAndStartTimer() {
-        fetchName()
+        if nameChangeTimer != nil { return }
         
         nameChangeTimer = Timer.scheduledTimer(withTimeInterval: rateOfNameChange, repeats: true) { _ in
             withAnimation {
