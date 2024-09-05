@@ -20,6 +20,8 @@ struct ProductsView: View, NamePersistenceController {
     
     @AppStorage("selectedSex") private var selectedSex: Sex = .male
     
+    @Query private var names: [Name] = []
+    
     
     // MARK: - Controls and Constants
     
@@ -36,36 +38,135 @@ struct ProductsView: View, NamePersistenceController {
         }
     }
     
+    // Name Scroll Animation
+    private let nameScrollSpeed: CGFloat = 50 // Points per second
+    @State private var nameScrollOffset: CGFloat = 0
+    @State private var nameScrollContentWidth: CGFloat = 0
+    @State private var nameScrollAnimationTimer: Timer? = nil
     
     
-    // MARK: - Name Scroll
+    // MARK: - Body
     
-    @Query private var names: [Name] = []
-    @State private var scrollOffset: CGFloat = 0
-    @State private var scrollContentWidth: CGFloat = 0
-    @State private var timer: Timer? = nil
-    
-    // Scroll speed control
-    let scrollSpeed: CGFloat = 50 // Points per second
-    
-    // MARK: - Auto Scroll Logic
-    func startAutoScroll() {
-        stopAutoScroll() // Stop any existing timer before starting a new one
-        
-        // Start a new timer to increment the scroll offset
-        timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { _ in
-            scrollOffset += scrollSpeed * 0.01
-            if scrollOffset >= scrollContentWidth {
-                scrollOffset = 0 // Loop back to the start
+    var body: some View {
+        VStack(spacing: 4) {
+            ZStack(alignment: .bottom) {
+                VStack(spacing: 16) {
+                    Spacer()
+                    Image(uiImage: UIImage(named: "AppIcon")!)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 100, height: 100)
+                        .clipShape(RoundedRectangle(cornerRadius: 100/5.8))
+                    
+                    Text("Baby Affinity")
+                        .font(.largeTitle).bold()
+                    
+                    Text("The first important decision, should be the easiest.")
+                        .fontWeight(.semibold)
+                    
+                    nameScroll
+                }
+                .frame(maxHeight: .infinity)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
             }
+            .background(gradientSlide)
+            
+            // FIXME: Move the header up more in the view.
+            
+            VStack(spacing: 8) {
+                ScrollView(showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 12) {
+//                        Spacer()
+                        
+                        getFeatureItemView(
+                            title: "See Your Top Names",
+                            description: "Easily view and manage your top-rated names in one place."
+                        )
+                        
+                        getFeatureItemView(
+                            title: "Access Affinity Ratings",
+                            description: "Unlock advanced Affinity Ratings to discover your ideal baby name match."
+                        )
+                        
+                        getFeatureItemView(
+                            title: "Add More Favorites",
+                            description: "Save and manage additional favorite names without any limits."
+                        )
+                        
+//                        getFeatureItemView(
+//                            title: "Share with a Partner",
+//                            description: "Collaborate with your partner by sharing your favorite names directly."
+//                        )
+                    }
+                    .padding(.horizontal)
+                }
+                
+                purchaseButtonAndDisclaimer
+            }
+        }
+        // MARK: - Task
+        .task {
+            await store.fetchProducts()
         }
     }
     
-    func stopAutoScroll() {
-        timer?.invalidate()
-        timer = nil
+    
+    // MARK: - View Components
+    
+    private func getFeatureItemView(title: String, description: String) -> some View {
+        return VStack(alignment: .leading) {
+            Text(title)
+                .font(.headline)
+                .fontWeight(.bold)
+            
+            Text(description)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
     }
     
+    
+    // MARK: - Purchase Button and Disclaimer
+    
+    private var purchaseButtonAndDisclaimer: some View {
+        VStack(spacing: 8) {
+            Button {
+                
+                // FIXME: Fix Button Logic to be better.
+                for p in store.products {
+                    if p.displayName == "Premium Account" {
+                        Task {
+                            await store.purchase(p)
+                        }
+                    }
+                }
+                
+            } label: {
+                Text("Purchase Premium Account")
+                    .fontWeight(.semibold)
+                    .padding(8)
+            }
+            .buttonStyle(BorderedProminentButtonStyle())
+            
+            disclaimerTextAndLinks
+        }
+    }
+    
+    private var disclaimerTextAndLinks: some View {
+        VStack {
+            Text("By placing an in-app purchase, you agree to the Privacy Policy and Terms of Service.")
+                .font(.caption2)
+                .multilineTextAlignment(.center)
+            
+            LegalInfoView(showAppVersion: false)
+        }
+        .padding(.horizontal, 32)
+        .foregroundStyle(.secondary)
+    }
+    
+    
+    // MARK: - Name Scroll
     
     var nameScroll: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -82,101 +183,51 @@ struct ProductsView: View, NamePersistenceController {
                     .onAppear {
                         /// Delay to allow content to render
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            scrollContentWidth = geo.size.width
+                            nameScrollContentWidth = geo.size.width
                             startAutoScroll()
                         }
                     }
             })
-            .offset(x: -scrollOffset)
+            .offset(x: -nameScrollOffset)
         }
-        .disabled(true)             // Disable user input to scroll
+        .disabled(true)                     // Disable user input to scroll
     }
     
-    
-    // MARK: - Body
-    
-    var body: some View {
-        ZStack {
-            gradiantSlide
-            
-            VStack(spacing: 16) {
-                Image(uiImage: UIImage(named: "AppIcon")!)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 100, height: 100)
-                    .clipShape(RoundedRectangle(cornerRadius: 100/5.8))
-                
-                Text("Baby Affinity")
-                    .font(.largeTitle).bold()
-                
-                Text("The first important decision, should be the easiest.")
-                    .fontWeight(.semibold)
-                
-                nameScroll
+    func startAutoScroll() {
+        stopAutoScroll()    // Stop any existing timer before starting a new one
+        
+        // Start a new timer to increment the scroll offset
+        nameScrollAnimationTimer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { _ in
+            nameScrollOffset += nameScrollSpeed * 0.01
+            if nameScrollOffset >= nameScrollContentWidth {
+                nameScrollOffset = 0            // Loop back to the start
             }
-            .frame(maxHeight: .infinity)
-            .offset(y: -108 - 16)
-            .multilineTextAlignment(.center)
-            .padding()
-            
-            // FIXME: Add features list.
-            
-            
-            
-            VStack {
-                Spacer()
-                Button {
-                    
-                    for p in store.products {
-                        if p.displayName == "Premium Account" {
-                            Task {
-                                await store.purchase(p)
-                            }
-                        }
-                    }
-                    
-                } label: {
-                    Text("Purchase Premium Account")
-                        .fontWeight(.semibold)
-                        .padding(8)
-                }
-                .buttonStyle(BorderedProminentButtonStyle())
-            }
-            .padding(.bottom)
-        }
-        // MARK: - Task
-        .task {
-            await store.fetchProducts()
         }
     }
     
+    func stopAutoScroll() {
+        nameScrollAnimationTimer?.invalidate()
+        nameScrollAnimationTimer = nil
+    }
     
-    // MARK: - View Components
     
-    private var gradiantSlide: some View {
-        VStack {
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: 0) {
-                    ForEach(0...100, id: \.self) { num in
-                        LinearGradient(colors: [getGradientStart(num),
-                                                Color(.systemBackground)],
-                                       startPoint: .top,
-                                       endPoint: .bottom)
-                            .frame(width: 80)
-                    }
+    // MARK: - Gradient Slide
+    
+    private var gradientSlide: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            LazyHStack(spacing: 0) {
+                ForEach(0...100, id: \.self) { num in
+                    LinearGradient(colors: [getGradientStart(num),
+                                            Color(.systemBackground)],
+                                   startPoint: .top,
+                                   endPoint: .bottom)
+                    .frame(width: 80)
                 }
             }
-            .frame(height: 400)
-            
-            Spacer()
         }
+        .frame(height: 400)
         .edgesIgnoringSafeArea(.top)
     }
-    
-    
-    
-    
-    // MARK: - Methods
     
     func gradientBackground(for index: Int) -> LinearGradient {
         let (startColor, endColor) = colorPair(for: selectedSex, index: index)
