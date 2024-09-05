@@ -7,39 +7,24 @@
 
 import Foundation
 import StoreKit
-import StoreKit
+import SwiftUI
+
+typealias Transaction = StoreKit.Transaction
 
 @MainActor
 final class Store: ObservableObject {
     
-    // MARK: - Instances
-    
     static let shared = Store()
     
-    
-    // MARK: - Properties
-    
     @Published var products: [Product] = []
-    
-    
-    // MARK: - Controls and Constants
-    
-    private var isAuthorizedForPayments: Bool {
-        return SKPaymentQueue.canMakePayments()
-    }
-    
-    
-    // MARK: - Init
+    @Published var purchasedProductIDs: Set<String> = []
     
     private init() {
         Task {
-            await fetchProducts()
+            await syncPurchasedProducts()
             monitorTransactionUpdates()
         }
     }
-    
-    
-    // MARK: - Methods
     
     func fetchProducts() async {
         let productIDs: Set<String> = ["com.mikeCenters.BabyAffinity.premium"]
@@ -48,7 +33,7 @@ final class Store: ObservableObject {
             products = try await Product.products(for: productIDs)
             
         } catch {
-            logError("Failed to fetch products: \(error)")
+            logError("Failed to fetch products: \(error.localizedDescription)")
         }
     }
     
@@ -57,23 +42,17 @@ final class Store: ObservableObject {
             let result = try await product.purchase()
             switch result {
             case .success(let verification):
-                switch verification {
-                case .verified(let transaction):
-                    await transaction.finish()
-                    
-                case .unverified(_, let error):
-                    logError("Unverified transaction: \(error)")
-                }
-            case .pending:
+                handlePurchaseVerification(verification)
+                
+            case .pending, .userCancelled:
                 break
-            case .userCancelled:
-                break
+                
             @unknown default:
                 break
             }
             
         } catch {
-            logError("Purchase failed: \(error)")
+            logError("Purchase failed: \(error.localizedDescription)")
         }
     }
     
@@ -81,12 +60,10 @@ final class Store: ObservableObject {
         for await result in Transaction.currentEntitlements {
             switch result {
             case .verified(let transaction):
-                // Handle restored purchases
-                await transaction.finish()
+                await handleTransaction(transaction)
                 
             case .unverified(_, let error):
-                // Handle error
-                logError("Unverified transaction: \(error)")
+                logError("Unverified transaction during restore: \(error.localizedDescription)")
             }
         }
     }
@@ -96,14 +73,40 @@ final class Store: ObservableObject {
             for await result in Transaction.updates {
                 switch result {
                 case .verified(let transaction):
-                    // Handle successful transaction
-                    await transaction.finish()
-                    
+                    await handleTransaction(transaction)
                 case .unverified(_, let error):
-                    // Handle error
-                    logError("Unverified transaction: \(error)")
+                    logError("Unverified transaction update: \(error.localizedDescription)")
                 }
             }
         }
+    }
+    
+    private func syncPurchasedProducts() async {
+        purchasedProductIDs = []
+        for await result in Transaction.currentEntitlements {
+            switch result {
+            case .verified(let transaction):
+                purchasedProductIDs.insert(transaction.productID)
+                
+            case .unverified(_, let error):
+                logError("Unverified transaction during sync: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    private func handlePurchaseVerification(_ verification: VerificationResult<Transaction>) {
+        switch verification {
+        case .verified(let transaction):
+            Task {
+                await handleTransaction(transaction)
+            }
+        case .unverified(_, let error):
+            logError("Unverified transaction: \(error.localizedDescription)")
+        }
+    }
+    
+    private func handleTransaction(_ transaction: Transaction) async {
+        purchasedProductIDs.insert(transaction.productID)
+        await transaction.finish()
     }
 }

@@ -30,6 +30,8 @@ struct Baby_AffinityApp: App {
         }
     }()
     
+    @StateObject private var store = Store.shared
+    
     @AppStorage("isShowingOnboarding") var isShowingOnboarding: Bool = true
     
     
@@ -44,6 +46,7 @@ struct Baby_AffinityApp: App {
                 ContentView()
             }
         }
+        .environmentObject(store)
         .modelContainer(sharedModelContainer)
     }
 }
