@@ -28,6 +28,12 @@ struct LegalInfoView: View {
     }
     
     
+    // MARK: - Controls
+    
+    /// The property used to display the app version text.
+    var showAppVersion = true
+        
+    
     // MARK: - Body
     
     /// The body of the `LegalInfoView` that includes links to legal documents and the app version.
@@ -46,12 +52,16 @@ struct LegalInfoView: View {
                     .buttonStyle(.borderless)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
+            .frame(height: UIFont.preferredFont(forTextStyle: .caption1).lineHeight + 4)
             .font(.caption).fontWeight(.semibold)
             
-            // Display the app version
-            Text("App Version: \(appVersionText ?? "<Missing App Version>")")
-                .foregroundColor(.secondary)
-                .font(.caption2)
+            
+            if showAppVersion {
+                // Display the app version
+                Text("App Version: \(appVersionText ?? "<Missing App Version>")")
+                    .foregroundColor(.secondary)
+                    .font(.caption2)
+            }
         }
     }
 }
@@ -63,7 +73,13 @@ struct LegalInfoView: View {
 
 #Preview("Legal Info View in List") {
     List {
-        LegalInfoView()
+        Section("With App Version") {
+            LegalInfoView()
+        }
+        
+        Section("Without App Version") {
+            LegalInfoView(showAppVersion: false)
+        }
     }
 }
 
