@@ -39,7 +39,7 @@ struct SettingsNavigationStack: View {
                     }
                     
                     NavigationLink {
-                        Text("Products View")
+                        ProductsView()
                     } label: {
                         Text("Products")
                     }
