@@ -10,6 +10,56 @@ import SwiftData
 import StoreKit
 
 
+struct PresentationLayout: Layout {
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout Void) -> CGSize {
+        // We assume two subviews (top and bottom)
+        guard subviews.count == 2 else { return .zero }
+        
+        // Use the proposed width and height, or fallback to a default if unavailable
+        let width = proposal.width ?? 0
+        let height = proposal.height ?? 0
+        
+        return CGSize(width: width, height: height)
+    }
+    
+    // This method places the subviews in the calculated layout bounds
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout Void) {
+        guard subviews.count == 2 else { return }
+
+        let totalHeight = bounds.height
+        let availableWidth = bounds.width
+
+        // Calculate the heights for each section (2/5 for top, 3/5 for bottom)
+        let topHeight = totalHeight * 2 / 5
+        let bottomHeight = totalHeight * 3 / 5
+
+        // Get subview sizes
+        let topSubview = subviews[0]
+        let bottomSubview = subviews[1]
+        let topSubviewSize = topSubview.sizeThatFits(ProposedViewSize(width: availableWidth, height: topHeight))
+        let bottomSubviewSize = bottomSubview.sizeThatFits(ProposedViewSize(width: availableWidth, height: bottomHeight))
+
+        // Calculate the x and y coordinates to center each subview
+        let topXOffset = (availableWidth - topSubviewSize.width) / 2
+        let topYOffset = (topHeight - topSubviewSize.height) / 2
+        let bottomXOffset = (availableWidth - bottomSubviewSize.width) / 2
+        let bottomYOffset = (bottomHeight - bottomSubviewSize.height) / 2
+
+        // Place the top view centered within its section
+        topSubview.place(
+            at: CGPoint(x: bounds.minX + topXOffset, y: bounds.minY + topYOffset),
+            proposal: ProposedViewSize(width: availableWidth, height: topHeight)
+        )
+        
+        // Place the bottom view centered within its section
+        bottomSubview.place(
+            at: CGPoint(x: bounds.minX + bottomXOffset, y: bounds.minY + topHeight + bottomYOffset),
+            proposal: ProposedViewSize(width: availableWidth, height: bottomHeight)
+        )
+    }
+}
+
+
 struct ProductsView: View, NamePersistenceController {
     
     // MARK: - Properties
@@ -21,6 +71,10 @@ struct ProductsView: View, NamePersistenceController {
     @AppStorage("selectedSex") private var selectedSex: Sex = .male
     
     @Query private var names: [Name] = []
+    
+    private var product: Product? {
+        store.products.first { $0.id == "com.mikeCenters.BabyAffinity.premium"}
+    }
     
     
     // MARK: - Controls and Constants
@@ -39,7 +93,7 @@ struct ProductsView: View, NamePersistenceController {
     }
     
     // Name Scroll Animation
-    private let nameScrollSpeed: CGFloat = 50 // Points per second
+    private let nameScrollSpeed: CGFloat = 50           // Points per second
     @State private var nameScrollOffset: CGFloat = 0
     @State private var nameScrollContentWidth: CGFloat = 0
     @State private var nameScrollAnimationTimer: Timer? = nil
@@ -48,7 +102,10 @@ struct ProductsView: View, NamePersistenceController {
     // MARK: - Body
     
     var body: some View {
-        VStack(spacing: 4) {
+        PresentationLayout {
+            
+            // Top Section
+            
             ZStack(alignment: .bottom) {
                 VStack(spacing: 16) {
                     Spacer()
@@ -66,42 +123,44 @@ struct ProductsView: View, NamePersistenceController {
                     
                     nameScroll
                 }
-                .frame(maxHeight: .infinity)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
             }
             .background(gradientSlide)
             
-            // FIXME: Move the header up more in the view.
+            
+            // Bottom Section
             
             VStack(spacing: 8) {
-                ScrollView(showsIndicators: false) {
-                    VStack(alignment: .leading, spacing: 12) {
-//                        Spacer()
+                VStack(alignment: .leading, spacing: 12) {
+                    Spacer()
+                    
+                    getFeatureItemView(
+                        title: "See Your Top Names",
+                        description: "Easily view and manage your top-rated names in one place."
+                    )
+                    
+                    getFeatureItemView(
+                        title: "Access Affinity Ratings",
+                        description: "Unlock advanced Affinity Ratings to discover your ideal baby name match."
+                    )
+                    
+                    getFeatureItemView(
+                        title: "Add More Favorites",
+                        description: "Save and manage additional favorite names without any limits."
+                    )
+                    
+//                    getFeatureItemView(
+//                        title: "Share with a Partner",
+//                        description: "Collaborate with your partner by sharing your favorite names directly."
+//                    )
+                    
+                    Spacer()
+                    
                         
-                        getFeatureItemView(
-                            title: "See Your Top Names",
-                            description: "Easily view and manage your top-rated names in one place."
-                        )
-                        
-                        getFeatureItemView(
-                            title: "Access Affinity Ratings",
-                            description: "Unlock advanced Affinity Ratings to discover your ideal baby name match."
-                        )
-                        
-                        getFeatureItemView(
-                            title: "Add More Favorites",
-                            description: "Save and manage additional favorite names without any limits."
-                        )
-                        
-//                        getFeatureItemView(
-//                            title: "Share with a Partner",
-//                            description: "Collaborate with your partner by sharing your favorite names directly."
-//                        )
-                    }
-                    .padding(.horizontal)
                 }
-                
+                .padding(.horizontal)
+
                 purchaseButtonAndDisclaimer
             }
         }
@@ -115,7 +174,7 @@ struct ProductsView: View, NamePersistenceController {
     // MARK: - View Components
     
     private func getFeatureItemView(title: String, description: String) -> some View {
-        return VStack(alignment: .leading) {
+        VStack(alignment: .leading) {
             Text(title)
                 .font(.headline)
                 .fontWeight(.bold)
@@ -131,14 +190,12 @@ struct ProductsView: View, NamePersistenceController {
     
     private var purchaseButtonAndDisclaimer: some View {
         VStack(spacing: 8) {
+            Text("Unlock an enhanced experience for just \(product?.displayPrice ?? "<Unable to locate the product in the App Store.>").")
+            
             Button {
-                
-                // FIXME: Fix Button Logic to be better.
-                for p in store.products {
-                    if p.displayName == "Premium Account" {
-                        Task {
-                            await store.purchase(p)
-                        }
+                if let p = product {
+                    Task {
+                        await store.purchase(p)
                     }
                 }
                 
@@ -158,11 +215,11 @@ struct ProductsView: View, NamePersistenceController {
             Text("By placing an in-app purchase, you agree to the Privacy Policy and Terms of Service.")
                 .font(.caption2)
                 .multilineTextAlignment(.center)
+                .foregroundStyle(.secondary)
             
             LegalInfoView(showAppVersion: false)
         }
         .padding(.horizontal, 32)
-        .foregroundStyle(.secondary)
     }
     
     
@@ -225,7 +282,6 @@ struct ProductsView: View, NamePersistenceController {
                 }
             }
         }
-        .frame(height: 400)
         .edgesIgnoringSafeArea(.top)
     }
     
