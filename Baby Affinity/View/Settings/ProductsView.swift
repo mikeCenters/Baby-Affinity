@@ -57,16 +57,16 @@ struct ProductsView: View, NamePersistenceController {
             // Top Section
             
             ZStack(alignment: .bottom) {
-                VStack(spacing: 16) {
+                VStack(spacing: 8) {
                     Spacer()
                     Image(uiImage: UIImage(named: "AppIcon")!)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 100, height: 100)
-                        .clipShape(RoundedRectangle(cornerRadius: 100/5.8))
+                        .frame(width: 84, height: 84)
+                        .clipShape(RoundedRectangle(cornerRadius: 84/5.8))
                     
                     Text("Baby Affinity")
-                        .font(.largeTitle).bold()
+                        .font(.title).bold()
                     
                     Text("The first important decision, should be the easiest.")
                         .fontWeight(.semibold)
@@ -265,12 +265,19 @@ struct ProductsView: View, NamePersistenceController {
 
 // MARK: - Previews
 
-#Preview("Products View") {
+#Preview("Products View in a Tab View and Navigation Stack") {
     @StateObject var store = Store.shared
     
-    return ProductsView()
+    return TabView {
+        NavigationStack {
+            ProductsView()
+        }
         .modelContainer(previewModelContainer)
         .environmentObject(store)
+        .tabItem {
+            Label("Products", systemImage: "cart")
+        }
+    }
 }
 
 #endif
