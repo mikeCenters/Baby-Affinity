@@ -16,6 +16,7 @@
 		BA33AF142C876AE900EE6700 /* LastNameSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AF132C876AE900EE6700 /* LastNameSetting.swift */; };
 		BA5EED312C69B5A400267AD1 /* NamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5EED302C69B5A400267AD1 /* NamesView.swift */; };
 		BA5EED342C6B0C4C00267AD1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5EED332C6B0C4C00267AD1 /* SettingsView.swift */; };
+		BA60B04B2C8AB1D100FD58F2 /* PresentationLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA60B04A2C8AB1D100FD58F2 /* PresentationLayout.swift */; };
 		BA719A162C6C2C5600A552FA /* LogError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA719A152C6C2C5600A552FA /* LogError.swift */; };
 		BA719A182C6C542800A552FA /* NamePersistenceControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA719A172C6C542800A552FA /* NamePersistenceControllerTests.swift */; };
 		BA9BAFE72C5ED484008D88A2 /* FavoriteNamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9BAFE62C5ED484008D88A2 /* FavoriteNamesView.swift */; };
@@ -80,6 +81,7 @@
 		BA33AF152C87912700EE6700 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		BA5EED302C69B5A400267AD1 /* NamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamesView.swift; sourceTree = "<group>"; };
 		BA5EED332C6B0C4C00267AD1 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		BA60B04A2C8AB1D100FD58F2 /* PresentationLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationLayout.swift; sourceTree = "<group>"; };
 		BA719A152C6C2C5600A552FA /* LogError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogError.swift; sourceTree = "<group>"; };
 		BA719A172C6C542800A552FA /* NamePersistenceControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePersistenceControllerTests.swift; sourceTree = "<group>"; };
 		BA9BAFE62C5ED484008D88A2 /* FavoriteNamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteNamesView.swift; sourceTree = "<group>"; };
@@ -323,6 +325,7 @@
 				BA33AF0D2C8050DB00EE6700 /* SettingsNavigationStack.swift */,
 				BA33AF0F2C8052BB00EE6700 /* SettingsLoadingIndicator.swift */,
 				BA33AF132C876AE900EE6700 /* LastNameSetting.swift */,
+				BA60B04A2C8AB1D100FD58F2 /* PresentationLayout.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -458,6 +461,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BA33AF0A2C7E665B00EE6700 /* IsPersistentStoreEmpty.swift in Sources */,
+				BA60B04B2C8AB1D100FD58F2 /* PresentationLayout.swift in Sources */,
 				BA719A162C6C2C5600A552FA /* LogError.swift in Sources */,
 				BAE858952C6114CB00177BA8 /* HomeView.swift in Sources */,
 				BAD0F62F2C87CC4200B41D34 /* Store.swift in Sources */,
