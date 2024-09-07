@@ -27,9 +27,9 @@ struct PresentationLayout: Layout {
         let totalHeight = bounds.height
         let availableWidth = bounds.width
 
-        // Calculate the heights for each section (2/5 for top, 3/5 for bottom)
-        let topHeight = totalHeight * 2 / 5
-        let bottomHeight = totalHeight * 3 / 5
+        // Calculate the heights for each section (1/3 for top, 2/3 for bottom)
+        let topHeight = totalHeight * 1 / 3
+        let bottomHeight = totalHeight * 2 / 3
 
         // Get subview sizes
         let topSubview = subviews[0]
