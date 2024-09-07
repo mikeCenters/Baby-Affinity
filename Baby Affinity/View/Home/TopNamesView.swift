@@ -49,7 +49,10 @@ struct TopNamesView: View {
     // MARK: - Properties
     
     /// The environment model context.
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.modelContext) var modelContext
+    
+    /// The object used to inferface with the App Store.
+    @EnvironmentObject private var store: Store
     
     /// The selected sex stored in user defaults.
     @AppStorage("selectedSex") private var selectedSex = Sex.male
@@ -163,7 +166,7 @@ extension TopNamesView {
 
 // MARK: - Methods
 
-extension TopNamesView {
+extension TopNamesView: NamePersistenceController {
     
     /// Handles the view state based on whether there are names to present.
     /// If no names are available, the view stays in the `isLoading` state.
@@ -183,6 +186,19 @@ extension TopNamesView {
     /// Returns a list of names with their ranks, based on the selected sex.
     /// - Returns: A list of tuples containing the rank and the corresponding name.
     private func getNamesToPresent() -> [(Rank, Name)] {
+        guard store.purchasedProductIDs.contains(Store.premiumProductID) else {
+            do {
+                let names = try fetchNames(selectedSex)
+                let randomNames = names.randomElements(count: 10)
+                
+                return randomNames.enumerated().map { ($0.offset + 1, $0.element) }
+                
+            } catch {
+                logError("Unable to fetch \(selectedSex.sexNamingConvention) names: \(error.localizedDescription)")
+            }
+            return []
+        }
+        
         switch selectedSex {
         case .male:
             return maleNames.enumerated().map { ($0.offset + 1, $0.element) }
