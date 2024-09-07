@@ -76,12 +76,8 @@ struct NamePreviewCard: View, NamePersistenceController {
         }
         .listRowBackground(Color.accentColor.opacity(0.3))
         // MARK: - On Appear
-        .onAppear {
+        .task {
             fetchAndStartTimer()
-        }
-        // MARK: - On Disappear
-        .onDisappear {
-            nameChangeTimer?.invalidate()
         }
     }
     
@@ -161,6 +157,8 @@ struct NamePreviewCard: View, NamePersistenceController {
     
     private func fetchAndStartTimer() {
         if nameChangeTimer != nil { return }
+        
+        fetchName()
         
         nameChangeTimer = Timer.scheduledTimer(withTimeInterval: rateOfNameChange, repeats: true) { _ in
             withAnimation {
