@@ -91,11 +91,23 @@ struct TopNamesView: View {
                 LoadingIndicator()                              /// Show a loading indicator when the view is loading data.
                 
             case .showNames:
-                ForEach(presentedNames, id: \.0) { (rank, name) in
-                    if rank <= nameLimit {
-                        NameCellView(name: name, rank: rank)    /// Show the name cell view for the top names.
-                    } else if showMore {
-                        NameCellView(name: name, rank: rank)    /// Show the name cell view for additional names if "show more" is toggled.
+                
+                if store.purchasedProductIDs.contains(Store.premiumProductID) {
+                    ForEach(presentedNames, id: \.0) { (rank, name) in
+                        if rank <= nameLimit {
+                            NameCellView(name: name, rank: rank)    /// Show the name cell view for the top names.
+                        } else if showMore {
+                            NameCellView(name: name, rank: rank)    /// Show the name cell view for additional names if "show more" is toggled.
+                        }
+                    }
+                    
+                } else {            // Non-Premium User
+                    ForEach(getRandomNamesToPresent(), id: \.0) { (rank, name) in
+                        if rank <= nameLimit {
+                            NameCellView(name: name, rank: rank)    /// Show the name cell view for the top names.
+                        } else if showMore {
+                            NameCellView(name: name, rank: rank)    /// Show the name cell view for additional names if "show more" is toggled.
+                        }
                     }
                 }
             }
@@ -186,19 +198,6 @@ extension TopNamesView: NamePersistenceController {
     /// Returns a list of names with their ranks, based on the selected sex.
     /// - Returns: A list of tuples containing the rank and the corresponding name.
     private func getNamesToPresent() -> [(Rank, Name)] {
-        guard store.purchasedProductIDs.contains(Store.premiumProductID) else {
-            do {
-                let names = try fetchNames(selectedSex)
-                let randomNames = names.randomElements(count: 10)
-                
-                return randomNames.enumerated().map { ($0.offset + 1, $0.element) }
-                
-            } catch {
-                logError("Unable to fetch \(selectedSex.sexNamingConvention) names: \(error.localizedDescription)")
-            }
-            return []
-        }
-        
         switch selectedSex {
         case .male:
             return maleNames.enumerated().map { ($0.offset + 1, $0.element) }
@@ -206,6 +205,22 @@ extension TopNamesView: NamePersistenceController {
         case .female:
             return femaleNames.enumerated().map { ($0.offset + 1, $0.element) }
         }
+    }
+    
+    /// Returns a list of names with an obfuscated `Rank`, based on the selected sex. The rank will represent
+    /// the name's position in the array, and not its rank in relation to all `Name` objects.
+    /// - Returns: A list of tuples containing the rank and the corresponding name.
+    private func getRandomNamesToPresent() -> [(Rank, Name)] {
+        do {
+            let names = try fetchNames(selectedSex)
+            let randomNames = names.randomElements(count: 10)
+            
+            return randomNames.enumerated().map { ($0.offset + 1, $0.element) }
+            
+        } catch {
+            logError("Unable to fetch \(selectedSex.sexNamingConvention) names: \(error.localizedDescription)")
+        }
+        return []
     }
 }
 
