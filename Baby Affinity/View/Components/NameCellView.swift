@@ -12,6 +12,9 @@ struct NameCellView: View {
     
     // MARK: - Properties
     
+    /// The object used to inferface with the App Store.
+    @EnvironmentObject private var store: Store
+    
     /// The `Name` object to be displayed in the cell.
     var name: Name
     
@@ -34,21 +37,37 @@ struct NameCellView: View {
         /// The `.frame` modifier is used to place components perfectly in their position. Use of `Spacer()` will create offsets for the center component.
         HStack {
             
-            /// Displays the rank of the `Name` object.
-            Text("\(rank)")
-                .font(.headline)
-                .frame(maxWidth: rankAndIconMaxWidth, alignment: .leading)
-            
+            if store.purchasedProductIDs.contains(Store.premiumProductID) {
+                /// Display the rank of the `Name` object.
+                Text("\(rank)")
+                    .font(.headline)
+                    .frame(maxWidth: rankAndIconMaxWidth, alignment: .leading)
+                
+            } else {
+                /// Obfuscate the rank of the `Name` object.
+                Text("??")
+                    .font(.headline)
+                    .frame(maxWidth: rankAndIconMaxWidth, alignment: .leading)
+            }
             
             VStack(alignment: .center) {
                 /// Displays the text of the `Name` object.
                 Text(name.text)
                     .font(.title3)
                 
-                /// Displays the rating of the `Name` object.
-                Text("Rating: \(name.affinityRating)")
-                    .foregroundStyle(.secondary)
-                    .font(.caption)
+                
+                if store.purchasedProductIDs.contains(Store.premiumProductID) {
+                    /// Displays the rating of the `Name` object.
+                    Text("Rating: \(name.affinityRating)")
+                        .foregroundStyle(.secondary)
+                        .font(.caption)
+                    
+                } else {
+                    /// Obfuscate the rating of the `Name` object.
+                    Text("Rating: ????")
+                        .foregroundStyle(.secondary)
+                        .font(.caption)
+                }
             }
             .frame(maxWidth: .infinity, alignment: .center)
             
@@ -91,8 +110,8 @@ struct NameCellView: View {
 import SwiftData
 
 #Preview {
-    let names = (1...10).map {
-        try! Name("Name \($0)", sex: .male)
+    let names = (1...10).map { _ in
+        try! Name("Name", sex: .male)
     }
     
     return List {
