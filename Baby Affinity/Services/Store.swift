@@ -13,6 +13,7 @@ typealias Transaction = StoreKit.Transaction
 
 @MainActor
 final class Store: ObservableObject {
+    static let premiumProductID = "com.mikeCenters.BabyAffinity.premium"
     
     static let shared = Store()
     
