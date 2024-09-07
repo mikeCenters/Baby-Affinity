@@ -42,12 +42,6 @@ struct ProductsView: View, NamePersistenceController {
         }
     }
     
-    // Name Scroll Animation
-    private let nameScrollSpeed: CGFloat = 50           // Points per second
-    @State private var nameScrollOffset: CGFloat = 0
-    @State private var nameScrollContentWidth: CGFloat = 0
-    @State private var nameScrollAnimationTimer: Timer? = nil
-    
     
     // MARK: - Body
     
@@ -70,9 +64,8 @@ struct ProductsView: View, NamePersistenceController {
                     
                     Text("The first important decision, should be the easiest.")
                         .fontWeight(.semibold)
-                    
-                    nameScroll
                 }
+                .frame(maxWidth: .infinity)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
             }
@@ -106,7 +99,7 @@ struct ProductsView: View, NamePersistenceController {
                     }
                     .padding(.horizontal)
                 }
-                .padding(.top, 8)
+                .padding(.top)
 
                 purchaseButtonAndDisclaimer
             }
@@ -171,51 +164,6 @@ struct ProductsView: View, NamePersistenceController {
     }
     
     
-    // MARK: - Name Scroll
-    
-    private var nameScroll: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack(spacing: 20) {
-                ForEach(names) { name in
-                    Text(name.text)
-                        .font(.body)
-                }
-                
-            }
-            .frame(height: UIFont.preferredFont(forTextStyle: .body).lineHeight)
-            .background(GeometryReader { geo in
-                Color.clear
-                    .onAppear {
-                        /// Delay to allow content to render
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            nameScrollContentWidth = geo.size.width
-                            startAutoScroll()
-                        }
-                    }
-            })
-            .offset(x: -nameScrollOffset)
-        }
-        .disabled(true)                     // Disable user input to scroll
-    }
-    
-    private func startAutoScroll() {
-        stopAutoScroll()    // Stop any existing timer before starting a new one
-        
-        // Start a new timer to increment the scroll offset
-        nameScrollAnimationTimer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { _ in
-            nameScrollOffset += nameScrollSpeed * 0.01
-            if nameScrollOffset >= nameScrollContentWidth {
-                nameScrollOffset = 0            // Loop back to the start
-            }
-        }
-    }
-    
-    private func stopAutoScroll() {
-        nameScrollAnimationTimer?.invalidate()
-        nameScrollAnimationTimer = nil
-    }
-    
-    
     // MARK: - Gradient Slide
     
     private var gradientSlide: some View {
@@ -261,6 +209,7 @@ struct ProductsView: View, NamePersistenceController {
     }
 }
 
+
 #if DEBUG
 
 // MARK: - Previews
@@ -272,11 +221,11 @@ struct ProductsView: View, NamePersistenceController {
         NavigationStack {
             ProductsView()
         }
-        .modelContainer(previewModelContainer)
-        .environmentObject(store)
         .tabItem {
             Label("Products", systemImage: "cart")
         }
+        .modelContainer(previewModelContainer)
+        .environmentObject(store)
     }
 }
 
