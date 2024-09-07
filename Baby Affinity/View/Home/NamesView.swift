@@ -13,6 +13,9 @@ struct NamesView: View {
     
     // MARK: - Properties
     
+    /// The object used to inferface with the App Store.
+    @EnvironmentObject private var store: Store
+    
     /// The list of names to be queried.
     @Query private var namesQuery: [Name]
     
@@ -92,6 +95,10 @@ struct NamesView: View {
         names = namesQuery
             .filter { $0.sex == selectedSex }
             .sorted { $0.affinityRating > $1.affinityRating }
+        
+        if !store.purchasedProductIDs.contains(Store.premiumProductID) {
+            names = names.shuffled()
+        }
     }
 }
 
