@@ -8,12 +8,18 @@
 import SwiftUI
 
 /// A view that displays a `Name` object with its rank, rating, and favorite status.
-struct NameCellView: View {
+struct NameCellView: View, NamePersistenceController {
     
     // MARK: - Properties
     
+    /// The environment model context.
+    @Environment(\.modelContext) var modelContext
+    
     /// The object used to inferface with the App Store.
     @EnvironmentObject private var store: Store
+    
+    /// The selected sex stored in user defaults.
+    @AppStorage("selectedSex") private var selectedSex = Sex.male
     
     /// The `Name` object to be displayed in the cell.
     var name: Name
@@ -29,6 +35,8 @@ struct NameCellView: View {
     
     /// The value that represents the scale of the favorite icon.
     @State private var imageScale: CGFloat = 1
+    
+    @State private var showPurchaseScreen = false
     
     
     // MARK: - Body
@@ -73,12 +81,20 @@ struct NameCellView: View {
             
             
             Button {
-                /// Toggles the favorite status of the `Name` object.
-                withAnimation(.bouncy) {
-                    name.toggleFavorite()
-                }
+                let favoriteNames = try? fetchFavoriteNames(sex: selectedSex)
                 
-                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                /// Only allow three favorites for non-premium users.
+                if let count = favoriteNames?.count, count < 3 {
+                    /// Toggles the favorite status of the `Name` object.
+                    withAnimation(.bouncy) {
+                        name.toggleFavorite()
+                    }
+                    
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    
+                } else {
+                    showPurchaseScreen.toggle()
+                }
                 
             } label: {
                 /// Displays a filled star if the `Name` is a favorite, otherwise an empty star.
@@ -101,11 +117,16 @@ struct NameCellView: View {
                 }
             }
         }
+        .sheet(isPresented: $showPurchaseScreen) {
+            ProductsView()
+        }
     }
 }
 
 
 #if DEBUG
+
+// MARK: - Previews
 
 import SwiftData
 
