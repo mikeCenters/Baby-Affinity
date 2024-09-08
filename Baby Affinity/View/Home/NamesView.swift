@@ -13,11 +13,11 @@ struct NamesView: View {
     
     // MARK: - Properties
     
-    /// The object used to inferface with the App Store.
-    @EnvironmentObject private var store: Store
+    /// The environment model context.
+    @Environment(\.modelContext) internal var modelContext
     
-    /// The list of names to be queried.
-    @Query private var namesQuery: [Name]
+    /// The object used to inferface with the App Store.
+    @EnvironmentObject internal var store: Store
     
     /// The selected sex for filtering the names.
     @AppStorage("selectedSex") private var selectedSex = Sex.male
@@ -28,76 +28,76 @@ struct NamesView: View {
     
     // MARK: - Controls
     
+    /// The property used to check the premium status of the user's account.
+    private var isPremiumAccount: Bool {
+        store.purchasedProductIDs.contains(Store.premiumProductID)
+    }
+    
     /// A binding to control the visibility of the view.
     @Binding var isShown: Bool
     
     
-    // MARK: - Init
-    
-    /// Initializes a new instance of `NamesView`.
-    ///
-    /// A view that shows all list of all names in descending order, based on the affinity rating attribute.
-    ///
-    /// - Parameters:
-    ///   - isShown: A binding to control the visibility of the view.
-    init(isShown: Binding<Bool>) {
-        _isShown = isShown
-    }
-    
-    
     // MARK: - Body
     
-    var body: some View {
-        NavigationStack {
-            List {
-                Section(header: Text("All \(selectedSex.childNaming) Names")) {
+    var body: some View { NavigationStack {
+        List {
+            Section(header: Text("All \(selectedSex.childNaming) Names")) {
+                
+                ForEach(Array(names.enumerated()), id: \.element) { (index, name) in
+                    /// The array is arranged in descending order of the rank.
+                    /// The array is already set to reflect their rank, so index+1 gives the correct value.
+                    NameCellView(name: name, rank: index + 1)
+                }
+            }
+        }
+        
+        
+        // MARK: - Toolbar
+        
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    withAnimation {
+                        isShown.toggle()
+                    }
                     
-                    ForEach(Array(names.enumerated()), id: \.element) { (index, name) in
-                        /// The array is arranged in descending order of the rank.
-                        /// The array is already set to reflect their rank, so index+1 gives the correct value.
-                        NameCellView(name: name, rank: index + 1)
-                    }
+                } label: {
+                    Text("Done")
                 }
-            }
-            // MARK: - Toolbar
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        withAnimation {
-                            isShown.toggle()
-                        }
-                        
-                    } label: {
-                        Text("Done")
-                    }
-                }
-            }
-        }
-        // MARK: - On Appear
-        .onAppear() {
-            withAnimation {
-                loadNames()
-            }
-        }
-        // MARK: - On Change
-        .onChange(of: namesQuery) {
-            withAnimation {
-                loadNames()
             }
         }
     }
-    
-    
-    // MARK: - Methods
+        
+        
+        // MARK: - On Appear
+        
+    .onAppear() {
+        withAnimation {
+            loadNames()
+        }
+    }
+    }
+}
+
+
+// MARK: - Methods
+
+extension NamesView: NamePersistenceController {
     
     /// Load names from the query to the view.
     private func loadNames() {
-        names = namesQuery
-            .filter { $0.sex == selectedSex }
-            .sorted { $0.affinityRating > $1.affinityRating }
-        
-        if !store.purchasedProductIDs.contains(Store.premiumProductID) {
-            names = names.shuffled()
+        do {
+            let fetchedNames = try fetchNamesSortedByAffinity(selectedSex)
+            
+            if isPremiumAccount {
+                names = fetchedNames
+                
+            } else {
+                names = fetchedNames.shuffled()
+            }
+            
+        } catch {
+            logError("Unable to fetch names in Names View: \(error.localizedDescription)")
         }
     }
 }
@@ -107,9 +107,22 @@ struct NamesView: View {
 
 // MARK: - Preview
 
-#Preview {
-    NamesView(isShown: .constant(true))
+#Preview("Names View - Non-Premium Account") {
+    @StateObject var store = Store.shared
+    @State var isShown = true
+    
+    return NamesView(isShown: $isShown)
         .modelContainer(previewModelContainer_WithFavorites)
+        .environmentObject(store)
+}
+
+#Preview("Names View - Premium Account") {
+    @StateObject var store = Store.premium
+    @State var isShown = true
+    
+    return NamesView(isShown: $isShown)
+        .modelContainer(previewModelContainer_WithFavorites)
+        .environmentObject(store)
 }
 
 #endif
