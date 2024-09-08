@@ -17,14 +17,32 @@ final class Store: ObservableObject {
     
     static let shared = Store()
     
+    #if DEBUG
+    
+    static let premium = Store(isPremium: true)
+    
+    #endif
+    
     @Published var products: [Product] = []
     @Published var purchasedProductIDs: Set<String> = []
     
-    private init() {
+    private init(isPremium: Bool = false) {
         Task {
             await syncPurchasedProducts()
             monitorTransactionUpdates()
+            
+            #if DEBUG
+            
+            if isPremium {
+                unlockContent()
+            }
+            
+            #endif
         }
+    }
+    
+    private func unlockContent() {
+        purchasedProductIDs.insert(Store.premiumProductID)
     }
     
     func fetchProducts() async {
