@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: - Name Cell View
+
 /// A view that displays a `Name` object with its rank, rating, and favorite status.
 struct NameCellView: View, NamePersistenceController {
     
@@ -30,83 +32,37 @@ struct NameCellView: View, NamePersistenceController {
     
     // MARK: - Controls and Constants
     
+    /// The property used to check the premium status of the user's account.
+    private var isPremiumAccount: Bool {
+        store.purchasedProductIDs.contains(Store.premiumProductID)
+    }
+    
     /// Used to provide the maxWidth of the rank and favorites icon. This is used to place the name perfectly center within the cell.
-    private let rankAndIconMaxWidth: CGFloat? = 60
+    private let rankAndIconMaxWidth: CGFloat = 60
     
     /// The value that represents the scale of the favorite icon.
     @State private var imageScale: CGFloat = 1
     
+    // THe control used to show the purchase premium account sheet.
     @State private var showPurchaseScreen = false
     
     
     // MARK: - Body
     
+    
     var body: some View {
         /// The `.frame` modifier is used to place components perfectly in their position. Use of `Spacer()` will create offsets for the center component.
         HStack {
+            rankView
             
-            if store.purchasedProductIDs.contains(Store.premiumProductID) {
-                /// Display the rank of the `Name` object.
-                Text("\(rank)")
-                    .font(.headline)
-                    .frame(maxWidth: rankAndIconMaxWidth, alignment: .leading)
-                
-            } else {
-                /// Obfuscate the rank of the `Name` object.
-                Text("??")
-                    .font(.headline)
-                    .frame(maxWidth: rankAndIconMaxWidth, alignment: .leading)
-            }
+            nameAndRatingView
             
-            VStack(alignment: .center) {
-                /// Displays the text of the `Name` object.
-                Text(name.text)
-                    .font(.title3)
-                
-                
-                if store.purchasedProductIDs.contains(Store.premiumProductID) {
-                    /// Displays the rating of the `Name` object.
-                    Text("Rating: \(name.affinityRating)")
-                        .foregroundStyle(.secondary)
-                        .font(.caption)
-                    
-                } else {
-                    /// Obfuscate the rating of the `Name` object.
-                    Text("Rating: ????")
-                        .foregroundStyle(.secondary)
-                        .font(.caption)
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .center)
-            
-            
-            Button {
-                let favoriteNames = try? fetchFavoriteNames(sex: selectedSex)
-                
-                /// Only allow three favorites for non-premium users.
-                if let count = favoriteNames?.count, count < 3 {
-                    /// Toggles the favorite status of the `Name` object.
-                    withAnimation(.bouncy) {
-                        name.toggleFavorite()
-                    }
-                    
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                    
-                } else {
-                    showPurchaseScreen.toggle()
-                }
-                
-            } label: {
-                /// Displays a filled star if the `Name` is a favorite, otherwise an empty star.
-                Image(systemName: name.isFavorite ? "star.fill" : "star")
-                    .font(.headline)
-                    .foregroundColor(name.isFavorite ? .yellow : .gray)
-                /// Scale effect will upscale when tapped and is a favorite; otherwise, no scaling is perfomed.
-                    .scaleEffect(imageScale)
-            }
-            .frame(maxWidth: rankAndIconMaxWidth, alignment: .trailing)
-            .buttonStyle(.borderless)   /// Disable List cell tapping.
+            favoriteButtonView
         }
+        
+        
+        // MARK: - On Change
+        
         .onChange(of: name.isFavorite) {
             withAnimation(.bouncy) {
                 imageScale = name.isFavorite ? 1.5 : 1
@@ -117,8 +73,117 @@ struct NameCellView: View, NamePersistenceController {
                 }
             }
         }
+        
+        
+        // MARK: - Sheet - Products View
         .sheet(isPresented: $showPurchaseScreen) {
             ProductsView()
+        }
+    }
+}
+
+
+// MARK: - View Components
+
+extension NameCellView {
+    
+    // MARK: - Rank View
+    
+    var rankView: some View {
+        switch isPremiumAccount {
+        case true:          // Premium Account
+            
+            /// Display the rank of the `Name` object.
+            Text("\(rank)")
+                .font(.headline)
+                .frame(maxWidth: rankAndIconMaxWidth, alignment: .leading)
+            
+        case false:         // Non-Premium Account
+            
+            /// Obfuscate the rank of the `Name` object.
+            Text("??")
+                .font(.headline)
+                .frame(maxWidth: rankAndIconMaxWidth, alignment: .leading)
+        }
+    }
+    
+    
+    // MARK: - Name and Rating View
+    
+    var nameAndRatingView: some View {
+        VStack(alignment: .center) {
+            /// Displays the text of the `Name` object.
+            Text(name.text)
+                .font(.title3)
+            
+            switch isPremiumAccount {
+            case true:          // Premium Account
+                
+                /// Displays the rating of the `Name` object.
+                Text("Rating: \(name.affinityRating)")
+                    .foregroundStyle(.secondary)
+                    .font(.caption)
+                
+            case false:         // Non-Premium Account
+                
+                /// Obfuscate the rating of the `Name` object.
+                Text("Rating: ????")
+                    .foregroundStyle(.secondary)
+                    .font(.caption)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .center)
+    }
+    
+    
+    // MARK: - Favorite Button View
+    
+    var favoriteButtonView: some View {
+        Button {
+            switch isPremiumAccount {
+            case true:          // Premium Account
+                toggleFavorite()
+                
+            case false:         // Non-Premium Account
+                handleNonPremiumFavorite()
+            }
+            
+        } label: {
+            /// Displays a filled star if the `Name` is a favorite, otherwise an empty star.
+            Image(systemName: name.isFavorite ? "star.fill" : "star")
+                .font(.headline)
+                .foregroundColor(name.isFavorite ? .yellow : .gray)
+            /// Scale effect will upscale when tapped and is a favorite; otherwise, no scaling is perfomed.
+                .scaleEffect(imageScale)
+        }
+        .frame(maxWidth: rankAndIconMaxWidth, alignment: .trailing)
+        .buttonStyle(.borderless)   /// Disable List cell tapping.
+    }
+    
+    private func toggleFavorite() {
+        /// Toggles the favorite status of the `Name` object.
+        withAnimation(.bouncy) {
+            name.toggleFavorite()
+        }
+        
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+    }
+    
+    private func handleNonPremiumFavorite() {
+        let favoriteNames = try? fetchFavoriteNames(sex: selectedSex)
+        let maxFavorites = 3
+        /// Only allow three favorites for non-premium users.
+        if let count = favoriteNames?.count, count < maxFavorites {
+            toggleFavorite()
+            
+        } else {
+            
+            if name.isFavorite {                // Set the name to non-favorite
+                toggleFavorite()
+                
+            } else {                            // Show the purchase screen
+                showPurchaseScreen.toggle()
+            }
         }
     }
 }
@@ -128,9 +193,9 @@ struct NameCellView: View, NamePersistenceController {
 
 // MARK: - Previews
 
-import SwiftData
-
-#Preview {
+#Preview("Name Cell View in List - Non-Premium Account") {
+    @StateObject var store = Store.shared
+    
     let names = (1...10).map { _ in
         try! Name("Name", sex: .male)
     }
@@ -143,6 +208,25 @@ import SwiftData
         }
     }
     .modelContainer(previewModelContainer_WithFavorites)
+    .environmentObject(store)
+}
+
+#Preview("Name Cell View in List - Premium Account") {
+    @StateObject var store = Store.premium
+    
+    let names = (1...10).map { _ in
+        try! Name("Name", sex: .male)
+    }
+    
+    return List {
+        Section {
+            ForEach(Array(names.enumerated()), id: \.offset) { (index, name) in
+                NameCellView(name: name, rank: index + 1)
+            }
+        }
+    }
+    .modelContainer(previewModelContainer_WithFavorites)
+    .environmentObject(store)
 }
 
 #endif
