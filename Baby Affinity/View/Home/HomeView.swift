@@ -30,35 +30,46 @@ struct HomeView: View {
     
     // MARK: - Body
     
-    var body: some View {
-        NavigationStack {
-            List {
-                
-                /// Displays a first name and the stored last name for liking and disliking.
-                NamePreviewCard()
-                
-                /// Displays the top names based on affinity rating.
-                TopNamesView()
-                    
-                /// Displays the favorite names.
-                FavoriteNamesView()
-                
-                /// Displays the sheet with all names of the selected sex.
-                showAllNamesButton
-            }
-            .navigationTitle(headerTitle)
-            .toolbar {
-                /// Toolbar item to select the sex for filtering names.
-                SexSelectionIconView()
-            }
-            .sheet(isPresented: $showAllNames) {
-                NamesView(isShown: $showAllNames)
-            }
+    var body: some View { NavigationStack {
+        List {
+            /// Displays a first name and the stored last name for liking and disliking.
+            NamePreviewCard()
+            
+            /// Displays the top names based on affinity rating.
+            TopNamesView()
+            
+            /// Displays the favorite names.
+            FavoriteNamesView()
+            
+            /// Displays the sheet with all names of the selected sex.
+            showAllNamesButton
+        }
+        .navigationTitle(headerTitle)
+        
+        
+        // MARK: - ToolBar
+        
+        .toolbar {
+            /// Toolbar item to select the sex for filtering names.
+            SexSelectionIconView()
+        }
+        
+        
+        // MARK: - Sheet
+        
+        .sheet(isPresented: $showAllNames) {
+            NamesView(isShown: $showAllNames)
         }
     }
+    }
+}
+
+
+// MARK: - View Components
+
+extension HomeView {
     
-    
-    // MARK: - View Components
+    // MARK: - Show All Names Button
     
     var showAllNamesButton: some View {
         HStack {
@@ -84,9 +95,20 @@ struct HomeView: View {
 
 // MARK: - Preview
 
-#Preview {
-    HomeView()
+#Preview("Home View - Non-Premium Account") {
+    @StateObject var store = Store.shared
+    
+    return HomeView()
         .modelContainer(previewModelContainer_WithFavorites)
+        .environmentObject(store)
+}
+
+#Preview("Home View - Premium Account") {
+    @StateObject var store = Store.premium
+    
+    return HomeView()
+        .modelContainer(previewModelContainer_WithFavorites)
+        .environmentObject(store)
 }
 
 #endif
