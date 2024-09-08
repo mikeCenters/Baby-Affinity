@@ -40,19 +40,22 @@ struct FavoriteNamesView: View, NamePersistenceController {
     // MARK: - Properties
     
     /// The environment model context.
-    @Environment(\.modelContext) var modelContext
+    @Environment(\.modelContext) internal var modelContext
     
     /// The selected sex for filtering the names, stored in `AppStorage`.
     @AppStorage("selectedSex") private var selectedSex = Sex.male
     
     /// An array of favorite male names fetched from the model context.
-    @Query(getFetchDescriptor(of: .male)) var maleNames: [Name]
+    @Query(getFetchDescriptor(of: .male)) private var maleNames: [Name]
     
     /// An array of favorite female names fetched from the model context.
-    @Query(getFetchDescriptor(of: .female)) var femaleNames: [Name]
+    @Query(getFetchDescriptor(of: .female)) private var femaleNames: [Name]
     
     /// The names to be presented in the view, each paired with its rank.
     @State private var presentedNames: [(Rank, Name)] = []
+    
+    
+    // MARK: - Controls and Constants
     
     /// The current state of the view, determining which content is displayed.
     @State private var viewState: FavoriteNamesView.ViewState = .isLoading
@@ -81,9 +84,13 @@ struct FavoriteNamesView: View, NamePersistenceController {
                 }
             }
             
+            
             // MARK: - Footer View
+            
             refreshButton
         }
+        
+        
         // MARK: - On Appear
         .onAppear {
             if viewState == .isLoading {
@@ -93,12 +100,15 @@ struct FavoriteNamesView: View, NamePersistenceController {
                 }
             }
         }
+        
+        
         // MARK: - On Change
         .onChange(of: selectedSex) {
             withAnimation {
                 presentNames()
             }
         }
+        
         .onChange(of: maleNames) {
             if viewState == .isLoading {
                 withAnimation {
@@ -106,6 +116,7 @@ struct FavoriteNamesView: View, NamePersistenceController {
                 }
             }
         }
+        
         .onChange(of: femaleNames) {
             if viewState == .isLoading {
                 withAnimation {
@@ -173,8 +184,9 @@ extension FavoriteNamesView {
     
     /// Updates the `presentedNames` state with the names to be displayed, based on the selected sex.
     private func presentNames() {
-        presentedNames = getNamesToPresent(for: selectedSex)
-        viewState = presentedNames.isEmpty ? .noFavorites : .showNames
+        let randomNames = getNamesToPresent(for: selectedSex)
+        presentedNames = randomNames
+        viewState = randomNames.isEmpty ? .noFavorites : .showNames
     }
 
     /// Returns a list of names with their ranks, based on the selected sex.
@@ -220,21 +232,27 @@ extension FavoriteNamesView {
 // MARK: - Preview
 
 #Preview("Favorites are available") {
-    List {
+    @StateObject var store = Store.shared
+    
+    return List {
         FavoriteNamesView()
     }
     .modelContainer(previewModelContainer_WithFavorites)
+    .environmentObject(store)
 }
 
 #Preview("Favorites are not available") {
-    List {
+    @StateObject var store = Store.shared
+    
+    return List {
         FavoriteNamesView()
     }
     .modelContainer(previewModelContainer)
+    .environmentObject(store)
 }
 
 #Preview("View is loading") {
-    
+    @StateObject var store = Store.shared
     @State var selectedSex: Sex = .male
 
     return List {
@@ -259,6 +277,7 @@ extension FavoriteNamesView {
         }
     }
     .modelContainer(previewModelContainer_EmptyStore)
+    .environmentObject(store)
 }
 
 #endif
