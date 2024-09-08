@@ -11,7 +11,7 @@ import SwiftData
 typealias FilteredString = String
 
 @Model
-final class Name {
+final class Name: Codable {
     
     // MARK: - Errors
     
@@ -129,6 +129,34 @@ final class Name {
         self.affinityRating = affinityRating
         self.evaluated = Name.defaultEvaluationCount
         self.isFavorite = Name.defaultFavoriteStatus
+    }
+    
+    // MARK: - Codable Conformance
+    
+    enum CodingKeys: String, CodingKey {
+        case text
+        case sexRawValue = "sex"
+        case evaluated
+        case affinityRating
+        case isFavorite
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        text = try container.decode(String.self, forKey: .text)
+        sexRawValue = try container.decode(Int.self, forKey: .sexRawValue)
+        evaluated = try container.decode(Int.self, forKey: .evaluated)
+        affinityRating = try container.decode(Int.self, forKey: .affinityRating)
+        isFavorite = try container.decode(Bool.self, forKey: .isFavorite)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(text, forKey: .text)
+        try container.encode(sexRawValue, forKey: .sexRawValue)
+        try container.encode(evaluated, forKey: .evaluated)
+        try container.encode(affinityRating, forKey: .affinityRating)
+        try container.encode(isFavorite, forKey: .isFavorite)
     }
 }
 
