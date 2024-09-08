@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		BA07475B2C7026AA002C8425 /* SectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA07475A2C7026AA002C8425 /* SectionView.swift */; };
+		BA27E09D2C8E1A2D00241118 /* NameSharingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA27E09C2C8E1A2D00241118 /* NameSharingView.swift */; };
+		BA27E09F2C8E468000241118 /* RadiatingSemiCircles.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA27E09E2C8E468000241118 /* RadiatingSemiCircles.swift */; };
 		BA33AF0A2C7E665B00EE6700 /* IsPersistentStoreEmpty.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AF092C7E665B00EE6700 /* IsPersistentStoreEmpty.swift */; };
 		BA33AF0C2C7E6A5400EE6700 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AF0B2C7E6A5400EE6700 /* OnboardingView.swift */; };
 		BA33AF0E2C8050DB00EE6700 /* SettingsNavigationStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AF0D2C8050DB00EE6700 /* SettingsNavigationStack.swift */; };
@@ -72,6 +74,8 @@
 
 /* Begin PBXFileReference section */
 		BA07475A2C7026AA002C8425 /* SectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionView.swift; sourceTree = "<group>"; };
+		BA27E09C2C8E1A2D00241118 /* NameSharingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSharingView.swift; sourceTree = "<group>"; };
+		BA27E09E2C8E468000241118 /* RadiatingSemiCircles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadiatingSemiCircles.swift; sourceTree = "<group>"; };
 		BA33AF092C7E665B00EE6700 /* IsPersistentStoreEmpty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsPersistentStoreEmpty.swift; sourceTree = "<group>"; };
 		BA33AF0B2C7E6A5400EE6700 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		BA33AF0D2C8050DB00EE6700 /* SettingsNavigationStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsNavigationStack.swift; sourceTree = "<group>"; };
@@ -147,6 +151,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BA27E09B2C8E192700241118 /* Shared Lists */ = {
+			isa = PBXGroup;
+			children = (
+				BA27E0A02C8E47B300241118 /* Components */,
+				BA27E09C2C8E1A2D00241118 /* NameSharingView.swift */,
+			);
+			path = "Shared Lists";
+			sourceTree = "<group>";
+		};
+		BA27E0A02C8E47B300241118 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				BA27E09E2C8E468000241118 /* RadiatingSemiCircles.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		BA5EED322C6B0C3900267AD1 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -243,6 +264,7 @@
 		BACC30602C48C1E8003CEC7C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				BA27E09B2C8E192700241118 /* Shared Lists */,
 				BAE8589E2C6326AD00177BA8 /* Components */,
 				BACC30642C5C7B67003CEC7C /* Home */,
 				BAE858962C61369A00177BA8 /* NamePicker */,
@@ -487,6 +509,7 @@
 				BAF3C6772C6F9994004F9E46 /* AboutView.swift in Sources */,
 				BA5EED312C69B5A400267AD1 /* NamesView.swift in Sources */,
 				BA33AF0C2C7E6A5400EE6700 /* OnboardingView.swift in Sources */,
+				BA27E09F2C8E468000241118 /* RadiatingSemiCircles.swift in Sources */,
 				BACC30322C48A977003CEC7C /* ContentView.swift in Sources */,
 				BACC305F2C48A9FF003CEC7C /* Sex.swift in Sources */,
 				BACC305D2C48A9C1003CEC7C /* Name.swift in Sources */,
@@ -494,6 +517,7 @@
 				BAC0B4A02C705F1F008B3141 /* SendEmailButton.swift in Sources */,
 				BAE858A42C6349B900177BA8 /* LoadingIndicator.swift in Sources */,
 				BA07475B2C7026AA002C8425 /* SectionView.swift in Sources */,
+				BA27E09D2C8E1A2D00241118 /* NameSharingView.swift in Sources */,
 				BACC30302C48A977003CEC7C /* Baby_AffinityApp.swift in Sources */,
 				BAD0F6322C87DD1800B41D34 /* ProductsView.swift in Sources */,
 				BAF3C6712C6EB1C2004F9E46 /* NamePersistenceController_Admin.swift in Sources */,
