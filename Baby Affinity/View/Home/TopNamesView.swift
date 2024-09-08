@@ -69,6 +69,11 @@ struct TopNamesView: View {
     
     // MARK: - Controls and Constants
     
+    /// The property used to check the premium status of the user's account.
+    private var isPremiumAccount: Bool {
+        store.purchasedProductIDs.contains(Store.premiumProductID)
+    }
+    
     /// The current state of the view.
     @State private var viewState: TopNamesView.ViewState = .isLoading
     
@@ -88,11 +93,12 @@ struct TopNamesView: View {
             
             switch viewState {
             case .isLoading:
-                LoadingIndicator()                              /// Show a loading indicator when the view is loading data.
+                LoadingIndicator()              /// Show a loading indicator when the view is loading data.
                 
             case .showNames:
-                
-                if store.purchasedProductIDs.contains(Store.premiumProductID) {
+                switch isPremiumAccount {
+                    
+                case true:                  // Premium Account
                     ForEach(presentedNames, id: \.0) { (rank, name) in
                         if rank <= nameLimit {
                             NameCellView(name: name, rank: rank)    /// Show the name cell view for the top names.
@@ -101,7 +107,7 @@ struct TopNamesView: View {
                         }
                     }
                     
-                } else {            // Non-Premium User
+                case false:                 // Non-Premium User
                     ForEach(getRandomNamesToPresent(), id: \.0) { (rank, name) in
                         if rank <= nameLimit {
                             NameCellView(name: name, rank: rank)    /// Show the name cell view for the top names.
@@ -112,10 +118,14 @@ struct TopNamesView: View {
                 }
             }
             
+            
             // MARK: - Footer View
+            
             collapseAndExpandButton
                 .disabled(viewState == .isLoading)              /// Disable the button if the view is still loading.
         }
+        
+        
         // MARK: - On Appear
         .onAppear {
             withAnimation {
@@ -125,13 +135,17 @@ struct TopNamesView: View {
                 }
             }
         }
+        
+        
         // MARK: - On Change
+        
         .onChange(of: selectedSex) {
             withAnimation {
                 presentNames()              /// Recalculate the presented names when the list of seletced sex changes.
                 handleViewState()           /// Update the view state accordingly.
             }
         }
+        
         .onChange(of: maleNames) { oldValue, newValue in
             if newValue != oldValue {       /// Only update when the lists change.
                 withAnimation {
@@ -140,6 +154,7 @@ struct TopNamesView: View {
                 }
             }
         }
+        
         .onChange(of: femaleNames) { oldValue, newValue in
             if newValue != oldValue {       /// Only update when the lists change.
                 withAnimation {
@@ -155,6 +170,8 @@ struct TopNamesView: View {
 // MARK: - View Components
 
 extension TopNamesView {
+    
+    // MARK: - Collapse and Expand Button
     
     /// A view representing the collapse and expand button to toggle between showing more or fewer names.
     var collapseAndExpandButton: some View {
@@ -229,8 +246,10 @@ extension TopNamesView: NamePersistenceController {
 
 // MARK: - Preview
 
-#Preview("Top Names View in a List and Tab View") {
-    TabView {
+#Preview("Top Names View in a List and Tab View - Non-Premium Account") {
+    @StateObject var store = Store.shared
+    
+    return TabView {
         List {
             TopNamesView()
         }
@@ -244,13 +263,47 @@ extension TopNamesView: NamePersistenceController {
         
     }
     .modelContainer(previewModelContainer_WithFavorites)
+    .environmentObject(store)
 }
 
-#Preview("Top Names View in a List") {
-    List {
+#Preview("Top Names View in a List - Non-Premium Account") {
+    @StateObject var store = Store.shared
+    
+    return List {
         TopNamesView()
     }
     .modelContainer(previewModelContainer_WithFavorites)
+    .environmentObject(store)
+}
+
+#Preview("Top Names View in a List and Tab View - Premium Account") {
+    @StateObject var store = Store.premium
+    
+    return TabView {
+        List {
+            TopNamesView()
+        }
+        .tabItem {
+            Label {
+                Text("Home")
+            } icon: {
+                Image(systemName: "list.bullet.below.rectangle")
+            }
+        }
+        
+    }
+    .modelContainer(previewModelContainer_WithFavorites)
+    .environmentObject(store)
+}
+
+#Preview("Top Names View in a List - Premium Account") {
+    @StateObject var store = Store.premium
+    
+    return List {
+        TopNamesView()
+    }
+    .modelContainer(previewModelContainer_WithFavorites)
+    .environmentObject(store)
 }
 
 #endif
