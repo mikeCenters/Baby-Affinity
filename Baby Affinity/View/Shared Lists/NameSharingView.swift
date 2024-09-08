@@ -155,42 +155,42 @@ struct NameSharingView: View, NamePersistenceController {
     
     
     var body: some View {
-        VStack {
-            
-            RadiatingSemiCircles()
-                .edgesIgnoringSafeArea(.top)
-                .offset(y: -100)
-            
-            Spacer()
-            
-            
-            
-            Text("Bring your phones together to share names!")
-                .font(.title)
-                .padding()
-            
-            Image(systemName: "antenna.radiowaves.left.and.right")
-                .font(.system(size: 100))
-                .foregroundColor(isSharingActive ? .green : .gray)
-                .scaleEffect(animationAmount)
-                .animation(.easeInOut(duration: 1).repeatForever(autoreverses: true), value: nameSharingService.sessionState == .notConnected)
-                .onAppear {
-                    self.animationAmount = 1.3
-                }
-            
-            Button(action: {
-                self.isSharingActive.toggle()
-                // Start/stop the sharing process here
-            }) {
-                Text(isSharingActive ? "Stop Sharing" : "Start Sharing")
-                    .font(.headline)
+        ZStack {
+            VStack {
+                Text("Bring your phones together to share names!")
+                    .font(.title)
                     .padding()
-                    .background(isSharingActive ? Color.red : Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+                
+                Image(systemName: "antenna.radiowaves.left.and.right")
+                    .font(.system(size: 100))
+                    .foregroundColor(isSharingActive ? .green : .gray)
+                    .scaleEffect(animationAmount)
+                    .animation(.easeInOut(duration: 1).repeatForever(autoreverses: true), value: nameSharingService.sessionState == .notConnected)
+                    .onAppear {
+                        self.animationAmount = 1.3
+                    }
+                
+                Button(action: {
+                    self.isSharingActive.toggle()
+                    // Start/stop the sharing process here
+                }) {
+                    Text(isSharingActive ? "Stop Sharing" : "Start Sharing")
+                        .font(.headline)
+                        .padding()
+                        .background(isSharingActive ? Color.red : Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+            }
+            
+            // Place the antenna active indicator at the top of screen
+            VStack {
+                RadiatingSemiCircles()
+                    .edgesIgnoringSafeArea(.top)
+                    .offset(y: -100)
+                Spacer()
             }
         }
-        
         .sheet(isPresented: $isShowingReceivedNames) {
             Text("Names Received")
         }

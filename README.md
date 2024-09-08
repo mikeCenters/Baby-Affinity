@@ -24,8 +24,6 @@ Baby Affinity is proud to be the first app to introduce a name rating system for
 
 ## ToDo
 
-- Top names is not showing the correct fetch when a premium user.
-
 - FIXME: Create Shared List
 
 - RELEASE: 2.0
