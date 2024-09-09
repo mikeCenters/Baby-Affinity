@@ -10,14 +10,19 @@ import SwiftUI
 import MultipeerConnectivity
 
 class NameSharingService: NSObject, ObservableObject {
-    // Setup peerID, session, advertiser, and browser
+    
+    // MARK: - Properties
+    
     private var peerID: MCPeerID
     private var session: MCSession
     private var advertiser: MCNearbyServiceAdvertiser
     private var browser: MCNearbyServiceBrowser
     
-    @Published var sessionState: MCSessionState = .notConnected
-    @Published var receivedNames: [Name]? = nil
+    @Published private(set) var sessionState: MCSessionState = .notConnected
+    @Published private(set) var receivedNames: [Name]? = nil
+    
+    
+    // MARK: - Init
     
     override init() {
         self.peerID = MCPeerID(displayName: UIDevice.current.name)
@@ -144,15 +149,22 @@ extension NameSharingService: MCNearbyServiceBrowserDelegate {
 
 struct NameSharingView: View, NamePersistenceController {
     
+    // MARK: - Properties
+    
     @Environment(\.modelContext) internal var modelContext
     
     @StateObject var nameSharingService: NameSharingService = NameSharingService()
     
-    @State private var isSharingActive = false
-    @State private var animationAmount: CGFloat = 1.0
+    
+    // MARK: - Controls and Constants
     
     @State private var isShowingReceivedNames: Bool = false
     
+    @State private var isSharingActive = false
+    @State private var animationAmount: CGFloat = 1.0
+    
+    
+    // MARK: - Body
     
     var body: some View {
         ZStack {
@@ -183,12 +195,14 @@ struct NameSharingView: View, NamePersistenceController {
                 }
             }
             
-            // Place the antenna active indicator at the top of screen
-            VStack {
-                RadiatingSemiCircles()
-                    .edgesIgnoringSafeArea(.top)
-                    .offset(y: -100)
-                Spacer()
+            if nameSharingService.sessionState != .connected {                  // Connection not established
+                                                                                // Place the antenna active indicator at the top of screen
+                VStack {
+                    RadiatingSemiCircles()
+                        .edgesIgnoringSafeArea(.top)
+                        .offset(y: -100)
+                    Spacer()
+                }
             }
         }
         .sheet(isPresented: $isShowingReceivedNames) {
@@ -196,14 +210,7 @@ struct NameSharingView: View, NamePersistenceController {
         }
         
         
-        // MARK: - On Appear
-        
-        .onAppear {
-            // This is where you can start the advertiser and browser to detect nearby devices
-        }
-        
-        
-        // MARK: On Change
+        // MARK: - On Change
         
         .onChange(of: nameSharingService.sessionState) { oldValue, newValue in
             switch newValue {
