@@ -15,7 +15,7 @@ class AffinityCalculator {
     /// The K factor in the ELO rating system, which determines the maximum possible adjustment per game.
     /// - Note: A higher K factor means ratings change more significantly with each game, making the system more responsive to recent performance.
     /// In contrast, a lower K factor means ratings change more slowly, making the system more stable.
-    static let kFactor: Decimal = 100.0
+    static let kFactor: Decimal = 50
     
     /// Calculates the probability rating for a match between two ratings.
     /// - Parameters:
