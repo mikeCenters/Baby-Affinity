@@ -42,13 +42,16 @@ struct RadiatingSemiCircles: View {
     /// The line width of the semi-circle strokes.
     @State private var lineWidth: CGFloat = 8
     
+    /// The speed of the animation.
+    @State private var speed: CGFloat = 1
+    
     
     // MARK: - Body
     
     var body: some View {
         ZStack {
             // Create multiple semi-circles with animation
-            ForEach(0..<5, id: \.self) { index in
+            ForEach(0..<6, id: \.self) { index in
                 SemiCircleShape()
                     .stroke(.blue, lineWidth: lineWidth)
                     .frame(width: diameter, height: diameter / 2)
@@ -56,6 +59,7 @@ struct RadiatingSemiCircles: View {
                     .opacity(fadeAmount)
                     .animation(
                         Animation.easeInOut(duration: 2.0)
+                            .speed(speed)
                             .repeatForever(autoreverses: false)
                             .delay(Double(index) * 0.5),
                         value: animationAmount // Animation value to watch
@@ -71,7 +75,8 @@ struct RadiatingSemiCircles: View {
             withAnimation {
                 animationAmount = 1.5       // Controls the scale size
                 fadeAmount = 0.0            // Fades away
-                lineWidth *= 1.8            // Increase line size
+                lineWidth *= 1.5            // Increase line size
+                speed *= 0.5                // Speed of the animation
             }
         }
     }
