@@ -41,6 +41,19 @@ struct HomeView: View {
             /// Displays the favorite names.
             FavoriteNamesView()
             
+            Section {
+                NavigationLink {
+                    
+                    NameSharingView()
+                    
+                    
+                } label: {
+                    Text("Name Sharing")
+                }
+
+            }
+            
+            
             /// Displays the sheet with all names of the selected sex.
             showAllNamesButton
         }
