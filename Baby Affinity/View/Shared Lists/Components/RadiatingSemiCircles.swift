@@ -62,6 +62,10 @@ struct RadiatingSemiCircles: View {
                     )
             }
         }
+        
+        
+        // MARK: - On Appear
+        
         .onAppear {
             // Start the animation with specific properties
             withAnimation {
