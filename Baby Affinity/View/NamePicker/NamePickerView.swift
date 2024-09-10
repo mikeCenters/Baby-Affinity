@@ -83,7 +83,7 @@ private extension NamePickerView {
     
     /// Section displaying the selected names.
     var selectedNamesSection: some View {
-        Section(header: Text("Chosen Names")) {
+        Section(header: Text("Selected Names")) {
             ForEach(selectedNames) { name in
                 HStack {
                     Text(name.text)
@@ -274,61 +274,6 @@ extension NamePickerView: NamePersistenceController_Admin {
         }
         
         return namesToShow
-    }
-}
-
-
-// MARK: - Subviews
-
-/// A view presenting the instructions sheet.
-struct InstructionsView: View {
-    
-    // MARK: - Properties
-    
-    var instructionsText: String {
-        "Choose up to \(maxSelections) names from the list that are to your liking. While there may be other names that you would want to name your baby, pick among these that you like the most. \n\nIf you don't like the available names, simply select new names."
-    }
-    
-    
-    // MARK: - Controls and Constants
-    let maxSelections: Int
-    @Binding var showInstructions: Bool
-    
-    
-    // MARK: - Body
-    
-    var body: some View {
-        VStack {
-            Image(systemName: "checklist")
-                .resizable()
-                .scaledToFit()
-                .frame(height: 90)
-                .padding(.top, 40)
-                .padding([.horizontal, .bottom])
-                .foregroundStyle(.yellow)
-            
-            Text("Pick \(maxSelections) Names")
-                .font(.largeTitle)
-                .bold()
-                .padding()
-                .foregroundStyle(.tint)
-            
-            Text(instructionsText)
-                .font(.body)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
-            
-            Button {
-                showInstructions = false
-            } label: {
-                Text("Find Names!")
-                    .font(.headline)
-            }
-            .buttonStyle(BorderedButtonStyle())
-            .padding(.top, 40)
-
-            Spacer()
-        }
     }
 }
 
