@@ -87,6 +87,13 @@ protocol NamePersistenceController_Admin: NamePersistenceController {
     ///
     /// - Parameter container: The `ModelContainer` managing the context.
     func resetNameData()
+    
+    /// Updates the affinity ratings for a list of winning and losing names.
+    ///
+    /// - Parameters:
+    ///   - winners: An array of `Name` objects that won the comparison.
+    ///   - losers: An array of `Name` objects that lost the comparison.
+    func updateAffinity(winners: [Name], losers: [Name])
 }
 
 
@@ -291,5 +298,51 @@ extension NamePersistenceController_Admin {
             logError("Unable to reset Name data: \(error.localizedDescription)")
         }
         
+    }
+}
+
+
+// MARK: - Update
+
+extension NamePersistenceController_Admin {
+    
+    func updateAffinity(winners: [Name], losers: [Name]) {
+        let calc = AffinityCalculator()
+        let winnerRatings = winners.map { $0.affinityRating }
+        let loserRatings = losers.map { $0.affinityRating }
+        
+        updateNames(winners, against: loserRatings, isWinner: true, calc: calc)
+        updateNames(losers, against: winnerRatings, isWinner: false, calc: calc)
+    }
+    
+    /// Updates the affinity ratings for a given list of names.
+    ///
+    /// - Parameters:
+    ///   - names: The array of `Name` objects to update.
+    ///   - ratings: The list of opposing ratings that these names are compared against.
+    ///   - isWinner: A Boolean indicating whether these names are considered winners.
+    ///   - calc: The `AffinityCalculator` used to calculate the new affinity ratings.
+    private func updateNames(_ names: [Name], against ratings: [Rating], isWinner: Bool, calc: AffinityCalculator) {
+        names.forEach { name in
+            updateAffinity(for: name, against: ratings, isWinner: isWinner, calc: calc)
+        }
+    }
+    
+    /// Updates the affinity rating for a single name based on opposing ratings.
+    ///
+    /// - Parameters:
+    ///   - name: The `Name` object whose affinity is being updated.
+    ///   - ratings: The opposing ratings to compare against.
+    ///   - isWinner: A Boolean indicating whether the name is a winner.
+    ///   - calc: The `AffinityCalculator` used to calculate the new rating.
+    private func updateAffinity(for name: Name, against ratings: [Rating], isWinner: Bool, calc: AffinityCalculator) {
+        let newRating = calc.calculateNewRating(for: name.affinityRating, against: ratings, isWinner: isWinner)
+        
+        do {
+            try name.setAffinity(newRating)
+            
+        } catch {
+            logError("Unable to set affinity to new rating: \(error.localizedDescription)")
+        }
     }
 }
