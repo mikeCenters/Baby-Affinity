@@ -18,6 +18,8 @@ final class AffinityCalculatorTests: XCTestCase {
     let calc = AffinityCalculator()
     
     
+    // MARK: Standard Tests
+    
     func testProbabilityRating() {
         let winnerRating = 1200
         let loserRating = 1200
@@ -81,6 +83,9 @@ final class AffinityCalculatorTests: XCTestCase {
         XCTAssertEqual(results.newLoserRating, 1162)
     }
     
+    
+    // MARK: - Group Tests
+    
     func testAverageRating() {
         let knownAverage = 1277
         let ratings = [
@@ -106,5 +111,52 @@ final class AffinityCalculatorTests: XCTestCase {
         XCTAssertEqual(average, knownAverage)
     }
     
+    func testCalculateLoser_Group() {
+        let knownResult = 1181
+        let loserRating = 1200
+        let groupRatings = [
+            1250, 1200, 958, 1023, 1154, 1423, 1932
+        ]
+        
+        let newRating = calc.calculate(loser: loserRating, against: groupRatings)
+        
+        XCTAssertEqual(newRating, knownResult)
+    }
+    
+    func testCalculateNewRatingLoser_Group() {
+        let knownResult = 1181
+        let winnerRating = 1200
+        let groupRatings = [
+            1250, 1200, 958, 1023, 1154, 1423, 1932
+        ]
+        
+        let newRating = calc.calculateNewRating(for: winnerRating, against: groupRatings, isWinner: false)
+        
+        XCTAssertEqual(newRating, knownResult)
+    }
+    
+    func testCalculateWinner_Group() {
+        let knownResult = 1231
+        let winnerRating = 1200
+        let groupRatings = [
+            1250, 1200, 958, 1023, 1154, 1423, 1932
+        ]
+        
+        let newRating = calc.calculate(winner: winnerRating, against: groupRatings)
+        
+        XCTAssertEqual(newRating, knownResult)
+    }
+    
+    func testCalculateNewRatingWinner_Group() {
+        let knownResult = 1231
+        let winnerRating = 1200
+        let groupRatings = [
+            1250, 1200, 958, 1023, 1154, 1423, 1932
+        ]
+        
+        let newRating = calc.calculateNewRating(for: winnerRating, against: groupRatings, isWinner: true)
+        
+        XCTAssertEqual(newRating, knownResult)
+    }
     
 }

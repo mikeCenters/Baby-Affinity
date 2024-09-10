@@ -69,12 +69,9 @@ class AffinityCalculator {
 }
 
 
-// FIXME: - Work On Group Ratings Calculations
-
 // MARK: - Group Ratings
 
 extension AffinityCalculator {
-    
     
     func calculateNewRating(for rating: Rating, against ratings: [Rating], isWinner: Bool) -> Rating {
         let groupRating = averageRating(of: ratings)
@@ -89,11 +86,11 @@ extension AffinityCalculator {
         return isWinner ? scores.newWinnerRating : scores.newLoserRating
     }
     
-    func getScore(winner rating: Rating, against ratings: [Rating]) -> Rating {
+    func calculate(winner rating: Rating, against ratings: [Rating]) -> Rating {
         calculateNewRating(for: rating, against: ratings, isWinner: true)
     }
 
-    func getScore(loser rating: Rating, against ratings: [Rating]) -> Rating {
+    func calculate(loser rating: Rating, against ratings: [Rating]) -> Rating {
         calculateNewRating(for: rating, against: ratings, isWinner: false)
     }
     
@@ -105,7 +102,6 @@ extension AffinityCalculator {
     func groupAverageRating(winnerRatings: [Rating], loserRatings: [Rating]) -> Rating {
         averageRating(of: winnerRatings + loserRatings)
     }
-    
 }
 
 
