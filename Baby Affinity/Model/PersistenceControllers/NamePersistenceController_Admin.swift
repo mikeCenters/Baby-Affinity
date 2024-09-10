@@ -94,6 +94,26 @@ protocol NamePersistenceController_Admin: NamePersistenceController {
     ///   - winners: An array of `Name` objects that won the comparison.
     ///   - losers: An array of `Name` objects that lost the comparison.
     func updateAffinity(winners: [Name], losers: [Name])
+    
+    /// Applies a penalty to the affinity ratings of the provided names by subtracting a value derived from the `kFactor`.
+    /// The new rating for each name is calculated by subtracting the `kFactor` from the current affinity rating.
+    /// If the resulting rating is below the minimum allowed (`Name.minimumAffinityRating`), it is set to the minimum rating.
+    /// After updating the rating, the evaluation count for each name is incremented.
+    ///
+    /// - Parameter names: An array of `Name` objects to which the penalty will be applied.
+    /// - Throws: Throws an error if the `setAffinity` method fails when updating the name's affinity rating.
+    /// - Note: The `increaseEvaluationCount` method is called for each name, regardless of whether the affinity was updated or not.
+    func applyPenalty(to names: [Name])
+    
+    /// Applies a bonus to the affinity ratings of the provided names by adding a value derived from the `kFactor`.
+    /// The new rating for each name is calculated by adding the `kFactor` to the current affinity rating.
+    /// If the resulting rating is below the minimum allowed (`Name.minimumAffinityRating`), it is set to the minimum rating.
+    /// After updating the rating, the evaluation count for each name is incremented.
+    ///
+    /// - Parameter names: An array of `Name` objects to which the bonus will be applied.
+    /// - Throws: Throws an error if the `setAffinity` method fails when updating the name's affinity rating.
+    /// - Note: The `increaseEvaluationCount` method is called for each name, regardless of whether the affinity was updated or not.
+    func applyBonus(to names: [Name])
 }
 
 
@@ -222,7 +242,56 @@ extension NamePersistenceController_Admin {
 
 extension NamePersistenceController_Admin {
     
+    func applyPenalty(to names: [Name]) {
+        let kFactor = AffinityCalculator.kFactor.convertToInt()
+        
+        for name in names {
+            do {
+                let newRating = name.affinityRating - kFactor
+                if newRating >= Name.minimumAffinityRating {
+                    try name.setAffinity(newRating)
+                    
+                } else {
+                    try name.setAffinity(Name.minimumAffinityRating)
+                }
+                
+                name.increaseEvaluationCount()
+                
+            } catch {
+                logError("Unable to set affinity for \(name): \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func applyBonus(to names: [Name]) {
+        let kFactor = AffinityCalculator.kFactor.convertToInt()
+        
+        for name in names {
+            do {
+                let newRating = name.affinityRating + kFactor
+                if newRating >= Name.minimumAffinityRating {
+                    try name.setAffinity(newRating)
+                    
+                } else {
+                    try name.setAffinity(Name.minimumAffinityRating)
+                }
+                
+                name.increaseEvaluationCount()
+                
+            } catch {
+                logError("Unable to set affinity for \(name): \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    
     func updateAffinity(winners: [Name], losers: [Name]) {
+        guard !winners.isEmpty && !losers.isEmpty else {
+            applyPenalty(to: losers)
+            applyBonus(to: winners)
+            return
+        }
+        
         let calc = AffinityCalculator()
         let winnerRatings = winners.map { $0.affinityRating }
         let loserRatings = losers.map { $0.affinityRating }
