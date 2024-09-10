@@ -245,6 +245,7 @@ extension NamePersistenceController_Admin {
     }
     
     /// Updates the affinity rating for a single name based on opposing ratings.
+    /// The method also increments the evaluation count of the name.
     ///
     /// - Parameters:
     ///   - name: The `Name` object whose affinity is being updated.
@@ -256,6 +257,7 @@ extension NamePersistenceController_Admin {
         
         do {
             try name.setAffinity(newRating)
+            name.increaseEvaluationCount()
             
         } catch {
             logError("Unable to set affinity to new rating: \(error.localizedDescription)")
