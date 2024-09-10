@@ -110,6 +110,7 @@ class NamePickerViewModel: ObservableObject {
     /// The affinity ratings are recalculated using the `AffinityCalculator` based on the  group rating, and
     /// the evaluation count for each name is incremented.
     func updateRatings() {
+        let calc = AffinityCalculator()
         let winners = selectedNames
         let losers = presentedNames
         // Get the group rating.
@@ -118,7 +119,7 @@ class NamePickerViewModel: ObservableObject {
         // FIXME: Check error handling. Possibly refactor.
         // Assign new Affinity ratings to names.
         for name in winners {
-            let ratings = AffinityCalculator.getScores(winnerRating: name.affinityRating, loserRating: groupRating)
+            let ratings = calc.calculateNewRatings(winnerRating: name.affinityRating, loserRating: groupRating)
             
             do {
                 try name.setAffinity(ratings.newWinnerRating)
@@ -135,7 +136,7 @@ class NamePickerViewModel: ObservableObject {
         
         // FIXME: Check error handling. Possibly refactor.
         for name in losers {
-            let ratings = AffinityCalculator.getScores(winnerRating: groupRating, loserRating: name.affinityRating)
+            let ratings = calc.calculateNewRatings(winnerRating: groupRating, loserRating: name.affinityRating)
             
             do {
                 try name.setAffinity(ratings.newLoserRating)
