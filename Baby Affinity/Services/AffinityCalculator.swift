@@ -73,6 +73,12 @@ class AffinityCalculator {
 
 extension AffinityCalculator {
     
+    /// Calculates the new rating for a participant in a match against a group.
+    /// - Parameters:
+    ///   - rating: The current rating of the participant.
+    ///   - ratings: An array of ratings for the group matched against the rating.
+    ///   - isWinner: A boolean indicating whether the participant won.
+    /// - Returns: The updated rating for the participant based on the outcome.
     func calculateNewRating(for rating: Rating, against ratings: [Rating], isWinner: Bool) -> Rating {
         let groupRating = averageRating(of: ratings)
         
@@ -86,81 +92,38 @@ extension AffinityCalculator {
         return isWinner ? scores.newWinnerRating : scores.newLoserRating
     }
     
+    /// Calculates the new rating for a participant who won against a group.
+    /// - Parameters:
+    ///   - rating: The current rating of the of the winner.
+    ///   - ratings: An array of ratings for the group matched against the winner.
+    /// - Returns: The updated rating for the participant after winning.
     func calculate(winner rating: Rating, against ratings: [Rating]) -> Rating {
         calculateNewRating(for: rating, against: ratings, isWinner: true)
     }
 
+    /// Calculates the new rating for a participant who lost against a group.
+    /// - Parameters:
+    ///   - rating: The current rating of the loser.
+    ///   - ratings: An array of ratings for the group matched against the winner.
+    /// - Returns: The updated rating for the participant after losing.
     func calculate(loser rating: Rating, against ratings: [Rating]) -> Rating {
         calculateNewRating(for: rating, against: ratings, isWinner: false)
     }
     
+    /// Calculates the average rating of a group of participants.
+    /// - Parameter ratings: An array of ratings for the group.
+    /// - Returns: The average rating of the group.
     func averageRating(of ratings: [Rating]) -> Rating {
         let totalRating = ratings.reduce(0, +)
         return totalRating / ratings.count
     }
     
+    /// Calculates the average rating of two groups of participants.
+    /// - Parameters:
+    ///   - winnerRatings: An array of ratings for the winning group.
+    ///   - loserRatings: An array of ratings for the losing group.
+    /// - Returns: The combined average rating of the two groups.
     func groupAverageRating(winnerRatings: [Rating], loserRatings: [Rating]) -> Rating {
         averageRating(of: winnerRatings + loserRatings)
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class EloRating {
-    var kFactor: Double
-    
-    init(kFactor: Double = 32) {
-        self.kFactor = kFactor
-    }
-    
-    // Calculate expected score between two ratings
-    private func expectedScore(forPlayer playerRating: Double, againstOpponent opponentRating: Double) -> Double {
-        let ratingDifference = opponentRating - playerRating
-        let exponent = ratingDifference / 400
-        return 1 / (1 + pow(10, exponent))
-    }
-    
-    // Calculate average rating of a group of players
-    private func averageRating(of players: [Double]) -> Double {
-        let totalRating = players.reduce(0, +)
-        return totalRating / Double(players.count)
-    }
-    
-    // Update the rating of a single player based on expected score and result
-    private func updateRating(currentRating: Double, expectedScore: Double, result: Double) -> Double {
-        return currentRating + kFactor * (result - expectedScore)
-    }
-    
-    // Update the ratings of individual players based on the average rating of the opposing group
-    func updateGroupRatings(winners: [Double], losers: [Double]) -> ([Double], [Double]) {
-        let averageLoserRating = averageRating(of: losers)
-        let averageWinnerRating = averageRating(of: winners)
-        
-        // Update each winner against the average rating of the losers
-        let newWinnerRatings = winners.map { winnerRating in
-            let expectedWinnersScore = expectedScore(forPlayer: winnerRating, againstOpponent: averageLoserRating)
-            return updateRating(currentRating: winnerRating, expectedScore: expectedWinnersScore, result: 1.0)
-        }
-        
-        // Update each loser against the average rating of the winners
-        let newLoserRatings = losers.map { loserRating in
-            let expectedLosersScore = expectedScore(forPlayer: loserRating, againstOpponent: averageWinnerRating)
-            return updateRating(currentRating: loserRating, expectedScore: expectedLosersScore, result: 0.0)
-        }
-        
-        return (newWinnerRatings, newLoserRatings)
     }
 }
