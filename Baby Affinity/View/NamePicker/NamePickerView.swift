@@ -196,15 +196,33 @@ extension NamePickerView: NamePersistenceController_Admin {
     ///     - Show 1 below the median.
     ///     - Show 3 from the top 20% above the median.
     ///     - Show 6 from the median to the top 20%.
-    /// - Parameter names: The list of names to be processed and presented.
     func load(_ names: [Name]) {
-        // Check that names is not empty.
         guard !names.isEmpty else { return }
         
-        // Empty the selected names array.
         selectedNames.removeAll()
         
-        // Separate names into evaluated and not evaluated
+        let (evaluatedNames, notEvaluatedNames) = categorizeNames(names)
+        let (belowMedianNames, aboveMedianNames) = splitByMedian(evaluatedNames)
+        
+        let top20PercentCount = calculateTop20PercentCount(for: aboveMedianNames)
+        let namesToShow: [Name] = determineNamesToShow(
+            from: belowMedianNames,
+            aboveMedianNames: aboveMedianNames,
+            notEvaluatedNames: notEvaluatedNames,
+            top20PercentCount: top20PercentCount
+        )
+        
+        presentedNames = namesToShow.shuffled()
+    }
+    
+
+    // MARK: - Helper Methods
+
+    /// Categorizes the names into evaluated and not evaluated lists.
+    ///
+    /// - Parameter names: The list of names to categorize.
+    /// - Returns: A tuple containing two arrays: one with evaluated names and one with not evaluated names.
+    private func categorizeNames(_ names: [Name]) -> ([Name], [Name]) {
         var evaluatedNames: [Name] = []
         var notEvaluatedNames: [Name] = []
         
@@ -212,31 +230,50 @@ extension NamePickerView: NamePersistenceController_Admin {
             name.evaluated > 0 ? evaluatedNames.append(name) : notEvaluatedNames.append(name)
         }
         
-        // Sort evaluated names by affinity rating
-        evaluatedNames.sort { $0.affinityRating < $1.affinityRating }
-        
-        // Find the median index
+        return (evaluatedNames, notEvaluatedNames)
+    }
+
+    /// Splits the evaluated names into two groups: below the median and above the median.
+    ///
+    /// - Parameter evaluatedNames: The list of evaluated names sorted by affinity rating.
+    /// - Returns: A tuple containing two arrays: one with names below the median and one with names above the median.
+    private func splitByMedian(_ evaluatedNames: [Name]) -> ([Name], [Name]) {
         let medianIndex = evaluatedNames.count / 2
         let belowMedianNames = evaluatedNames.prefix(medianIndex)
         let aboveMedianNames = evaluatedNames.suffix(from: medianIndex)
         
-        // Calculate top 20% count for above median names
-        let top20PercentCount = max(1, Int(Double(aboveMedianNames.count) * 0.2))
-        
-        // The array of names to present to the view
+        return (Array(belowMedianNames), Array(aboveMedianNames))
+    }
+
+    /// Calculates the count of names that represent the top 20% of a list.
+    ///
+    /// - Parameter names: The list of names from which to calculate the top 20% count.
+    /// - Returns: The number of names representing the top 20% of the list, with a minimum of 1.
+    private func calculateTop20PercentCount(for names: [Name]) -> Int {
+        return max(1, Int(Double(names.count) * 0.2))
+    }
+
+    /// Determines the names to show based on the evaluated status and affinity ratings.
+    ///
+    /// - Parameters:
+    ///   - belowMedianNames: The list of names below the median affinity rating.
+    ///   - aboveMedianNames: The list of names above the median affinity rating.
+    ///   - notEvaluatedNames: The list of names that have not been evaluated.
+    ///   - top20PercentCount: The count of names representing the top 20% of the above median list.
+    /// - Returns: An array of names selected according to the specified rules, shuffled before being returned.
+    private func determineNamesToShow(from belowMedianNames: [Name], aboveMedianNames: [Name], notEvaluatedNames: [Name], top20PercentCount: Int) -> [Name] {
         var namesToShow: [Name] = []
         
-        if notEvaluatedNames.isEmpty {      // All names have been evaluated.
+        if notEvaluatedNames.isEmpty { // All names have been evaluated.
             namesToShow.append(contentsOf: belowMedianNames.shuffled().prefix(1))
             namesToShow.append(contentsOf: aboveMedianNames.suffix(top20PercentCount).shuffled().prefix(3))
             namesToShow.append(contentsOf: aboveMedianNames.dropLast(top20PercentCount).shuffled().prefix(6))
-            
-        } else {                            // Some names still need evaluated.
+        } else { // Some names still need evaluated.
             namesToShow.append(contentsOf: aboveMedianNames.suffix(top20PercentCount).shuffled().prefix(2))
             namesToShow.append(contentsOf: notEvaluatedNames.shuffled().prefix(8))
         }
         
-        presentedNames = namesToShow.shuffled()
+        return namesToShow
     }
 }
 
