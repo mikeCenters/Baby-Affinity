@@ -103,6 +103,19 @@ extension NameSharingService: MCSessionDelegate {
     func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {
         // Not needed for this implementation
     }
+    
+    
+    // MARK: - Start and Stop Methods
+    
+    func startAdvertisingAndBrowsing() {
+        advertiser.startAdvertisingPeer()
+        browser.startBrowsingForPeers()
+    }
+    
+    func stopAdvertisingAndBrowsing() {
+        advertiser.stopAdvertisingPeer()
+        browser.stopBrowsingForPeers()
+    }
 }
 
 
@@ -159,8 +172,7 @@ struct NameSharingView: View, NamePersistenceController {
     // MARK: - Controls and Constants
     
     @State private var isShowingReceivedNames: Bool = false
-    
-    @State private var isSharingActive = false
+    @State private var isSharingActive = true
     @State private var animationAmount: CGFloat = 1.0
     
     
@@ -169,34 +181,22 @@ struct NameSharingView: View, NamePersistenceController {
     var body: some View {
         ZStack {
             VStack {
-                Text("Bring your phones together to share names!")
-                    .font(.title)
-                    .padding()
-                
                 Image(systemName: "antenna.radiowaves.left.and.right")
                     .font(.system(size: 100))
                     .foregroundColor(isSharingActive ? .green : .gray)
                     .scaleEffect(animationAmount)
-                    .animation(.easeInOut(duration: 1).repeatForever(autoreverses: true), value: nameSharingService.sessionState == .notConnected)
+                    .animation(.easeInOut(duration: 1).repeatForever(autoreverses: true), value: isSharingActive)
                     .onAppear {
                         self.animationAmount = 1.3
                     }
                 
-                Button(action: {
-                    self.isSharingActive.toggle()
-                    // Start/stop the sharing process here
-                }) {
-                    Text(isSharingActive ? "Stop Sharing" : "Start Sharing")
-                        .font(.headline)
-                        .padding()
-                        .background(isSharingActive ? Color.red : Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                }
+                Text("Bring your phones together to share names!")
+                    .font(.title)
+                    .padding()
+                
             }
             
-            if nameSharingService.sessionState != .connected {                  // Connection not established
-                                                                                // Place the antenna active indicator at the top of screen
+            if nameSharingService.sessionState != .connected {
                 VStack {
                     RadiatingSemiCircles()
                         .edgesIgnoringSafeArea(.top)
@@ -210,6 +210,22 @@ struct NameSharingView: View, NamePersistenceController {
         }
         
         
+        // MARK: - On Appear
+        
+        .onAppear {
+            if isSharingActive {
+                nameSharingService.startAdvertisingAndBrowsing()
+            }
+        }
+        
+        
+        // MARK: - On Disappear
+        
+        .onDisappear {
+            nameSharingService.stopAdvertisingAndBrowsing()
+        }
+        
+        
         // MARK: - On Change
         
         .onChange(of: nameSharingService.sessionState) { oldValue, newValue in
@@ -218,7 +234,6 @@ struct NameSharingView: View, NamePersistenceController {
                 do {
                     let fetchedNames = try fetchNames()
                     nameSharingService.sendNames(fetchedNames)
-                    
                 } catch {
                     logError("Unable to fetch names to send in Name Sharing View: \(error.localizedDescription)")
                 }
@@ -239,14 +254,6 @@ struct NameSharingView: View, NamePersistenceController {
             isShowingReceivedNames = true
         }
     }
-}
-
-
-// MARK: - View Components
-
-extension NameSharingView {
-    
-    
 }
 
 #if DEBUG
