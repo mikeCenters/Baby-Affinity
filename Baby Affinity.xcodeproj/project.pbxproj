@@ -79,6 +79,7 @@
 		BA27E09E2C8E468000241118 /* RadiatingSemiCircles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadiatingSemiCircles.swift; sourceTree = "<group>"; };
 		BA27E0A12C8FA88600241118 /* AffinityCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffinityCalculatorTests.swift; sourceTree = "<group>"; };
 		BA27E0A42C90CEC600241118 /* InstructionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsView.swift; sourceTree = "<group>"; };
+		BA27E0A62C9204BD00241118 /* Baby-Affinity-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Baby-Affinity-Info.plist"; sourceTree = SOURCE_ROOT; };
 		BA33AF092C7E665B00EE6700 /* IsPersistentStoreEmpty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsPersistentStoreEmpty.swift; sourceTree = "<group>"; };
 		BA33AF0B2C7E6A5400EE6700 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		BA33AF0D2C8050DB00EE6700 /* SettingsNavigationStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsNavigationStack.swift; sourceTree = "<group>"; };
@@ -222,6 +223,7 @@
 		BACC302E2C48A977003CEC7C /* Baby Affinity */ = {
 			isa = PBXGroup;
 			children = (
+				BA27E0A62C9204BD00241118 /* Baby-Affinity-Info.plist */,
 				BA9BF0B62C60A2BB0056334E /* Extensions */,
 				BAE858992C6271A100177BA8 /* Services */,
 				BACC305B2C48A99C003CEC7C /* Model */,
@@ -701,6 +703,8 @@
 				DEVELOPMENT_TEAM = 56NNYWF83R;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Baby-Affinity-Info.plist";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This app needs access to the local network to share baby names with nearby devices.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -731,6 +735,8 @@
 				DEVELOPMENT_TEAM = 56NNYWF83R;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Baby-Affinity-Info.plist";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This app needs access to the local network to share baby names with nearby devices.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
