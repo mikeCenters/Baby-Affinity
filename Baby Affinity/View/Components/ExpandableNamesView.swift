@@ -78,7 +78,7 @@ extension ExpandableNamesView {
 #Preview("In a List and Tab View") {
     TabView {
         List {
-            ExpandableNamesView(names: PreviewData.rankedMaleNames, title: "Expandable List of Names")
+            ExpandableNamesView(names: PreviewData.rankedMaleNames(count: 10), title: "Expandable List of Names")
         }
         .tabItem {
             Label {
