@@ -192,3 +192,65 @@ extension Name {
         isFavorite = Self.defaultFavoriteStatus
     }
 }
+
+
+#if DEBUG
+
+// MARK: - Preview Data
+
+struct PreviewData {
+    
+    // MARK: - Male Names
+    
+    static func maleNames(count: Int) -> [Name] {
+        (0..<count).map { _ in try! Name("Some Name", sex: .male, affinityRating: (800...1500).randomElement()!) }
+    }
+    
+    static func rankedMaleNames(count: Int) -> [(Rank, Name)] {
+        let names = (0..<count).map { _ in
+            let rating = (800...1500).randomElement()!
+            let name = try! Name("Some Name", sex: .male, affinityRating: rating)
+            
+            if Bool.random() {
+                name.toggleFavorite()
+            }
+            
+            return name
+        }
+        
+        let sorted = names.sorted { $0.affinityRating > $1.affinityRating }
+        
+        return Array(sorted.enumerated().map { (index, name) in
+            (index + 1, name)
+        })
+    }
+    
+    
+    // MARK: - Female Names
+    
+    static func femaleNames(count: Int) -> [Name] {
+        (0..<count).map { _ in try! Name("Some Name", sex: .female, affinityRating: (800...1500).randomElement()!) }
+    }
+    
+    static func rankedFemaleNames(count: Int) -> [(Rank, Name)] {
+        let names = (0..<count).map { _ in
+            let rating = (800...1500).randomElement()!
+            let name = try! Name("Some Name", sex: .female, affinityRating: rating)
+            
+            if Bool.random() {
+                name.toggleFavorite()
+            }
+            
+            return name
+        }
+        
+        let sorted = names.sorted { $0.affinityRating > $1.affinityRating }
+            
+        return Array(sorted.enumerated().map { (index, name) in
+            (index + 1, name)
+        })
+    }
+    
+}
+
+#endif
