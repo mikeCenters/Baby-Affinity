@@ -44,6 +44,8 @@
 		BAE858A02C6326C000177BA8 /* SexSelectionIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE8589F2C6326C000177BA8 /* SexSelectionIconView.swift */; };
 		BAE858A22C6335A400177BA8 /* NameCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE858A12C6335A400177BA8 /* NameCellView.swift */; };
 		BAE858A42C6349B900177BA8 /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE858A32C6349B900177BA8 /* LoadingIndicator.swift */; };
+		BAEA17A92C93E390000C2507 /* SharedNamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEA17A82C93E390000C2507 /* SharedNamesView.swift */; };
+		BAEA17AB2C94077E000C2507 /* NamesViewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEA17AA2C94077E000C2507 /* NamesViewSection.swift */; };
 		BAEBE3282C6B3E5F00035488 /* NamePersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBE3272C6B3E5F00035488 /* NamePersistenceController.swift */; };
 		BAEBE32A2C6C134B00035488 /* NameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBE3292C6C134B00035488 /* NameTests.swift */; };
 		BAF3C6712C6EB1C2004F9E46 /* NamePersistenceController_Admin.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF3C6702C6EB1C2004F9E46 /* NamePersistenceController_Admin.swift */; };
@@ -117,6 +119,8 @@
 		BAE8589F2C6326C000177BA8 /* SexSelectionIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SexSelectionIconView.swift; sourceTree = "<group>"; };
 		BAE858A12C6335A400177BA8 /* NameCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameCellView.swift; sourceTree = "<group>"; };
 		BAE858A32C6349B900177BA8 /* LoadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
+		BAEA17A82C93E390000C2507 /* SharedNamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedNamesView.swift; sourceTree = "<group>"; };
+		BAEA17AA2C94077E000C2507 /* NamesViewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamesViewSection.swift; sourceTree = "<group>"; };
 		BAEBE3272C6B3E5F00035488 /* NamePersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePersistenceController.swift; sourceTree = "<group>"; };
 		BAEBE3292C6C134B00035488 /* NameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameTests.swift; sourceTree = "<group>"; };
 		BAF3C6702C6EB1C2004F9E46 /* NamePersistenceController_Admin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePersistenceController_Admin.swift; sourceTree = "<group>"; };
@@ -167,6 +171,7 @@
 			isa = PBXGroup;
 			children = (
 				BA27E09E2C8E468000241118 /* RadiatingSemiCircles.swift */,
+				BAEA17A82C93E390000C2507 /* SharedNamesView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -333,6 +338,7 @@
 				BAE8589F2C6326C000177BA8 /* SexSelectionIconView.swift */,
 				BAE858A12C6335A400177BA8 /* NameCellView.swift */,
 				BAE858A32C6349B900177BA8 /* LoadingIndicator.swift */,
+				BAEA17AA2C94077E000C2507 /* NamesViewSection.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -502,6 +508,7 @@
 				BAE858952C6114CB00177BA8 /* HomeView.swift in Sources */,
 				BAD0F62F2C87CC4200B41D34 /* Store.swift in Sources */,
 				BA33AF142C876AE900EE6700 /* LastNameSetting.swift in Sources */,
+				BAEA17AB2C94077E000C2507 /* NamesViewSection.swift in Sources */,
 				BAF3C6792C6FAC45004F9E46 /* LegalInfoView.swift in Sources */,
 				BAE858982C6136AE00177BA8 /* NamePickerView.swift in Sources */,
 				BA9BAFE72C5ED484008D88A2 /* FavoriteNamesView.swift in Sources */,
@@ -531,6 +538,7 @@
 				BAC0B4A02C705F1F008B3141 /* SendEmailButton.swift in Sources */,
 				BAE858A42C6349B900177BA8 /* LoadingIndicator.swift in Sources */,
 				BA07475B2C7026AA002C8425 /* SectionView.swift in Sources */,
+				BAEA17A92C93E390000C2507 /* SharedNamesView.swift in Sources */,
 				BA27E09D2C8E1A2D00241118 /* NameSharingView.swift in Sources */,
 				BACC30302C48A977003CEC7C /* Baby_AffinityApp.swift in Sources */,
 				BAD0F6322C87DD1800B41D34 /* ProductsView.swift in Sources */,
