@@ -46,6 +46,7 @@
 		BAE858A42C6349B900177BA8 /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE858A32C6349B900177BA8 /* LoadingIndicator.swift */; };
 		BAEA17AB2C94077E000C2507 /* NamesViewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEA17AA2C94077E000C2507 /* NamesViewSection.swift */; };
 		BAEA17AD2C940DD1000C2507 /* ExpandableNamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEA17AC2C940DD1000C2507 /* ExpandableNamesView.swift */; };
+		BAEA17AF2C941A70000C2507 /* RefreshableNamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEA17AE2C941A70000C2507 /* RefreshableNamesView.swift */; };
 		BAEBE3282C6B3E5F00035488 /* NamePersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBE3272C6B3E5F00035488 /* NamePersistenceController.swift */; };
 		BAEBE32A2C6C134B00035488 /* NameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBE3292C6C134B00035488 /* NameTests.swift */; };
 		BAF3C6712C6EB1C2004F9E46 /* NamePersistenceController_Admin.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF3C6702C6EB1C2004F9E46 /* NamePersistenceController_Admin.swift */; };
@@ -121,6 +122,7 @@
 		BAE858A32C6349B900177BA8 /* LoadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
 		BAEA17AA2C94077E000C2507 /* NamesViewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamesViewSection.swift; sourceTree = "<group>"; };
 		BAEA17AC2C940DD1000C2507 /* ExpandableNamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableNamesView.swift; sourceTree = "<group>"; };
+		BAEA17AE2C941A70000C2507 /* RefreshableNamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshableNamesView.swift; sourceTree = "<group>"; };
 		BAEBE3272C6B3E5F00035488 /* NamePersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePersistenceController.swift; sourceTree = "<group>"; };
 		BAEBE3292C6C134B00035488 /* NameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameTests.swift; sourceTree = "<group>"; };
 		BAF3C6702C6EB1C2004F9E46 /* NamePersistenceController_Admin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePersistenceController_Admin.swift; sourceTree = "<group>"; };
@@ -339,6 +341,7 @@
 				BAE858A32C6349B900177BA8 /* LoadingIndicator.swift */,
 				BAEA17AA2C94077E000C2507 /* NamesViewSection.swift */,
 				BAEA17AC2C940DD1000C2507 /* ExpandableNamesView.swift */,
+				BAEA17AE2C941A70000C2507 /* RefreshableNamesView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -524,6 +527,7 @@
 				BAF3C67E2C6FD351004F9E46 /* MailView.swift in Sources */,
 				BAF3C67C2C6FB3C2004F9E46 /* ContactUsView.swift in Sources */,
 				BA33AF0E2C8050DB00EE6700 /* SettingsNavigationStack.swift in Sources */,
+				BAEA17AF2C941A70000C2507 /* RefreshableNamesView.swift in Sources */,
 				BACC30662C5C7B7B003CEC7C /* TopNamesView.swift in Sources */,
 				BA9BF0B82C60A2CC0056334E /* Extensions.swift in Sources */,
 				BA33AF122C837AA400EE6700 /* NamePreviewCard.swift in Sources */,

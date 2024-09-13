@@ -86,7 +86,6 @@ extension ExpandableNamesView {
                 Image(systemName: "list.bullet.below.rectangle")
             }
         }
-        
     }
     .environmentObject(Store.premium)
 }
