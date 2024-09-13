@@ -77,54 +77,19 @@ struct TopNamesView: View {
     /// The current state of the view.
     @State private var viewState: TopNamesView.ViewState = .isLoading
     
-    /// A state to control whether more names are shown.
-    @State private var showMore: Bool = false
-    
-    /// The limit on the number of names to be displayed initially.
-    private let nameLimit = 5
-    
     
     // MARK: - Body
     
     var body: some View {
-        Section(header: Text("Top \(selectedSex.childNaming) Names")) {
-            
-            // MARK: - Cell View
-            
+        Group {
             switch viewState {
             case .isLoading:
                 LoadingIndicator()              /// Show a loading indicator when the view is loading data.
                 
             case .showNames:
-                switch isPremiumAccount {
-                    
-                case true:                  // Premium Account
-                    ForEach(presentedNames, id: \.0) { (rank, name) in
-                        if rank <= nameLimit {
-                            NameCellView(name: name, rank: rank)    /// Show the name cell view for the top names.
-                        } else if showMore {
-                            NameCellView(name: name, rank: rank)    /// Show the name cell view for additional names if "show more" is toggled.
-                        }
-                    }
-                    
-                case false:                 // Non-Premium User
-                    ForEach(getRandomNamesToPresent(), id: \.0) { (rank, name) in
-                        if rank <= nameLimit {
-                            NameCellView(name: name, rank: rank)    /// Show the name cell view for the top names.
-                        } else if showMore {
-                            NameCellView(name: name, rank: rank)    /// Show the name cell view for additional names if "show more" is toggled.
-                        }
-                    }
-                }
+                ExpandableNamesView(names: presentedNames, title: "Top \(selectedSex.sexNamingConvention) Names")
             }
-            
-            
-            // MARK: - Footer View
-            
-            collapseAndExpandButton
-                .disabled(viewState == .isLoading)              /// Disable the button if the view is still loading.
         }
-        
         
         // MARK: - On Appear
         .onAppear {
@@ -147,49 +112,22 @@ struct TopNamesView: View {
         }
         
         .onChange(of: maleNames) { oldValue, newValue in
-            if newValue != oldValue {       /// Only update when the lists change.
-                withAnimation {
-                    presentNames()          /// Recalculate the presented names when the list of male names changes.
-                    handleViewState()       /// Update the view state accordingly.
-                }
+            guard selectedSex == .male && newValue != oldValue else { return }
+            
+            withAnimation {
+                presentNames()              /// Recalculate the presented names when the list of male names changes.
+                handleViewState()           /// Update the view state accordingly.
             }
         }
         
         .onChange(of: femaleNames) { oldValue, newValue in
-            if newValue != oldValue {       /// Only update when the lists change.
-                withAnimation {
-                    presentNames()          /// Recalculate the presented names when the list of male names changes.
-                    handleViewState()       /// Update the view state accordingly.
-                }
-            }
-        }
-    }
-}
-
-
-// MARK: - View Components
-
-extension TopNamesView {
-    
-    // MARK: - Collapse and Expand Button
-    
-    /// A button that toggles the expansion and collapse of the list, represented by
-    /// an up or down chevron icon. The button animates the transition between states.
-    private var collapseAndExpandButton: some View {
-        Button {
-            /// Toggles the state of the `showMore` flag with animation, which controls
-            /// whether more or fewer names are displayed.
-            withAnimation {
-                showMore.toggle()
-            }
+            guard selectedSex == .female && newValue != oldValue  else { return }
             
-        } label: {
-            Image(systemName: showMore ? "chevron.up" : "chevron.down")
-                .font(.headline)
+            withAnimation {
+                presentNames()              /// Recalculate the presented names when the list of male names changes.
+                handleViewState()           /// Update the view state accordingly.
+            }
         }
-        /// Aligns the button to the trailing edge of the view and makes it borderless.
-        .frame(maxWidth: .infinity, alignment: .trailing)
-        .buttonStyle(.borderless)
     }
 }
 
@@ -202,15 +140,11 @@ extension TopNamesView: NamePersistenceController {
     /// If no names are available, the view stays in the `isLoading` state.
     private func handleViewState() {
         viewState = presentedNames.isEmpty ? .isLoading : .showNames
-        
-        if viewState == .isLoading {
-            showMore = false
-        }
     }
     
     /// Updates the `presentedNames` state with the names to be displayed, based on the selected sex.
     private func presentNames() {
-        presentedNames = getNamesToPresent()
+        presentedNames = isPremiumAccount ? getNamesToPresent() : getRandomNamesToPresent()
     }
     
     /// Returns a list of names with their ranks, based on the selected sex.
@@ -248,18 +182,18 @@ extension TopNamesView: NamePersistenceController {
 // MARK: - Preview
 
 #Preview("Top Names View in a List and Tab View - Non-Premium Account") {
-    return TabView {
+    return TabView { NavigationStack {
         List {
             TopNamesView()
         }
-        .tabItem {
-            Label {
-                Text("Home")
-            } icon: {
-                Image(systemName: "list.bullet.below.rectangle")
-            }
+    }
+    .tabItem {
+        Label {
+            Text("Home")
+        } icon: {
+            Image(systemName: "list.bullet.below.rectangle")
         }
-        
+    }
     }
     .modelContainer(previewModelContainer_WithFavorites)
     .environmentObject(Store.shared)
