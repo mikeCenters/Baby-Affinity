@@ -200,7 +200,7 @@ extension FavoriteNamesView: NamePersistenceController {
         FavoriteNamesView()
     }
     .modelContainer(previewModelContainer_WithFavorites)
-    .environmentObject(Store.shared)
+    .environmentObject(Store.premium)
 }
 
 #Preview("Favorites are not available") {
@@ -208,7 +208,7 @@ extension FavoriteNamesView: NamePersistenceController {
         FavoriteNamesView()
     }
     .modelContainer(previewModelContainer)
-    .environmentObject(Store.shared)
+    .environmentObject(Store.premium)
 }
 
 #Preview("View is loading") {
@@ -231,7 +231,7 @@ extension FavoriteNamesView: NamePersistenceController {
         }
     }
     .modelContainer(previewModelContainer_EmptyStore)
-    .environmentObject(Store.shared)
+    .environmentObject(Store.premium)
 }
 
 #endif
