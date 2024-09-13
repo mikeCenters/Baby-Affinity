@@ -69,31 +69,9 @@ struct NamesViewSection<FooterContent: View>: View {
 
 // MARK: - Previews
 
-struct PreviewData {
-    static var maleNames: [Name] {
-        (0..<10).map { _ in try! Name("Some Name", sex: .male) }
-    }
-    
-    static var femaleNames: [Name] {
-        (0..<10).map { _ in try! Name("Some Name", sex: .female) }
-    }
-    
-    static var rankedMaleNames: [(Rank, Name)] {
-        maleNames.enumerated().map { (index, name) in
-            (index + 1, name)
-        }
-    }
-    
-    static var rankedFemaleNames: [(Rank, Name)] {
-        femaleNames.enumerated().map { (index, name) in
-            (index + 1, name)
-        }
-    }
-}
-
 #Preview("In a List - With Title and Footer") {
     List {
-        NamesViewSection(names: PreviewData.rankedMaleNames,
+        NamesViewSection(names: PreviewData.rankedMaleNames(count: 10),
                          title: "All Male Names") {
             Text("Some Footer")
         }
@@ -103,7 +81,7 @@ struct PreviewData {
 
 #Preview("In a List - With Title") {
     List {
-        NamesViewSection<EmptyView>(names: PreviewData.rankedMaleNames,
+        NamesViewSection<EmptyView>(names: PreviewData.rankedMaleNames(count: 10),
                                     title: "All Male Names")
     }
     .environmentObject(Store.shared)
@@ -111,7 +89,7 @@ struct PreviewData {
 
 #Preview("In a List - With Footer") {
     List {
-        NamesViewSection(names: PreviewData.rankedMaleNames) {
+        NamesViewSection(names: PreviewData.rankedMaleNames(count: 10)) {
             Text("Some Footer")
         }
     }
@@ -120,7 +98,7 @@ struct PreviewData {
 
 #Preview("In a List - With No Title or Footer") {
     List {
-        NamesViewSection<EmptyView>(names: PreviewData.rankedMaleNames)
+        NamesViewSection<EmptyView>(names: PreviewData.rankedMaleNames(count: 10))
     }
     .environmentObject(Store.shared)
 }
