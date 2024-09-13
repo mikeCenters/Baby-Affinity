@@ -10,8 +10,11 @@ import SwiftUI
 
 // MARK: - Refreshable Names View
 
-/// A SwiftUI view that displays a list of names and can be expanded or collapsed.
-/// When collapsed, a limited number of names are shown, and when expanded, all names are shown.
+/// A SwiftUI view that displays a list of names with a refresh button.
+/// The view includes a section header and a button to trigger a refresh action.
+///
+/// - Note: When the refresh button is tapped, it executes the provided `onRefresh` closure
+///   and triggers a haptic feedback.
 struct RefreshableNamesView: View {
     
     // MARK: - Properties
@@ -22,49 +25,25 @@ struct RefreshableNamesView: View {
     /// The title displayed as the header of the section.
     var title: String = ""
     
-    
-    // MARK: - Controls and Constants
-    
-    /// A state variable that determines whether to show more names or a limited number of names.
-    /// - `true`: Show all names.
-    /// - `false`: Show only a limited number of names (determined by `nameLimit`).
-    @State private var showMore: Bool = false
-    
-    /// The maximum number of names to display when the view is in a collapsed state.
-    private let nameLimit = 5
+    /// The action to be executed when the refresh button is tapped.
+    var onRefresh: () -> Void
     
     
     // MARK: - Body
     
     var body: some View {
-        NamesViewSection(
-            names: showMore ? names : Array(names.prefix(nameLimit)),
-            title: title) {
+        NamesViewSection(names: names, title: title) {
             
-            /// A button that toggles between showing more or fewer names in the section.
-            collapseAndExpandButton
-        }
-    }
-}
-
-
-// MARK: - View Components
-
-extension RefreshableNamesView {
-    
-    // MARK: - Footer Button
-    
-    /// A button view that toggles the `showMore` state.
-    /// - Displays "Show More" when collapsed and "Show Less" when expanded.
-    private var collapseAndExpandButton: some View {
-        Button(action: {
-            withAnimation {
-                showMore.toggle()
+            Button {
+                onRefresh()
+                
+                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                
+            } label: {
+                Image(systemName: "arrow.clockwise")
+                    .font(.headline)
             }
-            
-        }) {
-            Image(systemName: showMore ? "chevron.up" : "chevron.down")
-                .font(.headline)
+            .buttonStyle(.borderless)
         }
     }
 }
@@ -77,7 +56,9 @@ extension RefreshableNamesView {
 #Preview("In a List and Tab View") {
     TabView {
         List {
-            RefreshableNamesView(names: PreviewData.rankedMaleNames, title: "Expandable List of Names")
+            RefreshableNamesView(names: Array(PreviewData.rankedMaleNames.prefix(5)), title: "Refreshable List of Names") {
+                
+            }
         }
         .tabItem {
             Label {
