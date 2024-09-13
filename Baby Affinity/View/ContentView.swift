@@ -70,6 +70,7 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .modelContainer(previewModelContainer_WithFavorites)
+        .environmentObject(Store.shared)
 }
 
 #endif
