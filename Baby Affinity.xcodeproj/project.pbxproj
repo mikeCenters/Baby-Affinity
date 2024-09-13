@@ -44,7 +44,6 @@
 		BAE858A02C6326C000177BA8 /* SexSelectionIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE8589F2C6326C000177BA8 /* SexSelectionIconView.swift */; };
 		BAE858A22C6335A400177BA8 /* NameCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE858A12C6335A400177BA8 /* NameCellView.swift */; };
 		BAE858A42C6349B900177BA8 /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE858A32C6349B900177BA8 /* LoadingIndicator.swift */; };
-		BAEA17A92C93E390000C2507 /* SharedNamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEA17A82C93E390000C2507 /* SharedNamesView.swift */; };
 		BAEA17AB2C94077E000C2507 /* NamesViewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEA17AA2C94077E000C2507 /* NamesViewSection.swift */; };
 		BAEA17AD2C940DD1000C2507 /* ExpandableNamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEA17AC2C940DD1000C2507 /* ExpandableNamesView.swift */; };
 		BAEBE3282C6B3E5F00035488 /* NamePersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBE3272C6B3E5F00035488 /* NamePersistenceController.swift */; };
@@ -120,7 +119,6 @@
 		BAE8589F2C6326C000177BA8 /* SexSelectionIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SexSelectionIconView.swift; sourceTree = "<group>"; };
 		BAE858A12C6335A400177BA8 /* NameCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameCellView.swift; sourceTree = "<group>"; };
 		BAE858A32C6349B900177BA8 /* LoadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
-		BAEA17A82C93E390000C2507 /* SharedNamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedNamesView.swift; sourceTree = "<group>"; };
 		BAEA17AA2C94077E000C2507 /* NamesViewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamesViewSection.swift; sourceTree = "<group>"; };
 		BAEA17AC2C940DD1000C2507 /* ExpandableNamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableNamesView.swift; sourceTree = "<group>"; };
 		BAEBE3272C6B3E5F00035488 /* NamePersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePersistenceController.swift; sourceTree = "<group>"; };
@@ -173,7 +171,6 @@
 			isa = PBXGroup;
 			children = (
 				BA27E09E2C8E468000241118 /* RadiatingSemiCircles.swift */,
-				BAEA17A82C93E390000C2507 /* SharedNamesView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -542,7 +539,6 @@
 				BAC0B4A02C705F1F008B3141 /* SendEmailButton.swift in Sources */,
 				BAE858A42C6349B900177BA8 /* LoadingIndicator.swift in Sources */,
 				BA07475B2C7026AA002C8425 /* SectionView.swift in Sources */,
-				BAEA17A92C93E390000C2507 /* SharedNamesView.swift in Sources */,
 				BA27E09D2C8E1A2D00241118 /* NameSharingView.swift in Sources */,
 				BACC30302C48A977003CEC7C /* Baby_AffinityApp.swift in Sources */,
 				BAD0F6322C87DD1800B41D34 /* ProductsView.swift in Sources */,
