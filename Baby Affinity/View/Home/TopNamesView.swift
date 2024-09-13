@@ -173,22 +173,23 @@ extension TopNamesView {
     
     // MARK: - Collapse and Expand Button
     
-    /// A view representing the collapse and expand button to toggle between showing more or fewer names.
-    var collapseAndExpandButton: some View {
-        HStack {
-            Spacer()
-            
-            Button {
-                withAnimation {
-                    showMore.toggle()                   /// Toggle the state to show more or fewer names.
-                }
-                
-            } label: {
-                Image(systemName: showMore ? "chevron.up" : "chevron.down")
-                    .font(.headline)
+    /// A button that toggles the expansion and collapse of the list, represented by
+    /// an up or down chevron icon. The button animates the transition between states.
+    private var collapseAndExpandButton: some View {
+        Button {
+            /// Toggles the state of the `showMore` flag with animation, which controls
+            /// whether more or fewer names are displayed.
+            withAnimation {
+                showMore.toggle()
             }
-            .buttonStyle(.borderless)                   /// Apply a borderless button style.
+            
+        } label: {
+            Image(systemName: showMore ? "chevron.up" : "chevron.down")
+                .font(.headline)
         }
+        /// Aligns the button to the trailing edge of the view and makes it borderless.
+        .frame(maxWidth: .infinity, alignment: .trailing)
+        .buttonStyle(.borderless)
     }
 }
 
