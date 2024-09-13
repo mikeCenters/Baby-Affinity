@@ -8,6 +8,9 @@
 import SwiftUI
 import SwiftData
 
+
+// MARK: - Names View
+
 /// A view that displays a list of names filtered by the selected sex and sorted by affinity rating.
 struct NamesView: View {
     
@@ -26,7 +29,7 @@ struct NamesView: View {
     @State private var names: [Name] = []
     
     
-    // MARK: - Controls
+    // MARK: - Controls and Constants
     
     /// The property used to check the premium status of the user's account.
     private var isPremiumAccount: Bool {
