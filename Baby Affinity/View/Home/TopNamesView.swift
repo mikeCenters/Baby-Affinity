@@ -248,8 +248,6 @@ extension TopNamesView: NamePersistenceController {
 // MARK: - Preview
 
 #Preview("Top Names View in a List and Tab View - Non-Premium Account") {
-    @StateObject var store = Store.shared
-    
     return TabView {
         List {
             TopNamesView()
@@ -264,22 +262,18 @@ extension TopNamesView: NamePersistenceController {
         
     }
     .modelContainer(previewModelContainer_WithFavorites)
-    .environmentObject(store)
+    .environmentObject(Store.shared)
 }
 
 #Preview("Top Names View in a List - Non-Premium Account") {
-    @StateObject var store = Store.shared
-    
     return List {
         TopNamesView()
     }
     .modelContainer(previewModelContainer_WithFavorites)
-    .environmentObject(store)
+    .environmentObject(Store.shared)
 }
 
 #Preview("Top Names View in a List and Tab View - Premium Account") {
-    @StateObject var store = Store.premium
-    
     return TabView {
         List {
             TopNamesView()
@@ -294,17 +288,15 @@ extension TopNamesView: NamePersistenceController {
         
     }
     .modelContainer(previewModelContainer_WithFavorites)
-    .environmentObject(store)
+    .environmentObject(Store.shared)
 }
 
 #Preview("Top Names View in a List - Premium Account") {
-    @StateObject var store = Store.premium
-    
     return List {
         TopNamesView()
     }
     .modelContainer(previewModelContainer_WithFavorites)
-    .environmentObject(store)
+    .environmentObject(Store.shared)
 }
 
 #endif
