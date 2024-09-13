@@ -66,6 +66,7 @@ extension ExpandableNamesView {
             Image(systemName: showMore ? "chevron.up" : "chevron.down")
                 .font(.headline)
         }
+        .buttonStyle(.borderless)
     }
 }
 
