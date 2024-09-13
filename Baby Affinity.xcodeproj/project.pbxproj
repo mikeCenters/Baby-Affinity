@@ -47,6 +47,7 @@
 		BAEA17AB2C94077E000C2507 /* NamesViewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEA17AA2C94077E000C2507 /* NamesViewSection.swift */; };
 		BAEA17AD2C940DD1000C2507 /* ExpandableNamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEA17AC2C940DD1000C2507 /* ExpandableNamesView.swift */; };
 		BAEA17AF2C941A70000C2507 /* RefreshableNamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEA17AE2C941A70000C2507 /* RefreshableNamesView.swift */; };
+		BAEA17B12C9429C1000C2507 /* SharedNamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEA17B02C9429C1000C2507 /* SharedNamesView.swift */; };
 		BAEBE3282C6B3E5F00035488 /* NamePersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBE3272C6B3E5F00035488 /* NamePersistenceController.swift */; };
 		BAEBE32A2C6C134B00035488 /* NameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBE3292C6C134B00035488 /* NameTests.swift */; };
 		BAF3C6712C6EB1C2004F9E46 /* NamePersistenceController_Admin.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF3C6702C6EB1C2004F9E46 /* NamePersistenceController_Admin.swift */; };
@@ -123,6 +124,7 @@
 		BAEA17AA2C94077E000C2507 /* NamesViewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamesViewSection.swift; sourceTree = "<group>"; };
 		BAEA17AC2C940DD1000C2507 /* ExpandableNamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableNamesView.swift; sourceTree = "<group>"; };
 		BAEA17AE2C941A70000C2507 /* RefreshableNamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshableNamesView.swift; sourceTree = "<group>"; };
+		BAEA17B02C9429C1000C2507 /* SharedNamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedNamesView.swift; sourceTree = "<group>"; };
 		BAEBE3272C6B3E5F00035488 /* NamePersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePersistenceController.swift; sourceTree = "<group>"; };
 		BAEBE3292C6C134B00035488 /* NameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameTests.swift; sourceTree = "<group>"; };
 		BAF3C6702C6EB1C2004F9E46 /* NamePersistenceController_Admin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePersistenceController_Admin.swift; sourceTree = "<group>"; };
@@ -165,6 +167,7 @@
 			children = (
 				BA27E0A02C8E47B300241118 /* Components */,
 				BA27E09C2C8E1A2D00241118 /* NameSharingView.swift */,
+				BAEA17B02C9429C1000C2507 /* SharedNamesView.swift */,
 			);
 			path = "Shared Lists";
 			sourceTree = "<group>";
@@ -530,6 +533,7 @@
 				BAEA17AF2C941A70000C2507 /* RefreshableNamesView.swift in Sources */,
 				BACC30662C5C7B7B003CEC7C /* TopNamesView.swift in Sources */,
 				BA9BF0B82C60A2CC0056334E /* Extensions.swift in Sources */,
+				BAEA17B12C9429C1000C2507 /* SharedNamesView.swift in Sources */,
 				BA33AF122C837AA400EE6700 /* NamePreviewCard.swift in Sources */,
 				BAE858A02C6326C000177BA8 /* SexSelectionIconView.swift in Sources */,
 				BAF3C6772C6F9994004F9E46 /* AboutView.swift in Sources */,
