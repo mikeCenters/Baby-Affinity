@@ -23,6 +23,7 @@ struct NameSharingView: View, NamePersistenceController {
     
     @PremiumAccount private var isPremium
     @State private var isShowingReceivedNames: Bool = false
+    @State private var isShowingProductPage: Bool = false
     @State private var animationAmount: CGFloat = 1.0
     
     
@@ -60,6 +61,9 @@ struct NameSharingView: View, NamePersistenceController {
         .sheet(isPresented: $isShowingReceivedNames) {
             let receivedNames = getNames()
             SharedNamesView(maleNames: receivedNames.0, femaleNames: receivedNames.1)
+        }
+        .sheet(isPresented: $isShowingProductPage) {
+            ProductsView()
         }
         
         
@@ -107,10 +111,12 @@ struct NameSharingView: View, NamePersistenceController {
         
         .onChange(of: isPremium) {
             if isPremium {
+                isShowingProductPage = false
                 nameSharingService.startAdvertisingAndBrowsing()
                 
             } else {
                 nameSharingService.stopAdvertisingAndBrowsing()
+                isShowingProductPage = true
             }
         }
     }
