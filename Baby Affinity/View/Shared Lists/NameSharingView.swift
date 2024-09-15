@@ -96,13 +96,7 @@ struct NameSharingView: View, NamePersistenceController {
         .onReceive(nameSharingService.$sessionState.receive(on: DispatchQueue.main)) { sessionState in
             switch sessionState {
             case .connected:
-                do {
-                    let fetchedNames = try fetchNames()
-                    nameSharingService.sendNames(fetchedNames)
-                    
-                } catch {
-                    logError("Unable to fetch names to send in Name Sharing View: \(error.localizedDescription)")
-                }
+                sendNames()
                 
             default:
                 break
@@ -126,6 +120,23 @@ struct NameSharingView: View, NamePersistenceController {
 // MARK: - Methods
 
 extension NameSharingView: NamePersistenceController_Admin {
+    
+    /// Fetches a list of names and sends them using the `NameSharingService`.
+    ///
+    /// This method attempts to fetch names from the environment's `ModelContext` and, if successful,
+    /// passes them to the `NameSharingService` for sharing. If the fetch operation fails, it logs an
+    /// error message detailing the issue.
+    ///
+    /// - Note: The `NameSharingService` must be properly configured and initialized before this method is called.
+    private func sendNames() {
+        do {
+            let fetchedNames = try fetchNames()
+            nameSharingService.sendNames(fetchedNames)
+            
+        } catch {
+            logError("Unable to fetch names to send in Name Sharing View: \(error.localizedDescription)")
+        }
+    }
     
     /// A method that retrieves and categorizes names received via the `nameSharingService`.
     ///
