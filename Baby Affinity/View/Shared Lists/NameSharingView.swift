@@ -15,14 +15,14 @@ struct NameSharingView: View, NamePersistenceController {
     // MARK: - Properties
     
     @Environment(\.modelContext) internal var modelContext
-    
-    @StateObject var nameSharingService: NameSharingService = NameSharingService()
+    @EnvironmentObject private var store: Store
+    @StateObject private var nameSharingService: NameSharingService = .init()
     
     
     // MARK: - Controls and Constants
     
+    @PremiumAccount private var isPremium
     @State private var isShowingReceivedNames: Bool = false
-    @State private var isSharingActive = true
     @State private var animationAmount: CGFloat = 1.0
     
     
@@ -33,9 +33,9 @@ struct NameSharingView: View, NamePersistenceController {
             VStack {
                 Image(systemName: "antenna.radiowaves.left.and.right")
                     .font(.system(size: 100))
-                    .foregroundColor(isSharingActive ? .green : .gray)
+                    .foregroundColor(.green)
                     .scaleEffect(animationAmount)
-                    .animation(.easeInOut(duration: 1).repeatForever(autoreverses: true), value: isSharingActive)
+                    .animation(.easeInOut(duration: 1).repeatForever(autoreverses: true), value: isPremium)
                     .onAppear {
                         self.animationAmount = 1.3
                     }
@@ -43,10 +43,12 @@ struct NameSharingView: View, NamePersistenceController {
                 Text("Bring your phones together to share names!")
                     .font(.title)
                     .padding()
-                
             }
             
-            if nameSharingService.sessionState != .connected {
+            
+            // Broadcasting Animation
+            
+            if nameSharingService.sessionState != .connected && isPremium {
                 VStack {
                     RadiatingSemiCircles()
                         .edgesIgnoringSafeArea(.top)
@@ -64,7 +66,7 @@ struct NameSharingView: View, NamePersistenceController {
         // MARK: - On Appear
         
         .onAppear {
-            if isSharingActive {
+            if isPremium {
                 nameSharingService.startAdvertisingAndBrowsing()
             }
         }
@@ -77,10 +79,10 @@ struct NameSharingView: View, NamePersistenceController {
         }
         
         
-        // MARK: - On Receive
+        // MARK: - On Receive, On Change
         
-        .onReceive(nameSharingService.$receivedNames.receive(on: DispatchQueue.main)) { names in
-            guard let names = names, !names.isEmpty else {
+        .onReceive(nameSharingService.$receivedNames.receive(on: DispatchQueue.main)) { receivedNames in
+            guard let names = receivedNames, !names.isEmpty else {
                 return
             }
             
@@ -93,12 +95,22 @@ struct NameSharingView: View, NamePersistenceController {
                 do {
                     let fetchedNames = try fetchNames()
                     nameSharingService.sendNames(fetchedNames)
+                    
                 } catch {
                     logError("Unable to fetch names to send in Name Sharing View: \(error.localizedDescription)")
                 }
                 
             default:
                 break
+            }
+        }
+        
+        .onChange(of: isPremium) {
+            if isPremium {
+                nameSharingService.startAdvertisingAndBrowsing()
+                
+            } else {
+                nameSharingService.stopAdvertisingAndBrowsing()
             }
         }
     }
@@ -142,9 +154,16 @@ extension NameSharingView: NamePersistenceController_Admin {
 
 // MARK: - Previews
 
-#Preview {
+#Preview("With Premium Account") {
     NameSharingView()
         .modelContainer(previewModelContainer)
+        .environmentObject(Store.premium)
+}
+
+#Preview("With Non-Premium Account") {
+    NameSharingView()
+        .modelContainer(previewModelContainer)
+        .environmentObject(Store.shared)
 }
 
 #endif
