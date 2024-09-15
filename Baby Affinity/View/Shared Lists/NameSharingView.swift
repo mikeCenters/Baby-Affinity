@@ -206,7 +206,8 @@ struct NameSharingView: View, NamePersistenceController {
             }
         }
         .sheet(isPresented: $isShowingReceivedNames) {
-            Text("Names Received")
+            let receivedNames = getNames()
+            SharedNamesView(maleNames: receivedNames.0, femaleNames: receivedNames.1)
         }
         
         
@@ -246,7 +247,7 @@ struct NameSharingView: View, NamePersistenceController {
         
         // MARK: - On Receive
         
-        .onReceive(nameSharingService.$receivedNames) { names in
+        .onReceive(nameSharingService.$receivedNames.receive(on: DispatchQueue.main)) { names in
             guard let names = names, !names.isEmpty else {
                 return
             }
@@ -255,6 +256,25 @@ struct NameSharingView: View, NamePersistenceController {
         }
     }
 }
+
+
+// MARK: - Methods
+
+extension NameSharingView: NamePersistenceController_Admin {
+    
+    private func getNames() -> (RankedMaleNames, RankedFemaleNames) {
+        guard let receivedNames = nameSharingService.receivedNames
+        else {
+            return ([],[])
+        }
+        
+        let maleNames = receivedNames.filter { $0.sex == .male }
+        let femaleNames = receivedNames.filter { $0.sex == .female }
+        
+        return compareNames(maleNames: maleNames, femaleNames: femaleNames)
+    }
+}
+
 
 #if DEBUG
 
