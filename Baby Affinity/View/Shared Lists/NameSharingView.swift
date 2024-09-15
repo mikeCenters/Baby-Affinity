@@ -101,7 +101,6 @@ struct NameSharingView: View, NamePersistenceController {
                 break
             }
         }
-        
     }
 }
 
@@ -110,8 +109,23 @@ struct NameSharingView: View, NamePersistenceController {
 
 extension NameSharingView: NamePersistenceController_Admin {
     
+    /// A method that retrieves and categorizes names received via the `nameSharingService`.
+    ///
+    /// This method fetches the names from the `nameSharingService` and then filters them based on gender.
+    /// It separates the names into male and female categories. After filtering, it calls the
+    /// `compareNames(maleNames:femaleNames:)` function to process and compare these lists, returning
+    /// the results as tuples of `RankedMaleNames` and `RankedFemaleNames`.
+    ///
+    /// - Returns: A tuple containing two arrays:
+    ///   - `RankedMaleNames`: An array of ranked male name: Tuples of a name and its rank in an array.
+    ///   - `RankedFemaleNames`: An array of ranked female names: Tuples of a name and its rank in an array.
+    ///
+    /// - Note: If no names are received, the method will return two empty arrays.
+    ///
+    /// - SeeAlso: `compareNames(maleNames:femaleNames:)` for the processing and comparison of names.
     private func getNames() -> (RankedMaleNames, RankedFemaleNames) {
-        guard let receivedNames = nameSharingService.receivedNames
+        guard let receivedNames = nameSharingService.receivedNames,
+              !receivedNames.isEmpty
         else {
             return ([],[])
         }
