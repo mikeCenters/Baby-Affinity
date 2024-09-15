@@ -20,6 +20,12 @@ enum NamePersistenceError: Error {
 }
 
 
+// MARK: - Types
+
+typealias RankedMaleNames = [(Rank, Name)]
+typealias RankedFemaleNames = [(Rank, Name)]
+
+
 /// A protocol for administrative operations on name data in the Baby Affinity app.
 ///
 /// The `NamePersistenceController_Admin` protocol extends the `NamePersistenceController` protocol by adding methods
@@ -114,6 +120,86 @@ protocol NamePersistenceController_Admin: NamePersistenceController {
     /// - Throws: Throws an error if the `setAffinity` method fails when updating the name's affinity rating.
     /// - Note: The `increaseEvaluationCount` method is called for each name, regardless of whether the affinity was updated or not.
     func applyBonus(to names: [Name])
+    
+    /// Compares two lists of `Name` objects, one for males and one for females, and returns ranked results for both.
+    ///
+    /// This method creates compared name lists for males and females, assigns ranks based on their affinity ratings,
+    /// and returns the ranked names as tuples of `(Rank, Name)`.
+    ///
+    /// - Parameters:
+    ///   - maleNames: An array of `Name` objects representing male names.
+    ///   - femaleNames: An array of `Name` objects representing female names.
+    ///
+    /// - Returns: A tuple containing two arrays:
+    ///   - `RankedMaleNames`: The ranked list of male names based on affinity rating.
+    ///   - `RankedFemaleNames`: The ranked list of female names based on affinity rating.
+    func compareNames(maleNames: [Name], femaleNames: [Name]) -> (RankedMaleNames, RankedFemaleNames)
+    
+    /// Assigns ranks to a list of `Name` objects based on their affinity rating.
+    ///
+    /// The list is sorted in descending order of affinity ratings, and each name is assigned a rank based on its position in the sorted list.
+    ///
+    /// - Parameter names: An array of `Name` objects to be ranked.
+    ///
+    /// - Returns: An array of tuples where each tuple contains a rank and a `Name`.
+    func assignRanks(to names: [Name]) -> [(Rank, Name)]
+        
+    /// Creates a list of compared names of a provided `Sex`.
+    ///
+    /// This method fetches names from the database based on `Sex` and attempts to merge them with the provided list of names.
+    ///
+    /// - Parameters:
+    ///   - names: The list of `Name` objects to be compared.
+    ///   - sex: The`Sex` of the provided names.
+    ///
+    /// - Returns: A list of `Name` objects that have been compared and merged. If an error occurs or a name doesn't match the specified `Sex`, it is skipped.
+    func createComparedNames(with names: [Name], of sex: Sex) -> [Name]
+        
+    /// Finds a matching `Name` in a list and merges it with another name if found.
+    ///
+    /// This method attempts to find a `Name` in a given list and, if successful, merges it with the provided name.
+    ///
+    /// - Parameters:
+    ///   - name: The `Name` object to be merged.
+    ///   - names: An array of `Name` objects in which to search for a match.
+    ///
+    /// - Returns: A merged `Name` object if successful, or `nil` if no match is found or the merge fails.
+    func findAndMerge(_ name: Name, in names: [Name]) -> Name?
+        
+    /// Merges two `Name` objects if they have the same text and sex.
+    ///
+    /// This method combines two `Name` objects by averaging their affinity ratings and setting their favorite status. It returns a new `Name` object upon successful merging. If both names are set to favorite, the merged name will be favorite as well; otherwise, the status is set to `false`.
+    ///
+    /// - Parameters:
+    ///   - n1: The first `Name` object to merge.
+    ///   - n2: The second `Name` object to merge.
+    ///
+    /// - Returns: A new merged `Name` object if the merge is successful, or `nil` if the names do not match or merging fails.
+    func mergeNames(_ n1: Name, _ n2: Name) -> Name?
+    
+    /// Calculates the average affinity rating of two `Name` objects.
+    ///
+    /// This method takes the affinity ratings of two names and returns their average value.
+    ///
+    /// - Parameters:
+    ///   - n1: The first `Name` object.
+    ///   - n2: The second `Name` object.
+    ///
+    /// - Returns: The average of the affinity ratings of `n1` and `n2`.
+    func averageRating(_ n1: Name, _ n2: Name) -> Rating
+    
+    /// Finds a matching `Name` object in a given array of names based on the name text and sex.
+    ///
+    /// This method searches through an array of `Name` objects to find the first match where both
+    /// the `text` and `sexRawValue` properties are equal to the specified `Name`.
+    ///
+    /// - Parameters:
+    ///   - name: The `Name` object to search for in the array. It must contain both `text` and `sexRawValue` properties.
+    ///   - names: An array of `Name` objects to search within.
+    ///
+    /// - Returns: The first `Name` in the array that matches both the `text` and `sexRawValue`
+    ///            of the provided `name`, or `nil` if no match is found.
+    func find(_ name: Name, in names: [Name]) -> Name?
 }
 
 
@@ -233,6 +319,21 @@ extension NamePersistenceController_Admin {
         }
         catch {
             logError("Unable to batch delete Names: \(error.localizedDescription)")
+        }
+    }
+    
+    func resetNameData() {
+        do {
+            let names = try fetchNames()
+            
+            try modelContext.transaction {
+                for name in names {
+                    name.resetValues()
+                }
+            }
+            
+        } catch {
+            logError("Unable to reset Name data: \(error.localizedDescription)")
         }
     }
 }
@@ -397,23 +498,91 @@ extension NamePersistenceController_Admin {
             }
         }
     }
+}
+
+
+// MARK: - Methods
+
+extension NamePersistenceController_Admin {
     
+    func compareNames(maleNames: [Name], femaleNames: [Name]) -> (RankedMaleNames, RankedFemaleNames) {
+        let comparedMaleNames = createComparedNames(with: maleNames, of: .male)
+        let comparedFemaleNames = createComparedNames(with: femaleNames, of: .female)
+        
+        let rankedMaleNames = assignRanks(to: comparedMaleNames)
+        let rankedFemaleNames = assignRanks(to: comparedFemaleNames)
+        
+        return (rankedMaleNames, rankedFemaleNames)
+    }
     
-    // MARK: - Methods
+    func assignRanks(to names: [Name]) -> [(Rank, Name)] {
+        let sorted = names.sorted { $0.affinityRating > $1.affinityRating }
+        return Array(sorted.enumerated()).map { (index, name) in
+            (index + 1, name)
+        }
+    }
     
-    func resetNameData() {
+    func createComparedNames(with names: [Name], of sex: Sex) -> [Name] {
+        var newNames: [Name] = []
+        
         do {
-            let names = try fetchNames()
+            let fetchedNames = try fetchNames(sex)
             
-            try modelContext.transaction {
-                for name in names {
-                    name.resetValues()
+            for name in names {
+                guard name.sexRawValue == sex.rawValue,
+                      let newName = findAndMerge(name, in: fetchedNames)
+                else {
+                    logError("The provided name to compare is not of the selected sex.")
+                    continue
                 }
+                
+                newNames.append(newName)
             }
             
         } catch {
-            logError("Unable to reset Name data: \(error.localizedDescription)")
+            logError("Unable to create a compared name: \(error.localizedDescription)")
         }
         
+        return newNames
+    }
+    
+    func findAndMerge(_ name: Name, in names: [Name]) -> Name? {
+        guard let foundName = find(name, in: names),
+              let newName = mergeNames(name, foundName)
+                
+        else { return nil }
+        
+        return newName
+    }
+    
+    func mergeNames(_ n1: Name, _ n2: Name) -> Name? {
+        guard n1.text == n2.text, n1.sexRawValue == n2.sexRawValue else {
+            return nil
+        }
+        
+        let averageRating = averageRating(n1, n2)
+        let result = createName(n1.text, sex: .male, affinityRating: averageRating)
+        
+        switch result {
+        case .success(let newName):
+            
+            // Set the favorite status
+            if n1.isFavorite && n2.isFavorite {
+                newName.toggleFavorite()
+            }
+            
+            return newName
+            
+        case .failure(_):
+            return nil
+        }
+    }
+    
+    func averageRating(_ n1: Name, _ n2: Name) -> Rating {
+        (n1.affinityRating + n2.affinityRating) / 2
+    }
+    
+    func find(_ name: Name, in names: [Name]) -> Name? {
+        names.first { $0.text == name.text && $0.sexRawValue == name.sexRawValue }
     }
 }
