@@ -50,18 +50,21 @@ struct SharedNamesView: View {
     
     /// The body of the `SharedNamesView`. It contains expandable views that display top and favorite names for both male and female categories.
     var body: some View {
-        List {
-            // Displays the top shared male names in an expandable view.
-            ExpandableNamesView(names: topMaleNames, title: "Top Shared Male Names")
-            
-            // Displays the favorite shared male names in a refreshable view.
-            RefreshableNamesView(names: favoriteMaleNames, title: "Shared Favorite Male Names")
-            
-            // Displays the top shared female names in an expandable view.
-            ExpandableNamesView(names: topFemaleNames, title: "Top Shared Female Names")
-            
-            // Displays the favorite shared female names in a refreshable view.
-            RefreshableNamesView(names: favoriteFemaleNames, title: "Shared Favorite Female Names")
+        NavigationStack {
+            List {
+                // Displays the top shared male names in an expandable view.
+                ExpandableNamesView(names: topMaleNames, title: "Top Shared Male Names")
+                
+                // Displays the favorite shared male names in a refreshable view.
+                RefreshableNamesView(names: favoriteMaleNames, title: "Shared Favorite Male Names")
+                
+                // Displays the top shared female names in an expandable view.
+                ExpandableNamesView(names: topFemaleNames, title: "Top Shared Female Names")
+                
+                // Displays the favorite shared female names in a refreshable view.
+                RefreshableNamesView(names: favoriteFemaleNames, title: "Shared Favorite Female Names")
+            }
+            .navigationTitle("Shared Names")
         }
         
         // MARK: - On Appear
