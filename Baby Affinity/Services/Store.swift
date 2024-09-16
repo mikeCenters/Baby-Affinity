@@ -204,6 +204,21 @@ final class Store: ObservableObject {
     }
     
     /**
+     Requests a review prompt from the App Store.
+     
+     This method triggers the review prompt using `SKStoreReviewController`. It checks if there is an active `UIWindowScene` in the foreground and requests the review prompt in that scene. If there are no active scenes, the review request will not be displayed.
+     
+     - Note: This method is subject to Apple’s review policies and might not display the prompt every time it is called. It’s recommended to call this method sparingly to avoid overwhelming users with review requests.
+     
+     - Important: Ensure that this method is called at appropriate times in your app, such as after significant user actions or milestones, to increase the likelihood of receiving positive reviews.
+     */
+    func requestReview() {
+        if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+            SKStoreReviewController.requestReview(in: scene)
+        }
+    }
+    
+    /**
      Monitors and handles updates to transactions, including purchases and refunds.
      
      This method is continuously listening for transaction updates and processes them as they occur.
@@ -268,6 +283,7 @@ final class Store: ObservableObject {
             
         } else {
             purchasedProductIDs.insert(transaction.productID)
+            requestReview()
         }
         
         await transaction.finish()
