@@ -76,6 +76,7 @@ struct NamesViewSection<FooterContent: View>: View {
             Text("Some Footer")
         }
     }
+    .modelContainer(previewModelContainer)
     .environmentObject(Store.shared)
 }
 
@@ -84,6 +85,7 @@ struct NamesViewSection<FooterContent: View>: View {
         NamesViewSection<EmptyView>(names: PreviewData.rankedMaleNames(count: 10),
                                     title: "All Male Names")
     }
+    .modelContainer(previewModelContainer)
     .environmentObject(Store.shared)
 }
 
@@ -93,6 +95,7 @@ struct NamesViewSection<FooterContent: View>: View {
             Text("Some Footer")
         }
     }
+    .modelContainer(previewModelContainer)
     .environmentObject(Store.shared)
 }
 
@@ -100,6 +103,7 @@ struct NamesViewSection<FooterContent: View>: View {
     List {
         NamesViewSection<EmptyView>(names: PreviewData.rankedMaleNames(count: 10))
     }
+    .modelContainer(previewModelContainer)
     .environmentObject(Store.shared)
 }
 
