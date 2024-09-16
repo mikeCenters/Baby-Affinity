@@ -1,9 +1,9 @@
 # Baby Affinity
-    Baby Affinity for iOS.
-    Release:
-        - version 1.0.2
-    Development: 
-        - version 2.0
+Baby Affinity for iOS.
+Release:
+- version 1.0.2
+Development: 
+- version 2.0
 
 
 ## Overview
@@ -19,12 +19,10 @@ Baby Affinity is proud to be the first app to introduce a name rating system for
 - Dark Mode Support: Enjoy a sleek and modern interface with full support for dark mode.
 - In-App Support: Get help and support directly within the app.
 - Privacy: Your data is kept secure and private within Apple's ecosystem.
+- Share names with a partner to collaborate and find a name you both enjoy.
 
-## Upcoming Features
 
 ## ToDo
-
-- RELEASE: 2.0
 
 - FIXME: Search and Add Names
 - FIXME: Add Tags to create categories.
@@ -34,19 +32,19 @@ Baby Affinity is proud to be the first app to introduce a name rating system for
 
 # Change Log:
 ## version 2.0:
-    - App overhaul. It has been a few years and the entire codebase is updated to support new technologies.
-    - Added the ability to view names with a stored last name.
-    - Enhanced the feed to support multiple categories of names; Top Names, Favorite Names, etc.
-    - Added the ability to favorite names.
+- App overhaul. It has been a few years and the entire codebase is updated to support new technologies.
+- Added the ability to view names with a stored last name.
+- Enhanced the feed to support multiple categories of names; Top Names, Favorite Names, etc.
+- Added the ability to favorite names.
+- Users can now share names with a partner to find shared top names and favorites.
 
 ## version 1.0.2:
-    - Fixed a bug with the generator's bell curve formula.
-        - The mean was never properly setting.
-        
+- Fixed a bug with the generator's bell curve formula.
+- The mean was never properly setting.
+
 ## version 1.0.1:
-    - Updated the support links and app description.
-    - Website is available.
+- Updated the support links and app description.
+- Website is available.
 
 ## version 1.0:
-    - Initial Release.
-  
+- Initial Release.
