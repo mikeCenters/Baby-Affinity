@@ -72,9 +72,9 @@ struct NamesView: View {
     }
         
         
-        // MARK: - On Appear
+        // MARK: - Task
         
-    .onAppear() {
+    .task {
         withAnimation {
             loadNames()
         }
@@ -115,7 +115,7 @@ extension NamesView: NamePersistenceController {
     @State var isShown = true
     
     return NamesView(isShown: $isShown)
-        .modelContainer(previewModelContainer_WithFavorites)
+        .modelContainer(previewModelContainer)
         .environmentObject(store)
 }
 
@@ -124,7 +124,7 @@ extension NamesView: NamePersistenceController {
     @State var isShown = true
     
     return NamesView(isShown: $isShown)
-        .modelContainer(previewModelContainer_WithFavorites)
+        .modelContainer(previewModelContainer)
         .environmentObject(store)
 }
 
