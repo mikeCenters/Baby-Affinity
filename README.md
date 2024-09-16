@@ -24,7 +24,7 @@ Baby Affinity is proud to be the first app to introduce a name rating system for
 
 ## ToDo
 
-- FIXME: Create Shared List
+- FIXME: Top Names is out of order
 
 - RELEASE: 2.0
 
