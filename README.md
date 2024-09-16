@@ -34,8 +34,8 @@ Baby Affinity’s Affinity Rating System is more than just a tool; it’s your p
 Get ready to embark on a fun and exciting journey to find your baby’s perfect name with Baby Affinity. Download now and start discovering!
 
 
-## ToDo
-
+## ToDo:
+- Favorite Animation - Expandable Names View is where the error begins. Subviews work.
 - Search and Add Names
 - Add Tags to create categories.
 - Add precurated top names as a banner to add names to your favorites. These could be pulled from the global list as rising names or top 10 global names.
@@ -49,6 +49,7 @@ Get ready to embark on a fun and exciting journey to find your baby’s perfect 
 - Enhanced the feed to support multiple categories of names; Top Names, Favorite Names, etc.
 - Added the ability to favorite names.
 - Users can now share names with a partner to find shared top names and favorites.
+- New App Icon
 
 ## version 1.0.2:
 - Fixed a bug with the generator's bell curve formula.
