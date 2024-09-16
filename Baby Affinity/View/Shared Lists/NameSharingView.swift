@@ -94,6 +94,8 @@ struct NameSharingView: View, NamePersistenceController {
         .onAppear {
             if isPremium {
                 nameSharingService.startAdvertisingAndBrowsing()
+            } else {
+                isShowingProductPage = true
             }
         }
         
