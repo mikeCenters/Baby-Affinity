@@ -15,8 +15,12 @@ struct InstructionsView: View {
     
     // MARK: - Properties
     
-    var instructionsText: String {
-        "Choose up to \(maxSelections) names from the list that are to your liking. While there may be other names that you would want to name your baby, pick among these that you like the most. \n\nIf you don't like the available names, simply select new names."
+    private var instructionsText: String {
+        """
+        Choose up to \(maxSelections) names from the list that are to your liking.
+        
+        While there may be other names that you would want to name your baby, pick among these that you like the most. If you don't like the available names, simply select new names.
+        """
     }
     
     
@@ -29,36 +33,43 @@ struct InstructionsView: View {
     // MARK: - Body
     
     var body: some View {
-        VStack {
-            Image(systemName: "checklist")
-                .resizable()
-                .scaledToFit()
-                .frame(height: 90)
-                .padding(.top, 40)
-                .padding([.horizontal, .bottom])
-                .foregroundStyle(.yellow)
-            
-            Text("Pick \(maxSelections) Names")
-                .font(.largeTitle)
-                .bold()
-                .padding()
-                .foregroundStyle(.tint)
-            
-            Text(instructionsText)
-                .font(.body)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
-            
-            Button {
-                showInstructions = false
-            } label: {
-                Text("Find Names!")
-                    .font(.headline)
+        PresentationLayout {
+            VStack(spacing: 16) {
+                Spacer()
+                
+                Image(systemName: "checklist")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 80)
+                    .foregroundStyle(.yellow)
+                
+                Text("Pick \(maxSelections) Names")
+                    .font(.largeTitle)
+                    .bold()
+                    .foregroundStyle(.tint)
             }
-            .buttonStyle(BorderedButtonStyle())
-            .padding(.top, 40)
-
-            Spacer()
+            .padding(.horizontal)
+            
+            VStack {
+                Text(instructionsText)
+                    .font(.body)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+                
+                Spacer()
+                
+                Button {
+                    showInstructions = false
+                    
+                } label: {
+                    Text("Find Names!")
+                        .font(.headline)
+                }
+                .buttonStyle(BorderedButtonStyle())
+                
+                Spacer()
+            }
+            .padding([.top, .horizontal], 16)
         }
     }
 }
