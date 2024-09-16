@@ -92,7 +92,9 @@ struct TopNamesView: View {
         }
         
         // MARK: - On Appear
-        .onAppear {
+        .task {
+            try? await Task.sleep(nanoseconds: 100_000_000) /// Sleep of 0.1 second to allow data to load.
+            
             withAnimation {
                 if viewState == .isLoading {
                     presentNames()          /// Present the names when the view appears.
@@ -111,8 +113,8 @@ struct TopNamesView: View {
             }
         }
         
-        .onChange(of: maleNames) { oldValue, newValue in
-            guard selectedSex == .male && newValue != oldValue else { return }
+        .onChange(of: maleNames) {
+            guard selectedSex == .male else { return }
             
             withAnimation {
                 presentNames()              /// Recalculate the presented names when the list of male names changes.
@@ -120,8 +122,8 @@ struct TopNamesView: View {
             }
         }
         
-        .onChange(of: femaleNames) { oldValue, newValue in
-            guard selectedSex == .female && newValue != oldValue  else { return }
+        .onChange(of: femaleNames) {
+            guard selectedSex == .female else { return }
             
             withAnimation {
                 presentNames()              /// Recalculate the presented names when the list of male names changes.
