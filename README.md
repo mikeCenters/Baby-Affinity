@@ -1,8 +1,10 @@
 # Baby Affinity
 Baby Affinity for iOS.
-Release:
+
+#### Release:
 - version 1.0.2
-Development: 
+
+#### Development: 
 - version 2.0.0
 
 
