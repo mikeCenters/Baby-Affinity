@@ -132,7 +132,7 @@ struct ProductsView: View, NamePersistenceController {
     private var purchaseButtonAndDisclaimer: some View {
         VStack(spacing: 8) {
             if !isPremium {
-                Text("Unlock an enhanced experience for just \(product?.displayPrice ?? "<Unable to locate the product in the App Store.>").")
+                Text("Unlock an enhanced experience for just \(product?.displayPrice ?? "<Unable to locate the product in the App Store>").")
                     .multilineTextAlignment(.center)
             }
             
