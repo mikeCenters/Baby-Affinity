@@ -24,26 +24,44 @@ struct NameSharingView: View, NamePersistenceController {
     @PremiumAccount private var isPremium
     @State private var isShowingReceivedNames: Bool = false
     @State private var isShowingProductPage: Bool = false
-    @State private var animationAmount: CGFloat = 1.0
     
     
     // MARK: - Body
     
     var body: some View {
         ZStack {
-            VStack {
-                Image(systemName: "antenna.radiowaves.left.and.right")
-                    .font(.system(size: 100))
-                    .foregroundColor(.green)
-                    .scaleEffect(animationAmount)
-                    .animation(.easeInOut(duration: 1).repeatForever(autoreverses: true), value: isPremium)
-                    .onAppear {
-                        self.animationAmount = 1.3
-                    }
+            
+            // Primary View
+            
+            PresentationLayout {
+                VStack(spacing: 16) {
+                    Spacer()
+                    
+                    Image(systemName: "antenna.radiowaves.left.and.right")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 80)
+                        .foregroundColor(isPremium ? .green : .gray)
+                    
+                    Text("Share Names")
+                        .font(.largeTitle).bold()
+                    
+                    Text("Share names with someone nearby and discover which names you both like.")
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                }
                 
-                Text("Bring your phones together to share names!")
-                    .font(.title)
+                Label {
+                    Text("WiFi and Bluetooth must be enabled")
+                    
+                } icon: {
+                    Image(systemName: "checkmark")
+                        .font(.headline)
+                        .foregroundColor(.green)
+                }
                     .padding()
+                    .background { Color(.secondarySystemBackground)}
+                    .mask(RoundedRectangle(cornerRadius: 16))
             }
             
             
@@ -58,6 +76,10 @@ struct NameSharingView: View, NamePersistenceController {
                 }
             }
         }
+        
+        
+        // MARK: - Sheet
+        
         .sheet(isPresented: $isShowingReceivedNames) {
             let receivedNames = getNames()
             SharedNamesView(maleNames: receivedNames.0, femaleNames: receivedNames.1)
