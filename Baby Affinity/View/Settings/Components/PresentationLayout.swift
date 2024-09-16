@@ -10,50 +10,38 @@ import SwiftUI
 
 struct PresentationLayout: Layout {
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout Void) -> CGSize {
-        // We assume two subviews (top and bottom)
-        guard subviews.count == 2 else { return .zero }
-        
-        // Use the proposed width and height, or fallback to a default if unavailable
         let width = proposal.width ?? 0
         let height = proposal.height ?? 0
         
         return CGSize(width: width, height: height)
     }
     
-    // This method places the subviews in the calculated layout bounds
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout Void) {
-        guard subviews.count == 2 else { return }
-
-        let totalHeight = bounds.height
-        let availableWidth = bounds.width
-
-        // Calculate the heights for each section (1/3 for top, 2/3 for bottom)
-        let topHeight = totalHeight * 1 / 3
-        let bottomHeight = totalHeight * 2 / 3
-
-        // Get subview sizes
-        let topSubview = subviews[0]
-        let bottomSubview = subviews[1]
-        let topSubviewSize = topSubview.sizeThatFits(ProposedViewSize(width: availableWidth, height: topHeight))
-        let bottomSubviewSize = bottomSubview.sizeThatFits(ProposedViewSize(width: availableWidth, height: bottomHeight))
-
-        // Calculate the x and y coordinates to center each subview
-        let topXOffset = (availableWidth - topSubviewSize.width) / 2
-        let topYOffset = (topHeight - topSubviewSize.height) / 2
-        let bottomXOffset = (availableWidth - bottomSubviewSize.width) / 2
-        let bottomYOffset = (bottomHeight - bottomSubviewSize.height) / 2
-
-        // Place the top view centered within its section
-        topSubview.place(
-            at: CGPoint(x: bounds.minX + topXOffset, y: bounds.minY + topYOffset),
-            proposal: ProposedViewSize(width: availableWidth, height: topHeight)
-        )
+        guard (1...2).contains(subviews.count) else { return }
         
-        // Place the bottom view centered within its section
-        bottomSubview.place(
-            at: CGPoint(x: bounds.minX + bottomXOffset, y: bounds.minY + topHeight + bottomYOffset),
-            proposal: ProposedViewSize(width: availableWidth, height: bottomHeight)
-        )
+        let availableWidth = bounds.width
+        
+        // Calculate the height for each section (1/3 for top, 2/3 for bottom)
+        let topHeight = bounds.height * 1 / 3
+        let bottomHeight = bounds.height * 2 / 3
+        
+        // Helper function to place a subview at a centered position
+        func placeSubview(_ subview: LayoutSubview, in sectionHeight: CGFloat, yOffset: CGFloat) {
+            let subviewSize = subview.sizeThatFits(ProposedViewSize(width: availableWidth, height: sectionHeight))
+            let xOffset = (availableWidth - subviewSize.width) / 2
+            let yPosition = bounds.minY + yOffset + (sectionHeight - subviewSize.height) / 2
+            
+            subview.place(at: CGPoint(x: bounds.minX + xOffset, y: yPosition),
+                          proposal: ProposedViewSize(width: availableWidth, height: sectionHeight))
+        }
+        
+        // Place the first subview in the top section
+        placeSubview(subviews[0], in: topHeight, yOffset: 0)
+        
+        // If there's a second subview, place it in the bottom section
+        if subviews.count == 2 {
+            placeSubview(subviews[1], in: bottomHeight, yOffset: topHeight)
+        }
     }
 }
 
