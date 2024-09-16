@@ -10,21 +10,22 @@ import SwiftData
 import StoreKit
 
 
+// MARK: - Products View
+
 struct ProductsView: View, NamePersistenceController {
     
     // MARK: - Properties
     
     @Environment(\.modelContext) var modelContext
-    
-    @EnvironmentObject private var store: Store
-    
     @AppStorage("selectedSex") private var selectedSex: Sex = .male
-    
-    @Query private var names: [Name] = []
+    @EnvironmentObject private var store: Store
+    @PremiumAccount private var isPremium
     
     private var product: Product? {
         store.products.first { $0.id == "com.mikeCenters.BabyAffinity.premium"}
     }
+    
+    @Query private var names: [Name] = []
     
     
     // MARK: - Controls and Constants
@@ -94,7 +95,7 @@ struct ProductsView: View, NamePersistenceController {
                         
                         getFeatureItemView(
                             title: "Share with a Partner",
-                            description: "Collaborate with your partner by sharing your favorite names directly."
+                            description: "Collaborate with your partner by sharing your favorite names and generating a shared list."
                         )
                     }
                     .padding(.horizontal)
@@ -130,22 +131,27 @@ struct ProductsView: View, NamePersistenceController {
     
     private var purchaseButtonAndDisclaimer: some View {
         VStack(spacing: 8) {
-            Text("Unlock an enhanced experience for just \(product?.displayPrice ?? "<Unable to locate the product in the App Store.>").")
-                .multilineTextAlignment(.center)
+            if !isPremium {
+                Text("Unlock an enhanced experience for just \(product?.displayPrice ?? "<Unable to locate the product in the App Store.>").")
+                    .multilineTextAlignment(.center)
+            }
             
             Button {
-                if let p = product {
-                    Task {
-                        await store.purchase(p)
+                if !isPremium {
+                    if let p = product {
+                        Task {
+                            await store.purchase(p)
+                        }
                     }
                 }
                 
             } label: {
-                Text("Purchase Premium Account")
+                Text(isPremium ? "Premium Account Active" : "Purchase Premium Account")
                     .fontWeight(.semibold)
                     .padding(8)
             }
             .buttonStyle(BorderedProminentButtonStyle())
+            .tint(isPremium ? .green : .blue)
             
             disclaimerTextAndLinks
         }
@@ -197,6 +203,7 @@ struct ProductsView: View, NamePersistenceController {
         switch sex {
         case .male:
             colors = [Color.blue.opacity(1), Color.blue.opacity(0.8)]
+            
         case .female:
             colors = [Color.pink.opacity(1), Color.pink.opacity(0.8)]
         }
@@ -214,10 +221,8 @@ struct ProductsView: View, NamePersistenceController {
 
 // MARK: - Previews
 
-#Preview("Products View in a Tab View and Navigation Stack") {
-    @StateObject var store = Store.shared
-    
-    return TabView {
+#Preview("With a Tab View and Navigation Stack - Non-Premium Account") {
+    TabView {
         NavigationStack {
             ProductsView()
         }
@@ -225,7 +230,20 @@ struct ProductsView: View, NamePersistenceController {
             Label("Products", systemImage: "cart")
         }
         .modelContainer(previewModelContainer)
-        .environmentObject(store)
+        .environmentObject(Store.shared)
+    }
+}
+
+#Preview("With a Tab View and Navigation Stack - Premium Account") {
+    TabView {
+        NavigationStack {
+            ProductsView()
+        }
+        .tabItem {
+            Label("Products", systemImage: "cart")
+        }
+        .modelContainer(previewModelContainer)
+        .environmentObject(Store.premium)
     }
 }
 
