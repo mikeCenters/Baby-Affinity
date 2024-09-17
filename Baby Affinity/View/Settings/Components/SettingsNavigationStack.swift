@@ -10,6 +10,11 @@ import SwiftUI
 
 struct SettingsNavigationStack: View {
     
+    // MARK: - Properties
+    
+    @EnvironmentObject var store: Store
+    
+    
     // MARK: - Controls
     
     @Binding var isLoading: Bool
@@ -29,24 +34,28 @@ struct SettingsNavigationStack: View {
                     NavigationLink {
                         AboutView()
                     } label: {
-                        Text("About")
+                        Label("About", systemImage: "info.circle")
                     }
                     
                     NavigationLink {
                         ContactUsView()
                     } label: {
-                        Text("Contact Us")
+                        Label("Contact Us", systemImage: "paperplane.circle")
                     }
                     
                     NavigationLink {
                         ProductsView()
                     } label: {
-                        Text("Products")
+                        Label("Products", systemImage: "cart.circle")
                     }
                 }
                 
                 Section {
                     LastNameSetting()
+                }
+                
+                Section {
+                    restoreButton
                 }
                 
                 Section {
@@ -59,6 +68,20 @@ struct SettingsNavigationStack: View {
                 }
             }
             .navigationTitle("Settings")
+        }
+    }
+    
+    
+    // MARK: - View Components
+    
+    private var restoreButton: some View {
+        Button {
+            Task {
+                await store.restorePurchases()
+            }
+            
+        } label: {
+            Text("Restore Purchases")
         }
     }
 }

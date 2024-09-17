@@ -28,7 +28,7 @@ struct LastNameSetting: View {
     var body: some View {
         VStack {
             HStack {
-                Text("Last Name")
+                Label("Last Name", systemImage: "person.crop.circle")
                 
                 Spacer()
                 
