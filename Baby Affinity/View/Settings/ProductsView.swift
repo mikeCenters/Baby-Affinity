@@ -105,6 +105,8 @@ struct ProductsView: View, NamePersistenceController {
                 purchaseButtonAndDisclaimer
             }
         }
+        
+        
         // MARK: - Task
         .task {
             await store.fetchProducts()
