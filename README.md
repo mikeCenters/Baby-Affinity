@@ -2,7 +2,7 @@
 A modern approach to baby naming.
 
 #### Release:
-- version 2.0.0b
+- version 2.0.1
 
 #### Development:
 - version 2.0.1
