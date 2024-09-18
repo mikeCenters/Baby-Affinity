@@ -84,6 +84,15 @@ struct NamePreviewCard: View, NamePersistenceController {
         .task {
             fetchAndStartTimer()
         }
+        
+        
+        // MARK: - On Change
+        
+        .onChange(of: selectedSex) {
+            nameChangeTimer?.invalidate()
+            nameChangeTimer = nil
+            fetchAndStartTimer()
+        }
     }
 }
 

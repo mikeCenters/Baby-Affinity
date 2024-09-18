@@ -45,7 +45,11 @@ Get ready to embark on a fun and exciting journey to find your baby’s perfect 
 
 
 # Change Log:
-## version 2.0:
+## version 2.0.1:
+- Fixed bug with Name Preview Card
+    - Name Preview was not changing `Sex` when the user would change the property.
+
+## version 2.0.0:
 - App overhaul. It has been a few years and the entire codebase is updated to support new technologies.
 - Added the ability to view names with a stored last name.
 - Enhanced the feed to support multiple categories of names; Top Names, Favorite Names, etc.
