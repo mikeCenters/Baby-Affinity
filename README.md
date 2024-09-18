@@ -1,20 +1,20 @@
 # Baby Affinity
-Baby Affinity for iOS.
+A modern approach to baby naming.
 
 #### Release:
-- version 1.0.2
+- version 2.0.0b
 
-#### Development: 
-- version 2.0.0
+#### Development:
+- version 2.0.1
 
 
 ## Overview
 
-Choose Your Perfect Baby Name with Baby Affinity!
+#### Choose Your Perfect Baby Name with Baby Affinity!
 
 Selecting a baby name has never been more enjoyable! Baby Affinity transforms the name selection process into an exciting journey with its unique and fun approach. As you explore and choose names, our innovative Affinity Rating System tracks your preferences and assigns each name a personalized rating, helping you find the perfect name for your little one.
 
-Why Baby Affinity?
+#### Why Baby Affinity?
 
 Baby Affinity proudly introduces the first name rating system designed just for you. With a database of 2000 names and a sophisticated rating algorithm inspired by the ELO system, our app curates a personalized list of names based on your choices and preferences. No two lists are ever the same!
 
@@ -29,7 +29,7 @@ Baby Affinity proudly introduces the first name rating system designed just for 
 - Dark Mode Support: Enjoy a sleek, modern interface that’s easy on the eyes, even in low light.
 - Reset Your Ratings: Start fresh whenever you want with the simple reset feature.
 
-Uncover Unique Names Just for You!
+#### Uncover Unique Names Just for You!
 
 Baby Affinity’s Affinity Rating System is more than just a tool; it’s your personal baby name expert. By analyzing your selections and preferences, it provides a tailor-made list of names, ensuring that your choice is as unique as your family.
 
