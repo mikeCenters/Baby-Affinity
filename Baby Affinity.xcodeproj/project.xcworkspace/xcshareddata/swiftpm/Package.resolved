@@ -1,0 +1,24 @@
+{
+  "originHash" : "eec93523e6e31473e9f027955d91cc812bfdbea44018be9ddab2e2bab8083d15",
+  "pins" : [
+    {
+      "identity" : "store",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mikeCenters/Store",
+      "state" : {
+        "revision" : "31d9d89d72a83049d8700a72938a4c86aefc8395",
+        "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "systemlogger",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mikeCenters/SystemLogger",
+      "state" : {
+        "revision" : "bd45f4f9b304b6360ce7b07db842fa786a9f4a29",
+        "version" : "1.0.0"
+      }
+    }
+  ],
+  "version" : 3
+}

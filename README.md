@@ -45,6 +45,9 @@ Get ready to embark on a fun and exciting journey to find your baby’s perfect 
 
 
 # Change Log:
+## version 2.0.2:
+- Migrated Store and SystemLogger to packages.
+
 ## version 2.0.1:
 - Fixed bug with Name Preview Card
     - Name Preview was not changing `Sex` when the user would change the property.

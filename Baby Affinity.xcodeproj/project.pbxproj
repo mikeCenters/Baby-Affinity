@@ -468,6 +468,10 @@
 				Base,
 			);
 			mainGroup = BACC30232C48A976003CEC7C;
+			packageReferences = (
+				BA002D5D2CA6422100895683 /* XCRemoteSwiftPackageReference "SystemLogger" */,
+				BA002D5E2CA6422900895683 /* XCRemoteSwiftPackageReference "Store" */,
+			);
 			productRefGroup = BACC302D2C48A976003CEC7C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -894,6 +898,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BA002D5D2CA6422100895683 /* XCRemoteSwiftPackageReference "SystemLogger" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mikeCenters/SystemLogger";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		BA002D5E2CA6422900895683 /* XCRemoteSwiftPackageReference "Store" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mikeCenters/Store";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = BACC30242C48A976003CEC7C /* Project object */;
 }
