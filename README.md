@@ -37,6 +37,10 @@ Get ready to embark on a fun and exciting journey to find your baby’s perfect 
 
 
 ## ToDo:
+- Update algorithm to present all unseen names first, then filter the bottom ones out to provide better names to choose.
+    - Example: After all names, 1 bottom half, 3 top 20%, 6 median to to top 20%.
+- Top names sometimes loads out of order when launched.
+    - Switching names back and forth will resolve the issue.
 - Favorite Animation - Expandable Names View is where the error begins. Subviews work.
 - Search and Add Names
 - Add Tags to create categories.
