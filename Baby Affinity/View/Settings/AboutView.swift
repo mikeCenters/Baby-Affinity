@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: - About View
+
 /// A view that provides information about the Baby Affinity app, including its purpose, mission, privacy policy, and the Affinity Rating system.
 struct AboutView: View {
     
