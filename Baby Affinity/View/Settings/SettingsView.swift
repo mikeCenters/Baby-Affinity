@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// MARK: - Settings View
 
 struct SettingsView: View, NamePersistenceController_Admin {
     
@@ -40,6 +41,8 @@ struct SettingsView: View, NamePersistenceController_Admin {
 
 #if DEBUG
 
+import Store
+
 // MARK: - Previews
 
 #Preview("Settings View in Tab View") {
@@ -54,11 +57,15 @@ struct SettingsView: View, NamePersistenceController_Admin {
             }
     }
     .modelContainer(previewModelContainer)
+    .environmentObject(Store.main)
+    .loadProducts(in: Store.main)
 }
 
 #Preview("Settings View") {
     SettingsView()
         .modelContainer(previewModelContainer)
+        .environmentObject(Store.premium)
+        .loadProducts(in: Store.premium)
 }
 
 #endif
