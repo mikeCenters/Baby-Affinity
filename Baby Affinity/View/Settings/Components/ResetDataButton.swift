@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: - Reset Data Button
+
 /// A view that provides a button to reset the name data within the app.
 /// This view conforms to `NamePersistenceController_Admin` to access the functionality for resetting name data.
 /// It presents a confirmation dialog to ensure that the user wants to proceed with resetting all data.
@@ -20,7 +22,12 @@ struct ResetDataButton: View, NamePersistenceController_Admin {
     /// The environment's model context used for interacting with the data model.
     @Environment(\.modelContext) var modelContext
     
+    /// A closure to be executed before the reset process begins. This allows any additional
+    /// logic or UI updates to be triggered before resetting the name data.
     var beforeReset: () -> Void
+    
+    /// A closure to be executed after the reset process completes. This allows any additional
+    /// logic or UI updates to be triggered once the reset operation is done.
     var afterReset: () -> Void
     
     
@@ -55,13 +62,15 @@ struct ResetDataButton: View, NamePersistenceController_Admin {
     // MARK: - Methods
     
     /// Initiates the process to reset the name data in the model context.
-    func resetData() {
+    private func resetData() {
         withAnimation{
             beforeReset()
             
         } completion: {
-            resetNameData()
-            afterReset()
+            Task {
+                await resetNameData()
+                afterReset()
+            }
         }
     }
 }
@@ -87,8 +96,10 @@ import SwiftData
 #Preview("Reset Data Button with Debugging View") {
     struct PreviewNames: View {
         @Query(sort: \Name.affinityRating, order: .reverse) var names: [Name]
+        @Binding var text: String
         
         var body: some View {
+            Text("Status: \(text)")
             ForEach(names) { name in
                 HStack {
                     Text(name.text)
@@ -99,12 +110,15 @@ import SwiftData
         }
     }
     
+    @Previewable @State var text: String = "Data Loaded"
+    
     return List {
         Section {
-            ResetDataButton(beforeReset: { }, afterReset: { })
+            ResetDataButton(beforeReset: { text = "Resetting Data"},
+                            afterReset: { text = "Data is reset"})
         }
         Section("Debugging List") {
-            PreviewNames()
+            PreviewNames(text: $text)
         }
         .listRowBackground(Color(.systemGray3))
     }
