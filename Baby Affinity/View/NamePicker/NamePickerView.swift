@@ -9,6 +9,8 @@ import SwiftUI
 import SwiftData
 import SystemLogger
 
+// MARK: - Name Picker View
+
 /// A view for selecting baby names based on user preferences.
 ///
 /// The `NamePickerView` allows users to pick a set number of names from a list of presented names.
@@ -61,6 +63,7 @@ struct NamePickerView: View {
         
         
         // MARK: - On Appear
+        
         .onAppear {
             withAnimation {
                 loadNames()
@@ -69,6 +72,7 @@ struct NamePickerView: View {
         
         
         // MARK: - On Change
+        
         .onChange(of: selectedSex) {
             withAnimation {
                 loadNames()
@@ -283,7 +287,7 @@ extension NamePickerView: NamePersistenceController_Admin {
 
 // MARK: - Preview
 
-#Preview {
+#Preview("Name Picker View") {
     NamePickerView()
         .modelContainer(previewModelContainer_WithFavorites)
 }
