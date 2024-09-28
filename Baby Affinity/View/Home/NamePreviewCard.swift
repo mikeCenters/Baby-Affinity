@@ -4,8 +4,11 @@
 //
 //  Created by Mike Centers on 8/31/24.
 //
+
 import SwiftUI
 import SystemLogger
+
+// MARK: - Name Preview Card
 
 struct NamePreviewCard: View, NamePersistenceController {
     
