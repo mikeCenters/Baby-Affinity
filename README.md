@@ -40,6 +40,7 @@ Get ready to embark on a fun and exciting journey to find your baby’s perfect 
 
 - Update codebase and previews.
 
+- Name Picker View needs refactored and cleaned. On appear is inconsistent with loading names.
 
 - Update algorithm to present all unseen names first, then filter the bottom ones out to provide better names to choose.
     - Example: After all names, 1 bottom half, 3 top 20%, 6 median to to top 20%.
