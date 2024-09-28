@@ -8,6 +8,8 @@
 import SwiftUI
 import Store
 
+// MARK: - Settings Navigation Stack
+
 struct SettingsNavigationStack: View {
     
     // MARK: - Properties
@@ -86,11 +88,12 @@ struct SettingsNavigationStack: View {
     }
 }
 
+
 #if DEBUG
 
 // MARK: - Previews
 
-#Preview {
+#Preview("Settings Navigation Stack") {
     SettingsNavigationStack(isLoading: .constant(false))
         .environmentObject(Store.main)
 }
