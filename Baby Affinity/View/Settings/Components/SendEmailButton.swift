@@ -8,6 +8,8 @@
 import SwiftUI
 import MessageUI
 
+// MARK: - Send Email Button
+
 /**
  A SwiftUI view that presents a button to send an email.
 
@@ -51,8 +53,11 @@ struct SendEmailButton: View {
     private var canSendEmails: Bool { MFMailComposeViewController.canSendMail() }
     
     /// Template for the email body, including app version
-    let emailBodyTemplate: String = """
-    \n\n
+    let emailBodyTemplate: String =
+    """
+    
+    
+    
     =============
     App Version: \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Unable to get App Version.")
     =============
