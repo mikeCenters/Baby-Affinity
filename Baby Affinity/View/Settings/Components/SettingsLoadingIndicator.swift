@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: - Settings Loading Indicator
+
 /// A loading indicator for when data is resetting.
 struct SettingsLoadingIndicator: View {
     
@@ -26,7 +28,9 @@ struct SettingsLoadingIndicator: View {
 
 #if DEBUG
 
-#Preview {
+// MARK: - Preview
+
+#Preview("Settings View Loading Indicator") {
     SettingsLoadingIndicator()
         .tint(.blue)
 }
