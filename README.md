@@ -37,6 +37,10 @@ Get ready to embark on a fun and exciting journey to find your baby’s perfect 
 
 
 ## ToDo:
+
+- Update codebase and previews.
+
+
 - Update algorithm to present all unseen names first, then filter the bottom ones out to provide better names to choose.
     - Example: After all names, 1 bottom half, 3 top 20%, 6 median to to top 20%.
 - Top names sometimes loads out of order when launched.
@@ -53,6 +57,7 @@ Get ready to embark on a fun and exciting journey to find your baby’s perfect 
 - Migrated Store and SystemLogger to packages.
 - Updated Views and other objects to utilize the Store and SystemLogger packages.
 - Updated Views to use the `@ProductStatus` macro for monitoring status.
+- Updated Codebase and previews.
 
 ## version 2.0.1:
 - Fixed bug with Name Preview Card
