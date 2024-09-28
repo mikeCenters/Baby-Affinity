@@ -9,11 +9,6 @@ import SwiftUI
 import SwiftData
 import Store
 
-enum ProductID: String, CaseIterable, RawRepresentable {
-    case premiumAccount = "com.mikeCenters.BabyAffinity.premium"
-}
-
-
 @main
 struct Baby_AffinityApp: App {
     
