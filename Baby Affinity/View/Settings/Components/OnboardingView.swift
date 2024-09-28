@@ -7,18 +7,22 @@
 
 import SwiftUI
 
+// MARK: - Onboarding View
 
 struct OnboardingView: View, NamePersistenceController_Admin {
     
     // MARK: - Properties
     
+    /// The environment variable to access the model context for data persistence.
     @Environment(\.modelContext) var modelContext
     
     
     // MARK: - Controls
     
+    /// Controls whether the onboarding view is currently shown.
     @Binding var isShown: Bool
     
+    /// Tracks the loading state, particularly for asynchronous data tasks.
     @State private var isLoading: Bool = false
     
     
@@ -67,8 +71,17 @@ struct OnboardingView: View, NamePersistenceController_Admin {
             }
             .padding(.horizontal)
         }
+        
+        // MARK: - Animation
+        
         .transition(.move(edge: .bottom))
         .animation(.easeInOut, value: isShown)
+        
+        // MARK: - On Appear
+        
+        .onAppear {
+            loadData()
+        }
     }
     
     
@@ -76,11 +89,10 @@ struct OnboardingView: View, NamePersistenceController_Admin {
     
     private var findNamesButton: some View {
         Button {
+            guard !isLoading else { return }
+            
             withAnimation {
-                isLoading = true
-                
-            } completion: {
-                loadData()
+                isShown = false
             }
             
         } label: {
@@ -122,13 +134,20 @@ struct OnboardingView: View, NamePersistenceController_Admin {
     
     // MARK: - Methods
     
-    private func loadData() {
+    /// Loads default name data asynchronously and updates the loading state.
+    private  func loadData() {
         Task {
+            setLoadingState(to: true)
             await loadDefaultNames()
-
-            withAnimation {
-                isShown = false
-            }
+            setLoadingState(to: false)
+        }
+    }
+    
+    /// Sets the loading state with animation.
+    /// - Parameter state: A boolean indicating whether loading is in progress.
+    private func setLoadingState(to state: Bool) {
+        withAnimation {
+            isLoading = state
         }
     }
 }
