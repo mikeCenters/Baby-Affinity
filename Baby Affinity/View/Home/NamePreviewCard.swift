@@ -5,6 +5,7 @@
 //  Created by Mike Centers on 8/31/24.
 //
 import SwiftUI
+import SystemLogger
 
 struct NamePreviewCard: View, NamePersistenceController {
     
@@ -161,7 +162,7 @@ extension NamePreviewCard {
     
     private func updateRating(_ adjustment: Adjustment) {
         guard let name = name else {
-            logError("Unable to get Name object in Name Preview Card")
+            SystemLogger.main.logCritical("Unable to get Name object in Name Preview Card")
             return
         }
         switch adjustment {
@@ -178,7 +179,7 @@ extension NamePreviewCard {
             try name.setAffinity(name.affinityRating + amount)
             
         } catch {
-            logError("Unable to set affinity to new rating in Name Preview Card while increasing: \(error.localizedDescription)")
+            SystemLogger.main.logError("Unable to set affinity to new rating in Name Preview Card while increasing: \(error.localizedDescription)")
         }
     }
     
@@ -187,7 +188,7 @@ extension NamePreviewCard {
             try name.setAffinity(name.affinityRating - amount)
             
         } catch {
-            logError("Unable to set affinity to new rating in Name Preview Card while increasing: \(error.localizedDescription)")
+            SystemLogger.main.logError("Unable to set affinity to new rating in Name Preview Card while increasing: \(error.localizedDescription)")
         }
     }
     
@@ -298,7 +299,7 @@ extension NamePreviewCard {
             buttonsDisabled = false
             
         } catch {
-            logError("Unable to fetch names to generate a random name for Name Preview Card: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Unable to fetch names to generate a random name for Name Preview Card: \(error.localizedDescription)")
         }
     }
 }

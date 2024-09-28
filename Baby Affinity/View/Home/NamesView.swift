@@ -7,7 +7,7 @@
 
 import SwiftUI
 import SwiftData
-
+import SystemLogger
 
 // MARK: - Names View
 
@@ -100,7 +100,7 @@ extension NamesView: NamePersistenceController {
             }
             
         } catch {
-            logError("Unable to fetch names in Names View: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Unable to fetch names in Names View: \(error.localizedDescription)")
         }
     }
 }

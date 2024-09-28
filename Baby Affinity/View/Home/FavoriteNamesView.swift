@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import SystemLogger
 
 /// A view that displays the user's favorite names based on the selected sex.
 /// The names are fetched and displayed with their corresponding ranks. The view supports
@@ -167,7 +168,7 @@ extension FavoriteNamesView: NamePersistenceController {
             let rank = (try? getRank(of: name)) ?? 0
             
             if rank == 0 {
-                logError("Unable to get the rank of \(String(describing: name.sex?.sexNamingConvention.description)) name \(name.text) for Favorite Name View.")
+                SystemLogger.main.logError("Unable to get the rank of \(String(describing: name.sex?.sexNamingConvention.description)) name \(name.text) for Favorite Name View.")
             }
             
             return (rank, name)
@@ -183,7 +184,7 @@ extension FavoriteNamesView: NamePersistenceController {
             return try fetchFavoriteNames(sex: sex)
             
         } catch {
-            logError("Unable to fetch favorite \(sex.sexNamingConvention) names in Favorite Names View: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Unable to fetch favorite \(sex.sexNamingConvention) names in Favorite Names View: \(error.localizedDescription)")
         }
         
         return []   // Fallback for when names cannot be fetched.

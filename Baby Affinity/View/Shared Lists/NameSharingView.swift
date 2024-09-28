@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import SystemLogger
 
 // MARK: - Name Sharing View
 
@@ -158,7 +158,7 @@ extension NameSharingView: NamePersistenceController_Admin {
             nameSharingService.sendNames(fetchedNames)
             
         } catch {
-            logError("Unable to fetch names to send in Name Sharing View: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Unable to fetch names to send in Name Sharing View: \(error.localizedDescription)")
         }
     }
     

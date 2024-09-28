@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import SystemLogger
 
 /// A view for selecting baby names based on user preferences.
 ///
@@ -180,7 +181,7 @@ extension NamePickerView: NamePersistenceController_Admin {
             load(names)
             
         } catch {
-            logError("Unable to fetch names for name picker view to load: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Unable to fetch names for name picker view to load: \(error.localizedDescription)")
         }
     }
     

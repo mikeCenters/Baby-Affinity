@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import SystemLogger
 
 /// `TopNamesView` is a view that displays the top names based on the selected sex (male or female).
 /// The names are fetched from the model context and displayed in a ranked list, with options to show more or fewer names and toggle the favorite status of the `Name`.
@@ -172,7 +173,7 @@ extension TopNamesView: NamePersistenceController {
             return randomNames.enumerated().map { ($0.offset + 1, $0.element) }
             
         } catch {
-            logError("Unable to fetch \(selectedSex.sexNamingConvention) names: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Unable to fetch \(selectedSex.sexNamingConvention) names: \(error.localizedDescription)")
         }
         return []
     }

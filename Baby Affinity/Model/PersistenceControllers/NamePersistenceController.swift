@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import SystemLogger
 
 // MARK: - Name Persistence Controller
 
@@ -240,7 +241,7 @@ extension NamePersistenceController {
             return try modelContext.fetch(descriptor)
             
         } catch {
-            logError("Failed to fetch all names of all sexes: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Failed to fetch all names of all sexes: \(error.localizedDescription)")
             throw NamePersistenceError.unableToFetch(error)
         }
     }
@@ -253,7 +254,7 @@ extension NamePersistenceController {
             return try modelContext.fetch(descriptor)
             
         } catch {
-            logError("Failed to fetch all \(sex.sexNamingConvention) names: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Failed to fetch all \(sex.sexNamingConvention) names: \(error.localizedDescription)")
             throw NamePersistenceError.unableToFetch(error)
         }
     }
@@ -269,13 +270,13 @@ extension NamePersistenceController {
             let fetchRequest = try modelContext.fetch(descriptor)
             
             if fetchRequest.count > 1 {
-                logError("Multiple \(sex.sexNamingConvention.lowercased()) names of `\(text.capitalized)` were fetched!")
+                SystemLogger.main.logCritical("Multiple \(sex.sexNamingConvention.lowercased()) names of `\(text.capitalized)` were fetched!")
             }
             
             return fetchRequest.first
             
         } catch {
-            logError("Failed to fetch \(sex.sexNamingConvention) name by text '\(text)': \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Failed to fetch \(sex.sexNamingConvention) name by text '\(text)': \(error.localizedDescription)")
             throw NamePersistenceError.unableToFetch(error)
         }
     }
@@ -291,7 +292,7 @@ extension NamePersistenceController {
             return try modelContext.fetch(descriptor)
             
         } catch {
-            logError("Failed to fetch \(sex.sexNamingConvention) names by partial text '\(partialText)': \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Failed to fetch \(sex.sexNamingConvention) names by partial text '\(partialText)': \(error.localizedDescription)")
             throw NamePersistenceError.unableToFetch(error)
         }
     }
@@ -307,7 +308,7 @@ extension NamePersistenceController {
             return try modelContext.fetch(descriptor)
             
         } catch {
-            logError("Failed to fetch favorite \(sex.sexNamingConvention) names: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Failed to fetch favorite \(sex.sexNamingConvention) names: \(error.localizedDescription)")
             throw NamePersistenceError.unableToFetch(error)
         }
     }
@@ -323,7 +324,7 @@ extension NamePersistenceController {
             return try modelContext.fetch(descriptor)
             
         } catch {
-            logError("Failed to fetch favorite \(sex.sexNamingConvention) names: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Failed to fetch favorite \(sex.sexNamingConvention) names: \(error.localizedDescription)")
             throw NamePersistenceError.unableToFetch(error)
         }
     }
@@ -339,7 +340,7 @@ extension NamePersistenceController {
             return try modelContext.fetch(descriptor)
             
         } catch {
-            logError("Failed to fetch \(sex.sexNamingConvention) names with an evaluated count of `\(evaluatedCount)`: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Failed to fetch \(sex.sexNamingConvention) names with an evaluated count of `\(evaluatedCount)`: \(error.localizedDescription)")
             throw NamePersistenceError.unableToFetch(error)
         }
     }
@@ -360,7 +361,7 @@ extension NamePersistenceController {
             return try modelContext.fetch(descriptor)
             
         } catch {
-            logError("Failed to fetch all \(sex.sexNamingConvention) names: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Failed to fetch all \(sex.sexNamingConvention) names: \(error.localizedDescription)")
             throw NamePersistenceError.unableToFetch(error)
         }
     }
@@ -383,7 +384,7 @@ extension NamePersistenceController {
             return index + 1
             
         } catch {
-            logError("Failed to get rank for \(name.sex!.sexNamingConvention) name '\(name.text)' due to a failed fetch request: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Failed to get rank for \(name.sex!.sexNamingConvention) name '\(name.text)' due to a failed fetch request: \(error.localizedDescription)")
             throw NamePersistenceError.unableToFetch(error)
         }
     }

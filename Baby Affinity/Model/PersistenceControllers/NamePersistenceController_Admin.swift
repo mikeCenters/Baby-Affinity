@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import SystemLogger
 
 
 // MARK: - Error
@@ -213,19 +214,19 @@ extension NamePersistenceController_Admin {
             return .success(name)
             
         } catch Name.NameError.nameIsEmpty {
-            logError("Error: The name cannot be empty. Skipping: \(name)")
+            SystemLogger.main.logError("Error: The name cannot be empty. Skipping: \(name)")
             return .failure(.nameIsEmpty)
             
         } catch Name.NameError.ratingBelowMinimum(let minimumRating) {
-            logError("Error: The affinity rating is below the minimum (\(minimumRating)). Skipping: \(name)")
+            SystemLogger.main.logError("Error: The affinity rating is below the minimum (\(minimumRating)). Skipping: \(name)")
             return .failure(.ratingBelowMinimum(Name.minimumAffinityRating))
             
         } catch Name.NameError.invalidCharactersInName(let chars) {
-            logError("Error: The provided name string contained non-alphabet characters or the allowed special characters (\(chars)). Skipping: \(name)")
+            SystemLogger.main.logError("Error: The provided name string contained non-alphabet characters or the allowed special characters (\(chars)). Skipping: \(name)")
             return .failure(.invalidCharactersInName(chars))
             
         } catch {
-            logError("Unexpected error initializing Name: \(error.localizedDescription). Skipping: \(name)")
+            SystemLogger.main.logError("Unexpected error initializing Name: \(error.localizedDescription). Skipping: \(name)")
             return .failure(.unexpectedError(error))
         }
     }
@@ -237,7 +238,7 @@ extension NamePersistenceController_Admin {
         do {
             guard try fetchName(byText: name.text, sex: name.sex!) == nil
             else {
-                logError("Attempted to insert a duplicate \(name.sex!.sexNamingConvention) name. Name: \(name.text)")
+                SystemLogger.main.logError("Attempted to insert a duplicate \(name.sex!.sexNamingConvention) name. Name: \(name.text)")
                 return .failure(NamePersistenceError.duplicateNameInserted(name.text))
             }
             
@@ -247,11 +248,11 @@ extension NamePersistenceController_Admin {
             return .success(())
             
         } catch NamePersistenceError.unableToFetch(let error) {
-            logError("Unable to fetch names while attempting to insert name `\(name)`: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Unable to fetch names while attempting to insert name `\(name)`: \(error.localizedDescription)")
             return .failure(.unableToFetch(error))
             
         } catch {
-            logError("Unexpected error occured while inserting a name `\(name)`: \(error.localizedDescription)")
+            SystemLogger.main.logError("Unexpected error occured while inserting a name `\(name)`: \(error.localizedDescription)")
             return .failure(.unexpectedError(error))
         }
     }
@@ -261,7 +262,7 @@ extension NamePersistenceController_Admin {
         
         guard let fetchedNames = try? fetchNames()
         else {
-            logError("Unable to fetch names during batch insertion.")
+            SystemLogger.main.logCritical("Unable to fetch names during batch insertion.")
             return results
         }
             
@@ -274,7 +275,7 @@ extension NamePersistenceController_Admin {
                     let nameKey = "\(name.text)-\(name.sex!.rawValue)"  // Create a unique key using text and sex
                     
                     guard seenNames.insert(nameKey).inserted else {     // Attempt to insert a unique name to the seen array.
-                        logError("Duplicate name found in the provided array. Name: \(name.text) with sex \(name.sex!.rawValue)")
+                        SystemLogger.main.logError("Duplicate name found in the provided array. Name: \(name.text) with sex \(name.sex!.rawValue)")
                         results.append(.failure(NamePersistenceError.duplicateNameInserted(name.text)))
                         continue
                     }
@@ -290,7 +291,7 @@ extension NamePersistenceController_Admin {
                 }
             }
         } catch {
-            logError("Unable to batch insert Names: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Unable to batch insert Names: \(error.localizedDescription)")
         }
         
         return results
@@ -305,7 +306,7 @@ extension NamePersistenceController_Admin {
             try modelContext.save()
             
         } catch {
-            logError("Unable to save the model context during the deletion of Name object: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Unable to save the model context during the deletion of Name object: \(error.localizedDescription)")
         }
     }
     
@@ -318,7 +319,7 @@ extension NamePersistenceController_Admin {
             }
         }
         catch {
-            logError("Unable to batch delete Names: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Unable to batch delete Names: \(error.localizedDescription)")
         }
     }
     
@@ -333,7 +334,7 @@ extension NamePersistenceController_Admin {
             }
             
         } catch {
-            logError("Unable to reset Name data: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Unable to reset Name data: \(error.localizedDescription)")
         }
     }
 }
@@ -359,7 +360,7 @@ extension NamePersistenceController_Admin {
                 name.increaseEvaluationCount()
                 
             } catch {
-                logError("Unable to set affinity for \(name): \(error.localizedDescription)")
+                SystemLogger.main.logError("Unable to set affinity for \(name): \(error.localizedDescription)")
             }
         }
     }
@@ -380,7 +381,7 @@ extension NamePersistenceController_Admin {
                 name.increaseEvaluationCount()
                 
             } catch {
-                logError("Unable to set affinity for \(name): \(error.localizedDescription)")
+                SystemLogger.main.logError("Unable to set affinity for \(name): \(error.localizedDescription)")
             }
         }
     }
@@ -430,7 +431,7 @@ extension NamePersistenceController_Admin {
             name.increaseEvaluationCount()
             
         } catch {
-            logError("Unable to set affinity to new rating: \(error.localizedDescription)")
+            SystemLogger.main.logError("Unable to set affinity to new rating: \(error.localizedDescription)")
         }
     }
 }
@@ -494,7 +495,7 @@ extension NamePersistenceController_Admin {
             switch result {
             case .success(_): continue
             case .failure(let error):
-                logError("Unable to insert name when loading default names: \(error.localizedDescription)")
+                SystemLogger.main.logCritical("Unable to insert name when loading default names: \(error.localizedDescription)")
             }
         }
     }
@@ -532,7 +533,7 @@ extension NamePersistenceController_Admin {
                 guard name.sexRawValue == sex.rawValue,
                       let newName = findAndMerge(name, in: fetchedNames)
                 else {
-                    logError("The provided name to compare is not of the selected sex.")
+                    SystemLogger.main.logError("The provided name to compare is not of the selected sex.")
                     continue
                 }
                 
@@ -540,7 +541,7 @@ extension NamePersistenceController_Admin {
             }
             
         } catch {
-            logError("Unable to create a compared name: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Unable to create a compared name: \(error.localizedDescription)")
         }
         
         return newNames

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BA002D602CA85EF200895683 /* SystemLogger in Frameworks */ = {isa = PBXBuildFile; productRef = BA002D5F2CA85EF200895683 /* SystemLogger */; };
 		BA07475B2C7026AA002C8425 /* SectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA07475A2C7026AA002C8425 /* SectionView.swift */; };
 		BA27E09D2C8E1A2D00241118 /* NameSharingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA27E09C2C8E1A2D00241118 /* NameSharingView.swift */; };
 		BA27E09F2C8E468000241118 /* RadiatingSemiCircles.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA27E09E2C8E468000241118 /* RadiatingSemiCircles.swift */; };
@@ -22,7 +23,6 @@
 		BA5EED312C69B5A400267AD1 /* NamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5EED302C69B5A400267AD1 /* NamesView.swift */; };
 		BA5EED342C6B0C4C00267AD1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5EED332C6B0C4C00267AD1 /* SettingsView.swift */; };
 		BA60B04B2C8AB1D100FD58F2 /* PresentationLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA60B04A2C8AB1D100FD58F2 /* PresentationLayout.swift */; };
-		BA719A162C6C2C5600A552FA /* LogError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA719A152C6C2C5600A552FA /* LogError.swift */; };
 		BA719A182C6C542800A552FA /* NamePersistenceControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA719A172C6C542800A552FA /* NamePersistenceControllerTests.swift */; };
 		BA9BAFE72C5ED484008D88A2 /* FavoriteNamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9BAFE62C5ED484008D88A2 /* FavoriteNamesView.swift */; };
 		BA9BF0B82C60A2CC0056334E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9BF0B72C60A2CC0056334E /* Extensions.swift */; };
@@ -96,7 +96,6 @@
 		BA5EED302C69B5A400267AD1 /* NamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamesView.swift; sourceTree = "<group>"; };
 		BA5EED332C6B0C4C00267AD1 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		BA60B04A2C8AB1D100FD58F2 /* PresentationLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationLayout.swift; sourceTree = "<group>"; };
-		BA719A152C6C2C5600A552FA /* LogError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogError.swift; sourceTree = "<group>"; };
 		BA719A172C6C542800A552FA /* NamePersistenceControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePersistenceControllerTests.swift; sourceTree = "<group>"; };
 		BA9BAFE62C5ED484008D88A2 /* FavoriteNamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteNamesView.swift; sourceTree = "<group>"; };
 		BA9BF0B72C60A2CC0056334E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -144,6 +143,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA002D602CA85EF200895683 /* SystemLogger in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,7 +331,6 @@
 			isa = PBXGroup;
 			children = (
 				BAE8589A2C6271C400177BA8 /* AffinityCalculator.swift */,
-				BA719A152C6C2C5600A552FA /* LogError.swift */,
 				BAD0F62E2C87CC4200B41D34 /* Store.swift */,
 				BA5CE4362C97650D001DB912 /* NameSharingService.swift */,
 				BAD0F6302C87DA9100B41D34 /* Configuration.storekit */,
@@ -517,7 +516,6 @@
 				BA33AF0A2C7E665B00EE6700 /* IsPersistentStoreEmpty.swift in Sources */,
 				BA27E0A52C90CEC600241118 /* InstructionsView.swift in Sources */,
 				BA60B04B2C8AB1D100FD58F2 /* PresentationLayout.swift in Sources */,
-				BA719A162C6C2C5600A552FA /* LogError.swift in Sources */,
 				BAE858952C6114CB00177BA8 /* HomeView.swift in Sources */,
 				BAD0F62F2C87CC4200B41D34 /* Store.swift in Sources */,
 				BA33AF142C876AE900EE6700 /* LastNameSetting.swift in Sources */,
@@ -917,6 +915,14 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BA002D5F2CA85EF200895683 /* SystemLogger */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BA002D5D2CA6422100895683 /* XCRemoteSwiftPackageReference "SystemLogger" */;
+			productName = SystemLogger;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BACC30242C48A976003CEC7C /* Project object */;
 }

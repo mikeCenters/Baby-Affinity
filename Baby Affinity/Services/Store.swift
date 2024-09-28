@@ -9,6 +9,7 @@ import Foundation
 import StoreKit
 import SwiftUI
 import Combine
+import SystemLogger
 
 typealias Transaction = StoreKit.Transaction
 
@@ -44,7 +45,7 @@ struct PremiumAccount: DynamicProperty {
             get: { self.isPremium },
             set: { _ in
                 // Prevent manual updates
-                logError("The Premium Account property wrapper should not be manually set.")
+                SystemLogger.main.logError("The Premium Account property wrapper should not be manually set.")
             }
         )
     }
@@ -157,7 +158,7 @@ final class Store: ObservableObject {
             products = try await Product.products(for: productIDs)
             
         } catch {
-            logError("Failed to fetch products: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Failed to fetch products: \(error.localizedDescription)")
         }
     }
     
@@ -182,7 +183,7 @@ final class Store: ObservableObject {
             }
             
         } catch {
-            logError("Purchase failed: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Purchase failed: \(error.localizedDescription)")
         }
     }
     
@@ -198,7 +199,7 @@ final class Store: ObservableObject {
                 await handleTransaction(transaction)
                 
             case .unverified(_, let error):
-                logError("Unverified transaction during restore: \(error.localizedDescription)")
+                SystemLogger.main.logError("Unverified transaction during restore: \(error.localizedDescription)")
             }
         }
     }
@@ -231,7 +232,7 @@ final class Store: ObservableObject {
                     await handleTransaction(transaction)
                     
                 case .unverified(_, let error):
-                    logError("Unverified transaction update: \(error.localizedDescription)")
+                    SystemLogger.main.logCritical("Unverified transaction update: \(error.localizedDescription)")
                 }
             }
         }
@@ -251,7 +252,7 @@ final class Store: ObservableObject {
                 await handleTransaction(transaction)
                 
             case .unverified(_, let error):
-                logError("Unverified transaction during sync: \(error.localizedDescription)")
+                SystemLogger.main.logCritical("Unverified transaction during sync: \(error.localizedDescription)")
             }
         }
     }
@@ -268,7 +269,7 @@ final class Store: ObservableObject {
                 await handleTransaction(transaction)
             }
         case .unverified(_, let error):
-            logError("Unverified transaction: \(error.localizedDescription)")
+            SystemLogger.main.logCritical("Unverified transaction: \(error.localizedDescription)")
         }
     }
     

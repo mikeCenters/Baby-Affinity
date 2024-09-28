@@ -7,6 +7,7 @@
 
 import Foundation
 import MultipeerConnectivity
+import SystemLogger
 
 // MARK: - Name Sharing Service
 
@@ -66,7 +67,7 @@ class NameSharingService: NSObject, ObservableObject {
                 try session.send(data, toPeers: session.connectedPeers, with: .reliable)
                 
             } catch let error {
-                logError("Error sending names: \(error.localizedDescription)")
+                SystemLogger.main.logError("Error sending names: \(error.localizedDescription)")
             }
         }
     }
@@ -100,7 +101,7 @@ class NameSharingService: NSObject, ObservableObject {
             self.sessionState = .notConnected
             
         @unknown default:
-            logError("Unknown state for \(peerID.displayName): \(state)")
+            SystemLogger.main.logWarning("Unknown state for \(peerID.displayName): \(state)")
         }
     }
     
@@ -123,7 +124,7 @@ class NameSharingService: NSObject, ObservableObject {
             }
             
         } catch let error {
-            logError("Error decoding received names: \(error.localizedDescription)")
+            SystemLogger.main.logError("Error decoding received names: \(error.localizedDescription)")
         }
     }
     
@@ -198,7 +199,7 @@ extension NameSharingService: MCNearbyServiceAdvertiserDelegate {
     }
     
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
-        logError("Error starting advertiser: \(error.localizedDescription)")
+        SystemLogger.main.logError("Error starting advertiser: \(error.localizedDescription)")
     }
 }
 
@@ -208,7 +209,7 @@ extension NameSharingService: MCNearbyServiceAdvertiserDelegate {
 extension NameSharingService: MCNearbyServiceBrowserDelegate {
     // Called when a peer is found nearby
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
-        print("Found peer: \(peerID.displayName)")
+        SystemLogger.main.logInfo("Found peer: \(peerID.displayName)")
         
         // Automatically invite the found peer to join the session
         browser.invitePeer(peerID, to: session, withContext: nil, timeout: 10)
@@ -216,11 +217,11 @@ extension NameSharingService: MCNearbyServiceBrowserDelegate {
     
     // Called when a peer is lost (out of range or disconnected)
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
-        print("Lost peer: \(peerID.displayName)")
+        SystemLogger.main.logInfo("Lost peer: \(peerID.displayName)")
     }
     
     // Handle browser errors
     func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: Error) {
-        logError("Error starting browser: \(error.localizedDescription)")
+        SystemLogger.main.logError("Error starting browser: \(error.localizedDescription)")
     }
 }
