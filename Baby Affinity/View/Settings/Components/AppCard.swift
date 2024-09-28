@@ -14,11 +14,10 @@ struct AppCard: View {
     
     var body: some View {
         VStack(spacing: 8) {
-            
-            Image(uiImage: UIImage(named: "AppIcon")!)
+            Image("icon")
                 .resizable()
                 .frame(width: 60, height: 60)
-                .clipShape(RoundedRectangle(cornerRadius: 60 / 5.6, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: 60 / 5.8, style: .continuous))
             
             Text("Baby Affinity")
                 .font(.title3).bold()
@@ -36,7 +35,6 @@ struct AppCard: View {
 
 // MARK: - Previews
 
-// Preview for the `AppCard` view within a List.
 #Preview("App Card view in List") {
     List {
         AppCard()
