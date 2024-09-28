@@ -72,13 +72,14 @@ import Store
     ContentView()
         .modelContainer(previewModelContainer_WithFavorites)
         .environmentObject(Store.main)
+        .loadProducts(in: Store.main)
 }
 
 #Preview("Content View - Is Premium") {
     ContentView()
         .modelContainer(previewModelContainer_WithFavorites)
         .environmentObject(Store.premium)
-        .loadPremiumFeatures()
+        .loadProducts(in: Store.premium)
 }
 
 #endif
