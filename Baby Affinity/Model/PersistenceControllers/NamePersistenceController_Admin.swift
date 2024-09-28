@@ -90,10 +90,10 @@ protocol NamePersistenceController_Admin: NamePersistenceController {
     /// - Parameter container: The `ModelContainer` managing the context.
     func loadDefaultNames() async
     
-    /// Resets all name data in the persistent store, reloading the default names.
+    /// Asynchronously resets all name data in the persistent store, reloading the default names.
     ///
     /// - Parameter container: The `ModelContainer` managing the context.
-    func resetNameData()
+    func resetNameData() async
     
     /// Updates the affinity ratings for a list of winning and losing names.
     ///
@@ -323,7 +323,7 @@ extension NamePersistenceController_Admin {
         }
     }
     
-    func resetNameData() {
+    func resetNameData() async {
         do {
             let names = try fetchNames()
             
