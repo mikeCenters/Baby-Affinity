@@ -8,12 +8,9 @@
 import SwiftUI
 import SwiftData
 
+// MARK: - Content View
+
 struct ContentView: View {
-    
-    // MARK: - Properties
-    
-    @Environment(\.modelContext) var modelContext
-    
     
     // MARK: - Controls
     
@@ -24,6 +21,7 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
+            
             // MARK: - Home Feed
             
             HomeView()
@@ -66,14 +64,21 @@ struct ContentView: View {
 
 #if DEBUG
 
-import Store
-
 // MARK: - Preview
 
-#Preview {
+import Store
+
+#Preview("Content View") {
     ContentView()
         .modelContainer(previewModelContainer_WithFavorites)
         .environmentObject(Store.main)
+}
+
+#Preview("Content View - Is Premium") {
+    ContentView()
+        .modelContainer(previewModelContainer_WithFavorites)
+        .environmentObject(Store.premium)
+        .loadPremiumFeatures()
 }
 
 #endif
