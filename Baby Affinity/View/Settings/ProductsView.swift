@@ -17,21 +17,19 @@ struct ProductsView: View, NamePersistenceController {
     // MARK: - Properties
     
     @Environment(\.modelContext) var modelContext
-    @AppStorage("selectedSex") private var selectedSex: Sex = .male
     @EnvironmentObject private var store: Store
-    @ProductStatus(ProductID.premiumAccount.rawValue) private var isPremium
     
     private var product: Product? {
-        store.products.first { $0.id == "com.mikeCenters.BabyAffinity.premium"}
+        store.products.first { $0.id == ProductID.premiumAccount.rawValue }
     }
-    
-    @Query private var names: [Name] = []
     
     
     // MARK: - Controls and Constants
     
-    private let maleColorSet = [Color.blue.opacity(1), Color.blue.opacity(0.8)]
+    @ProductStatus(ProductID.premiumAccount.rawValue) private var isPremium
+    @AppStorage("selectedSex") private var selectedSex: Sex = .male
     
+    private let maleColorSet = [Color.blue.opacity(1), Color.blue.opacity(0.8)]
     private let femaleColorSet = [Color.pink.opacity(1), Color.pink.opacity(0.8)]
     
     private func getGradientStart(_ index: Int) -> Color {
@@ -54,7 +52,7 @@ struct ProductsView: View, NamePersistenceController {
             ZStack(alignment: .bottom) {
                 VStack(spacing: 8) {
                     Spacer()
-                    Image(uiImage: UIImage(named: "AppIcon")!)
+                    Image("icon")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 84, height: 84)
@@ -107,11 +105,9 @@ struct ProductsView: View, NamePersistenceController {
         }
         
         
-        // MARK: - Task
-        .task {
-            let productIDs = Set<String>(ProductID.allCases.map(\.rawValue))
-            await store.fetchProducts(productIDs)
-        }
+        // MARK: - Load Products
+        
+        .loadProducts(in: store)
     }
     
     
@@ -234,6 +230,7 @@ struct ProductsView: View, NamePersistenceController {
         }
         .modelContainer(previewModelContainer)
         .environmentObject(Store.main)
+        .loadProducts(in: Store.main)
     }
 }
 
@@ -247,6 +244,7 @@ struct ProductsView: View, NamePersistenceController {
         }
         .modelContainer(previewModelContainer)
         .environmentObject(Store.premium)
+        .loadProducts(in: Store.premium)
     }
 }
 
