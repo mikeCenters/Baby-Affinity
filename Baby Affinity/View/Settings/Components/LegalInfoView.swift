@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: - Legal Info View
+
 /// A view that displays legal information links (Privacy Policy and Terms of Service) and the app version.
 struct LegalInfoView: View {
     
