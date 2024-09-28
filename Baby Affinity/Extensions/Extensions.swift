@@ -7,6 +7,22 @@
 
 import Foundation
 import SwiftUI
+import Store
+
+// MARK: - View
+
+#if DEBUG
+extension View {
+    /// Load premium features within the `Store`, when the `Store` is set to premium.
+    func loadPremiumFeatures() -> some View {
+        self
+            .task {
+                let productIDs = Set<String>(ProductID.allCases.map(\.rawValue))
+                await Store.premium.fetchProducts(productIDs)
+            }
+    }
+}
+#endif
 
 
 // MARK: - Array
