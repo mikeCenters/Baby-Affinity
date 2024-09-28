@@ -8,6 +8,8 @@
 import SwiftUI
 import MessageUI
 
+// MARK: - Contact Us View
+
 /**
  A view that provides users with options to contact support, submit feature requests, and provide feedback.
 
