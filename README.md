@@ -51,6 +51,8 @@ Get ready to embark on a fun and exciting journey to find your baby’s perfect 
 # Change Log:
 ## version 2.0.2:
 - Migrated Store and SystemLogger to packages.
+- Updated Views and other objects to utilize the Store and SystemLogger packages.
+- Updated Views to use the `@ProductStatus` macro for monitoring status.
 
 ## version 2.0.1:
 - Fixed bug with Name Preview Card
