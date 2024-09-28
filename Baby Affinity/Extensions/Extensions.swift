@@ -11,18 +11,24 @@ import Store
 
 // MARK: - View
 
-#if DEBUG
 extension View {
-    /// Load premium features within the `Store`, when the `Store` is set to premium.
-    func loadPremiumFeatures() -> some View {
+    /// Loads products in the specified store.
+    ///
+    /// This function initiates a task to fetch products using the given store and the specified product IDs.
+    /// If no product IDs are provided, it defaults to loading all available product IDs from the `ProductID` enum.
+    ///
+    /// - Parameters:
+    ///   - store: The store instance that conforms to `ObservableObject` and is responsible for fetching products.
+    ///   - productIDs: A set of product IDs to fetch. Defaults to all product IDs from `ProductID.allCases`.
+    ///
+    /// - Returns: A view that can perform tasks, with the product loading operation scheduled.
+    func loadProducts(in store: Store, productIDs: Set<String> = .init(ProductID.allCases.map(\.rawValue))) -> some View {
         self
             .task {
-                let productIDs = Set<String>(ProductID.allCases.map(\.rawValue))
-                await Store.premium.fetchProducts(productIDs)
+                await store.fetchProducts(productIDs)
             }
     }
 }
-#endif
 
 
 // MARK: - Array
