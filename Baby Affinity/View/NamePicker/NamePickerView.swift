@@ -123,8 +123,8 @@ private extension NamePickerView {
         }
     }
     
-    /// Bottom toolbar with the submit button.
-    var toolBars: some ToolbarContent {
+    /// The toolbars used within the view.
+    private var toolBars: some ToolbarContent {
         Group {
             ToolbarItemGroup(placement: .bottomBar) {
                 Button(action: submitNames) {
@@ -135,7 +135,14 @@ private extension NamePickerView {
             }
             
             ToolbarItem(placement: .topBarTrailing) {
-                SexSelectionIconView()
+                Button {
+                    showInstructions.toggle()
+                    
+                } label: {
+                    Image(systemName: "i.circle")
+                        .font(.headline)
+                }
+
             }
         }
     }
