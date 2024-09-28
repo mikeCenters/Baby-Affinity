@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 // MARK: - Instructions View
 
 /// A view presenting the instructions sheet.
@@ -26,7 +25,10 @@ struct InstructionsView: View {
     
     // MARK: - Controls and Constants
     
+    /// The number of selections about to be made within the list of names.
     let maxSelections: Int
+    
+    /// A binding that shows the instructions for name picking.
     @Binding var showInstructions: Bool
     
     
