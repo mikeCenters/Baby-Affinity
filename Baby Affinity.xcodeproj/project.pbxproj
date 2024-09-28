@@ -194,6 +194,16 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		BA3120582CA8C667008CDBA3 /* Mail View */ = {
+			isa = PBXGroup;
+			children = (
+				BAF3C67D2C6FD351004F9E46 /* MailView.swift */,
+				BAF3C67F2C6FD41B004F9E46 /* EmailRequiredView.swift */,
+				BAC0B49F2C705F1F008B3141 /* SendEmailButton.swift */,
+			);
+			path = "Mail View";
+			sourceTree = "<group>";
+		};
 		BA5EED322C6B0C3900267AD1 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -368,13 +378,11 @@
 		BAF3C67A2C6FB357004F9E46 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				BA3120582CA8C667008CDBA3 /* Mail View */,
 				BA07475A2C7026AA002C8425 /* SectionView.swift */,
 				BAF3C6782C6FAC45004F9E46 /* LegalInfoView.swift */,
 				BAF3C6742C6F941E004F9E46 /* AppCard.swift */,
 				BAF3C6722C6F886A004F9E46 /* ResetDataButton.swift */,
-				BAF3C67D2C6FD351004F9E46 /* MailView.swift */,
-				BAF3C67F2C6FD41B004F9E46 /* EmailRequiredView.swift */,
-				BAC0B49F2C705F1F008B3141 /* SendEmailButton.swift */,
 				BA33AF0B2C7E6A5400EE6700 /* OnboardingView.swift */,
 				BA33AF0D2C8050DB00EE6700 /* SettingsNavigationStack.swift */,
 				BA33AF0F2C8052BB00EE6700 /* SettingsLoadingIndicator.swift */,
