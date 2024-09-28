@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: - Email Required View
+
 /// A view that informs the user that email setup is required for in-app support.
 struct EmailRequiredView: View {
     

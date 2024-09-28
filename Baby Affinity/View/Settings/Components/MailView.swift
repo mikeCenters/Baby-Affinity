@@ -9,7 +9,7 @@ import SwiftUI
 import UIKit
 import MessageUI
 
-// MARK: - Coordinator
+// MARK: - Mail View Coordinator
 
 /**
  The coordinator class is responsible for managing the `MFMailComposeViewController` events and dismissing the view controller once the mail is composed or cancelled.
@@ -39,7 +39,7 @@ class MailViewCoordinator: NSObject, MFMailComposeViewControllerDelegate, UINavi
 }
 
 
-// MARK: - View
+// MARK: - Mail View
 
 /**
  A SwiftUI view that presents a `MFMailComposeViewController` for composing and sending an email.
