@@ -70,10 +70,7 @@ struct TopNamesView: View {
     
     // MARK: - Controls and Constants
     
-    /// The property used to check the premium status of the user's account.
-    private var isPremiumAccount: Bool {
-        store.purchasedProductIDs.contains(Store.premiumProductID)
-    }
+    @ProductStatus(ProductID.premiumAccount.rawValue) private var isPremium
     
     /// The current state of the view.
     @State private var viewState: TopNamesView.ViewState = .isLoading
@@ -147,7 +144,7 @@ extension TopNamesView: NamePersistenceController {
     
     /// Updates the `presentedNames` state with the names to be displayed, based on the selected sex.
     private func presentNames() {
-        presentedNames = isPremiumAccount ? getNamesToPresent() : getRandomNamesToPresent()
+        presentedNames = isPremium ? getNamesToPresent() : getRandomNamesToPresent()
     }
     
     /// Returns a list of names with their ranks, based on the selected sex.
@@ -182,10 +179,12 @@ extension TopNamesView: NamePersistenceController {
 
 #if DEBUG
 
+import Store
+
 // MARK: - Preview
 
 #Preview("Top Names View in a List and Tab View - Non-Premium Account") {
-    return TabView { NavigationStack {
+    TabView { NavigationStack {
         List {
             TopNamesView()
         }
@@ -199,19 +198,19 @@ extension TopNamesView: NamePersistenceController {
     }
     }
     .modelContainer(previewModelContainer_WithFavorites)
-    .environmentObject(Store.shared)
+    .environmentObject(Store.main)
 }
 
 #Preview("Top Names View in a List - Non-Premium Account") {
-    return List {
+    List {
         TopNamesView()
     }
     .modelContainer(previewModelContainer_WithFavorites)
-    .environmentObject(Store.shared)
+    .environmentObject(Store.main)
 }
 
 #Preview("Top Names View in a List and Tab View - Premium Account") {
-    return TabView {
+    TabView {
         List {
             TopNamesView()
         }
@@ -225,15 +224,15 @@ extension TopNamesView: NamePersistenceController {
         
     }
     .modelContainer(previewModelContainer_WithFavorites)
-    .environmentObject(Store.shared)
+    .environmentObject(Store.main)
 }
 
 #Preview("Top Names View in a List - Premium Account") {
-    return List {
+    List {
         TopNamesView()
     }
     .modelContainer(previewModelContainer_WithFavorites)
-    .environmentObject(Store.shared)
+    .environmentObject(Store.main)
 }
 
 #endif

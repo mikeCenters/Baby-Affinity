@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import SystemLogger
+import Store
 
 // MARK: - Names View
 
@@ -31,10 +32,7 @@ struct NamesView: View {
     
     // MARK: - Controls and Constants
     
-    /// The property used to check the premium status of the user's account.
-    private var isPremiumAccount: Bool {
-        store.purchasedProductIDs.contains(Store.premiumProductID)
-    }
+    @ProductStatus(ProductID.premiumAccount.rawValue) private var isPremium
     
     /// A binding to control the visibility of the view.
     @Binding var isShown: Bool
@@ -92,7 +90,7 @@ extension NamesView: NamePersistenceController {
         do {
             let fetchedNames = try fetchNamesSortedByAffinity(selectedSex)
             
-            if isPremiumAccount {
+            if isPremium {
                 names = fetchedNames
                 
             } else {
@@ -111,21 +109,15 @@ extension NamesView: NamePersistenceController {
 // MARK: - Preview
 
 #Preview("Names View - Non-Premium Account") {
-    @StateObject var store = Store.shared
-    @State var isShown = true
-    
-    return NamesView(isShown: $isShown)
+    NamesView(isShown: .constant(true))
         .modelContainer(previewModelContainer)
-        .environmentObject(store)
+        .environmentObject(Store.main)
 }
 
 #Preview("Names View - Premium Account") {
-    @StateObject var store = Store.premium
-    @State var isShown = true
-    
-    return NamesView(isShown: $isShown)
+    NamesView(isShown: .constant(true))
         .modelContainer(previewModelContainer)
-        .environmentObject(store)
+        .environmentObject(Store.premium)
 }
 
 #endif

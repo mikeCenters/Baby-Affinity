@@ -67,6 +67,8 @@ struct NamesViewSection<FooterContent: View>: View {
 
 #if DEBUG
 
+import Store
+
 // MARK: - Previews
 
 #Preview("In a List - With Title and Footer") {
@@ -77,7 +79,7 @@ struct NamesViewSection<FooterContent: View>: View {
         }
     }
     .modelContainer(previewModelContainer)
-    .environmentObject(Store.shared)
+    .environmentObject(Store.main)
 }
 
 #Preview("In a List - With Title") {
@@ -86,7 +88,7 @@ struct NamesViewSection<FooterContent: View>: View {
                                     title: "All Male Names")
     }
     .modelContainer(previewModelContainer)
-    .environmentObject(Store.shared)
+    .environmentObject(Store.main)
 }
 
 #Preview("In a List - With Footer") {
@@ -96,7 +98,7 @@ struct NamesViewSection<FooterContent: View>: View {
         }
     }
     .modelContainer(previewModelContainer)
-    .environmentObject(Store.shared)
+    .environmentObject(Store.main)
 }
 
 #Preview("In a List - With No Title or Footer") {
@@ -104,7 +106,7 @@ struct NamesViewSection<FooterContent: View>: View {
         NamesViewSection<EmptyView>(names: PreviewData.rankedMaleNames(count: 10))
     }
     .modelContainer(previewModelContainer)
-    .environmentObject(Store.shared)
+    .environmentObject(Store.main)
 }
 
 #endif

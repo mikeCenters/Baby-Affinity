@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SystemLogger
+import Store
 
 // MARK: - Name Sharing View
 
@@ -21,7 +22,7 @@ struct NameSharingView: View, NamePersistenceController {
     
     // MARK: - Controls and Constants
     
-    @PremiumAccount private var isPremium
+    @ProductStatus(ProductID.premiumAccount.rawValue) private var isPremium
     @State private var isShowingReceivedNames: Bool = false
     @State private var isShowingProductPage: Bool = false
     
@@ -204,7 +205,7 @@ extension NameSharingView: NamePersistenceController_Admin {
 #Preview("With Non-Premium Account") {
     NameSharingView()
         .modelContainer(previewModelContainer)
-        .environmentObject(Store.shared)
+        .environmentObject(Store.main)
 }
 
 #endif

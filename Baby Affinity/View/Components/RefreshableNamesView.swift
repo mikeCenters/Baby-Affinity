@@ -85,6 +85,8 @@ extension RefreshableNamesView {
 
 #if DEBUG
 
+import Store
+
 // MARK: - Preview
 
 #Preview("In a List and Tab View") {

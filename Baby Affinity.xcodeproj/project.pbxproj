@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BA002D602CA85EF200895683 /* SystemLogger in Frameworks */ = {isa = PBXBuildFile; productRef = BA002D5F2CA85EF200895683 /* SystemLogger */; };
+		BA002D622CA85F7100895683 /* Store in Frameworks */ = {isa = PBXBuildFile; productRef = BA002D612CA85F7100895683 /* Store */; };
 		BA07475B2C7026AA002C8425 /* SectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA07475A2C7026AA002C8425 /* SectionView.swift */; };
 		BA27E09D2C8E1A2D00241118 /* NameSharingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA27E09C2C8E1A2D00241118 /* NameSharingView.swift */; };
 		BA27E09F2C8E468000241118 /* RadiatingSemiCircles.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA27E09E2C8E468000241118 /* RadiatingSemiCircles.swift */; };
@@ -37,7 +38,6 @@
 		BACC305F2C48A9FF003CEC7C /* Sex.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC305E2C48A9FF003CEC7C /* Sex.swift */; };
 		BACC30632C48C34A003CEC7C /* DefaultBabyNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC30622C48C34A003CEC7C /* DefaultBabyNames.swift */; };
 		BACC30662C5C7B7B003CEC7C /* TopNamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACC30652C5C7B7A003CEC7C /* TopNamesView.swift */; };
-		BAD0F62F2C87CC4200B41D34 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD0F62E2C87CC4200B41D34 /* Store.swift */; };
 		BAD0F6322C87DD1800B41D34 /* ProductsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD0F6312C87DD1800B41D34 /* ProductsView.swift */; };
 		BAE858952C6114CB00177BA8 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE858942C6114CB00177BA8 /* HomeView.swift */; };
 		BAE858982C6136AE00177BA8 /* NamePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE858972C6136AE00177BA8 /* NamePickerView.swift */; };
@@ -113,7 +113,6 @@
 		BACC305E2C48A9FF003CEC7C /* Sex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sex.swift; sourceTree = "<group>"; };
 		BACC30622C48C34A003CEC7C /* DefaultBabyNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultBabyNames.swift; sourceTree = "<group>"; };
 		BACC30652C5C7B7A003CEC7C /* TopNamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNamesView.swift; sourceTree = "<group>"; };
-		BAD0F62E2C87CC4200B41D34 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		BAD0F6302C87DA9100B41D34 /* Configuration.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Configuration.storekit; sourceTree = "<group>"; };
 		BAD0F6312C87DD1800B41D34 /* ProductsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsView.swift; sourceTree = "<group>"; };
 		BAE858942C6114CB00177BA8 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -143,6 +142,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA002D622CA85F7100895683 /* Store in Frameworks */,
 				BA002D602CA85EF200895683 /* SystemLogger in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -331,7 +331,6 @@
 			isa = PBXGroup;
 			children = (
 				BAE8589A2C6271C400177BA8 /* AffinityCalculator.swift */,
-				BAD0F62E2C87CC4200B41D34 /* Store.swift */,
 				BA5CE4362C97650D001DB912 /* NameSharingService.swift */,
 				BAD0F6302C87DA9100B41D34 /* Configuration.storekit */,
 			);
@@ -443,7 +442,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					BACC302B2C48A976003CEC7C = {
 						CreatedOnToolsVersion = 15.0.1;
@@ -517,7 +516,6 @@
 				BA27E0A52C90CEC600241118 /* InstructionsView.swift in Sources */,
 				BA60B04B2C8AB1D100FD58F2 /* PresentationLayout.swift in Sources */,
 				BAE858952C6114CB00177BA8 /* HomeView.swift in Sources */,
-				BAD0F62F2C87CC4200B41D34 /* Store.swift in Sources */,
 				BA33AF142C876AE900EE6700 /* LastNameSetting.swift in Sources */,
 				BAEA17AB2C94077E000C2507 /* NamesViewSection.swift in Sources */,
 				BAF3C6792C6FAC45004F9E46 /* LegalInfoView.swift in Sources */,
@@ -783,7 +781,6 @@
 		BACC30562C48A979003CEC7C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -803,7 +800,6 @@
 		BACC30572C48A979003CEC7C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -823,7 +819,6 @@
 		BACC30592C48A979003CEC7C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 56NNYWF83R;
@@ -841,7 +836,6 @@
 		BACC305A2C48A979003CEC7C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 56NNYWF83R;
@@ -921,6 +915,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = BA002D5D2CA6422100895683 /* XCRemoteSwiftPackageReference "SystemLogger" */;
 			productName = SystemLogger;
+		};
+		BA002D612CA85F7100895683 /* Store */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BA002D5E2CA6422900895683 /* XCRemoteSwiftPackageReference "Store" */;
+			productName = Store;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

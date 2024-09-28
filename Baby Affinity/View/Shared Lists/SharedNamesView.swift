@@ -116,6 +116,8 @@ extension SharedNamesView {
 
 #if DEBUG
 
+import Store
+
 // MARK: - Previews
 
 /// A preview for `SharedNamesView` that displays sample data.

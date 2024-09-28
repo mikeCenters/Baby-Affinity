@@ -7,6 +7,12 @@
 
 import SwiftUI
 import SwiftData
+import Store
+
+enum ProductID: String, CaseIterable, RawRepresentable {
+    case premiumAccount = "com.mikeCenters.BabyAffinity.premium"
+}
+
 
 @main
 struct Baby_AffinityApp: App {
@@ -30,7 +36,8 @@ struct Baby_AffinityApp: App {
         }
     }()
     
-    @StateObject private var store = Store.shared
+//    @StateObject private var store = Store.shared
+    @StateObject private var store = Store.main
     
     @AppStorage("isShowingOnboarding") var isShowingOnboarding: Bool = true
     
@@ -44,6 +51,10 @@ struct Baby_AffinityApp: App {
                 
             } else {
                 ContentView()
+                    .task {
+                        let productIDs = Set<String>(ProductID.allCases.map(\.rawValue))
+                        await store.fetchProducts(productIDs)
+                    }
             }
         }
         .environmentObject(store)

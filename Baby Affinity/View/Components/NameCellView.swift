@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Store
 
 // MARK: - Name Cell View
 
@@ -32,10 +33,7 @@ struct NameCellView: View, NamePersistenceController {
     
     // MARK: - Controls and Constants
     
-    /// The property used to check the premium status of the user's account.
-    private var isPremiumAccount: Bool {
-        store.purchasedProductIDs.contains(Store.premiumProductID)
-    }
+    @ProductStatus(ProductID.premiumAccount.rawValue) private var isPremium
     
     /// Used to provide the maxWidth of the rank and favorites icon. This is used to place the name perfectly center within the cell.
     private let rankAndIconMaxWidth: CGFloat = 60
@@ -90,7 +88,7 @@ extension NameCellView {
     // MARK: - Rank View
     
     var rankView: some View {
-        switch isPremiumAccount {
+        switch isPremium {
         case true:          // Premium Account
             
             /// Display the rank of the `Name` object.
@@ -116,7 +114,7 @@ extension NameCellView {
             Text(name.text)
                 .font(.title3)
             
-            switch isPremiumAccount {
+            switch isPremium {
             case true:          // Premium Account
                 
                 /// Displays the rating of the `Name` object.
@@ -140,7 +138,7 @@ extension NameCellView {
     
     var favoriteButtonView: some View {
         Button {
-            switch isPremiumAccount {
+            switch isPremium {
             case true:          // Premium Account
                 toggleFavorite()
                 
@@ -194,8 +192,6 @@ extension NameCellView {
 // MARK: - Previews
 
 #Preview("Name Cell View in List - Non-Premium Account") {
-    @StateObject var store = Store.shared
-    
     let names = (1...10).map { _ in
         try! Name("Name", sex: .male)
     }
@@ -208,12 +204,10 @@ extension NameCellView {
         }
     }
     .modelContainer(previewModelContainer_WithFavorites)
-    .environmentObject(store)
+    .environmentObject(Store.main)
 }
 
 #Preview("Name Cell View in List - Premium Account") {
-    @StateObject var store = Store.premium
-    
     let names = (1...10).map { _ in
         try! Name("Name", sex: .male)
     }
@@ -226,7 +220,7 @@ extension NameCellView {
         }
     }
     .modelContainer(previewModelContainer_WithFavorites)
-    .environmentObject(store)
+    .environmentObject(Store.premium)
 }
 
 #endif

@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 import StoreKit
-
+import Store
 
 // MARK: - Products View
 
@@ -19,7 +19,7 @@ struct ProductsView: View, NamePersistenceController {
     @Environment(\.modelContext) var modelContext
     @AppStorage("selectedSex") private var selectedSex: Sex = .male
     @EnvironmentObject private var store: Store
-    @PremiumAccount private var isPremium
+    @ProductStatus(ProductID.premiumAccount.rawValue) private var isPremium
     
     private var product: Product? {
         store.products.first { $0.id == "com.mikeCenters.BabyAffinity.premium"}
@@ -109,7 +109,8 @@ struct ProductsView: View, NamePersistenceController {
         
         // MARK: - Task
         .task {
-            await store.fetchProducts()
+            let productIDs = Set<String>(ProductID.allCases.map(\.rawValue))
+            await store.fetchProducts(productIDs)
         }
     }
     
@@ -232,7 +233,7 @@ struct ProductsView: View, NamePersistenceController {
             Label("Products", systemImage: "cart")
         }
         .modelContainer(previewModelContainer)
-        .environmentObject(Store.shared)
+        .environmentObject(Store.main)
     }
 }
 

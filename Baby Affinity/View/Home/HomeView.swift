@@ -106,22 +106,20 @@ extension HomeView {
 
 #if DEBUG
 
+import Store
+
 // MARK: - Preview
 
 #Preview("Home View - Non-Premium Account") {
-    @StateObject var store = Store.shared
-    
-    return HomeView()
+    HomeView()
         .modelContainer(previewModelContainer_WithFavorites)
-        .environmentObject(store)
+        .environmentObject(Store.main)
 }
 
 #Preview("Home View - Premium Account") {
-    @StateObject var store = Store.premium
-    
-    return HomeView()
+    HomeView()
         .modelContainer(previewModelContainer_WithFavorites)
-        .environmentObject(store)
+        .environmentObject(Store.premium)
 }
 
 #endif

@@ -194,6 +194,8 @@ extension FavoriteNamesView: NamePersistenceController {
 
 #if DEBUG
 
+import Store
+
 // MARK: - Preview
 
 #Preview("Favorites are available") {

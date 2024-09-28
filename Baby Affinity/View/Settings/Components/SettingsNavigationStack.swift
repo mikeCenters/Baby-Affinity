@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import Store
 
 struct SettingsNavigationStack: View {
     
@@ -92,6 +92,7 @@ struct SettingsNavigationStack: View {
 
 #Preview {
     SettingsNavigationStack(isLoading: .constant(false))
+        .environmentObject(Store.main)
 }
 
 #endif

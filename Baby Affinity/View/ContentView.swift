@@ -66,11 +66,14 @@ struct ContentView: View {
 
 #if DEBUG
 
+import Store
+
 // MARK: - Preview
+
 #Preview {
     ContentView()
         .modelContainer(previewModelContainer_WithFavorites)
-        .environmentObject(Store.shared)
+        .environmentObject(Store.main)
 }
 
 #endif

@@ -73,6 +73,8 @@ extension ExpandableNamesView {
 
 #if DEBUG
 
+import Store
+
 // MARK: - Preview
 
 #Preview("In a List and Tab View") {
@@ -88,7 +90,7 @@ extension ExpandableNamesView {
             }
         }
     }
-    .environmentObject(Store.premium)
+    .environmentObject(Store.main)
 }
 
 #endif
