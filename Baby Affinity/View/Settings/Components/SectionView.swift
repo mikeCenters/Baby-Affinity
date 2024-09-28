@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: - Section View
+
 /// A reusable section view with an icon, title, description, and optional customizable content.
 struct SectionView<Content: View>: View {
     
