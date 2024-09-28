@@ -15,6 +15,7 @@
 		BA27E0A22C8FA88600241118 /* AffinityCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA27E0A12C8FA88600241118 /* AffinityCalculatorTests.swift */; };
 		BA27E0A52C90CEC600241118 /* InstructionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA27E0A42C90CEC600241118 /* InstructionsView.swift */; };
 		BA3120552CA86793008CDBA3 /* ProductID.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3120542CA86793008CDBA3 /* ProductID.swift */; };
+		BA3120572CA868C2008CDBA3 /* PreviewModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3120562CA868C2008CDBA3 /* PreviewModelContainer.swift */; };
 		BA33AF0A2C7E665B00EE6700 /* IsPersistentStoreEmpty.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AF092C7E665B00EE6700 /* IsPersistentStoreEmpty.swift */; };
 		BA33AF0C2C7E6A5400EE6700 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AF0B2C7E6A5400EE6700 /* OnboardingView.swift */; };
 		BA33AF0E2C8050DB00EE6700 /* SettingsNavigationStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA33AF0D2C8050DB00EE6700 /* SettingsNavigationStack.swift */; };
@@ -87,6 +88,7 @@
 		BA27E0A42C90CEC600241118 /* InstructionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsView.swift; sourceTree = "<group>"; };
 		BA27E0A62C9204BD00241118 /* Baby-Affinity-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Baby-Affinity-Info.plist"; sourceTree = SOURCE_ROOT; };
 		BA3120542CA86793008CDBA3 /* ProductID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductID.swift; sourceTree = "<group>"; };
+		BA3120562CA868C2008CDBA3 /* PreviewModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewModelContainer.swift; sourceTree = "<group>"; };
 		BA33AF092C7E665B00EE6700 /* IsPersistentStoreEmpty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsPersistentStoreEmpty.swift; sourceTree = "<group>"; };
 		BA33AF0B2C7E6A5400EE6700 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		BA33AF0D2C8050DB00EE6700 /* SettingsNavigationStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsNavigationStack.swift; sourceTree = "<group>"; };
@@ -336,6 +338,7 @@
 				BA5CE4362C97650D001DB912 /* NameSharingService.swift */,
 				BAD0F6302C87DA9100B41D34 /* Configuration.storekit */,
 				BA3120542CA86793008CDBA3 /* ProductID.swift */,
+				BA3120562CA868C2008CDBA3 /* PreviewModelContainer.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -556,6 +559,7 @@
 				BAE858A42C6349B900177BA8 /* LoadingIndicator.swift in Sources */,
 				BA07475B2C7026AA002C8425 /* SectionView.swift in Sources */,
 				BA27E09D2C8E1A2D00241118 /* NameSharingView.swift in Sources */,
+				BA3120572CA868C2008CDBA3 /* PreviewModelContainer.swift in Sources */,
 				BACC30302C48A977003CEC7C /* Baby_AffinityApp.swift in Sources */,
 				BAD0F6322C87DD1800B41D34 /* ProductsView.swift in Sources */,
 				BAF3C6712C6EB1C2004F9E46 /* NamePersistenceController_Admin.swift in Sources */,
