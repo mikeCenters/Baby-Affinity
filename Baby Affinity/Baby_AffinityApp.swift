@@ -8,32 +8,37 @@
 import SwiftUI
 import SwiftData
 import Store
+import SystemLogger
 
 @main
 struct Baby_AffinityApp: App {
     
     // MARK: - Properties
     
-    var sharedModelContainer: ModelContainer = {
+    /// The shared model container used for managing data persistence throughout the app.
+    private var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Name.self,
         ])
         
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         
-        
         do {
             let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
             
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            SystemLogger.main.logCritical("Could not create ModelContainer: \(error.localizedDescription)")
+            fatalError("Could not create ModelContainer: \(error.localizedDescription)")
         }
     }()
     
+    /// The shared store instance for managing in-app purchases and product data.
     @StateObject private var store = Store.main
     
-    @AppStorage("isShowingOnboarding") var isShowingOnboarding: Bool = true
+    /// A boolean flag indicating whether the onboarding view should be shown to the user.
+    @AppStorage("isShowingOnboarding") private var isShowingOnboarding: Bool = true
     
     
     // MARK: - Body
