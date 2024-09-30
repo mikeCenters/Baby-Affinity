@@ -90,19 +90,21 @@ private extension NamePickerView {
     var selectedNamesSection: some View {
         Section(header: Text("Selected Names")) {
             ForEach(selectedNames) { name in
-                HStack {
-                    Text(name.text)
-                    Spacer()
-                    Button {
-                        withAnimation {
-                            deselect(name)
-                        }
-                        
-                    } label: {
+                Button {
+                    withAnimation {
+                        deselect(name)
+                    }
+                    
+                } label: {
+                    HStack {
+                        Text(name.text)
+                            .tint(.primary)
+                        Spacer()
                         Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(.red)
+                            .foregroundStyle(.red)
                     }
                 }
+                .listRowBackground(selectedSex == .male ? Color.blue.opacity(0.2) : Color.pink.opacity(0.2))
             }
         }
     }
@@ -185,107 +187,76 @@ extension NamePickerView: NamePersistenceController_Admin {
         updateAffinity(winners: selectedNames, losers: presentedNames)
     }
     
-    /// Fetch names based on the selected sex and updates the view model.
+    /// Empty the presentedNames and selectedNames arrays.
+    private func resetNames() {
+        withAnimation {
+            presentedNames.removeAll()
+            selectedNames.removeAll()
+        }
+    }
+    
+    
     private func loadNames() {
         do {
+            // Step 1: Clear the arrays before loading new names
+            resetNames()
+            
+            // Step 2: Fetch the names from the data source based on selectedSex
             let names = try fetchNames(selectedSex)
-            load(names)
+            
+            // Step 3: Filter names where evaluated == 0
+            let unEvaluatedNames = names.filter { $0.evaluated == 0 }
+            
+            // Step 4: Present Names
+            if unEvaluatedNames.isEmpty {
+                findNamesToPresent(with: names)
+            
+            // Step 3: Show 10 random unevaluated names.
+            } else {
+                presentedNames = unEvaluatedNames.randomElements(count: 10)
+            }
             
         } catch {
+            // Log critical error if name fetching fails
             SystemLogger.main.logCritical("Unable to fetch names for name picker view to load: \(error.localizedDescription)")
         }
     }
     
-    /// Loads the names to be presented to the user.
-    ///
-    /// This method filters the input list of names into groups based on the median affinity rating:
-    /// one group below the median, one group above the median, and one group of "not evaluated" names.
-    /// From these groups, it selects names to present based on the following rules:
-    /// - If there are not evaluated names:
-    ///     - Show 2 from the top 20% of the top median group.
-    ///     - Show 8 from the not evaluated group.
-    /// - Else:
-    ///     - Show 1 below the median.
-    ///     - Show 3 from the top 20% above the median.
-    ///     - Show 6 from the median to the top 20%.
-    func load(_ names: [Name]) {
-        guard !names.isEmpty else { return }
+    
+    private func findNamesToPresent(with names: [Name]) {
+        // Calculate mean and standard deviation for names based on Affinity Rating
+        let mean: Double = calculateMeanAffinityRating(names)
+        let squaredDiffs: [Double] = calculateSquaredDifferences(names, mean: mean)
+        let standardDeviation = calculateStandardDeviation(squaredDiffs)
         
-        selectedNames.removeAll()
+        // Filter names based on standard deviation criteria
+        let highDeviationNames = names.filter { Double($0.affinityRating) >= mean + 2 * standardDeviation }
+        let lowDeviationNames = names.filter { Double($0.affinityRating) < mean - standardDeviation }
+        let remainingNames = names.filter {
+            Double($0.affinityRating) >= mean - standardDeviation && Double($0.affinityRating) < mean + 2 * standardDeviation
+        }
         
-        let (evaluatedNames, notEvaluatedNames) = categorizeNames(names)
-        let (belowMedianNames, aboveMedianNames) = splitByMedian(evaluatedNames)
+        // Pick the appropriate number of names for each category
+        let selectedHighDeviationNames = Array(highDeviationNames.randomElements(count: 2))
+        let selectedLowDeviationName = Array(lowDeviationNames.randomElements(count: 1))
+        let selectedRemainingNames = Array(remainingNames.randomElements(count: 7))
         
-        let top20PercentCount = calculateTop20PercentCount(for: aboveMedianNames)
-        let namesToShow: [Name] = determineNamesToShow(
-            from: belowMedianNames,
-            aboveMedianNames: aboveMedianNames,
-            notEvaluatedNames: notEvaluatedNames,
-            top20PercentCount: top20PercentCount
-        )
-        
-        presentedNames = namesToShow.shuffled()
+        // Combine the names into the presentedNames array
+        presentedNames = selectedHighDeviationNames + selectedLowDeviationName + selectedRemainingNames
     }
     
-
-    // MARK: - Helper Methods
-
-    /// Categorizes the names into evaluated and not evaluated lists.
-    ///
-    /// - Parameter names: The list of names to categorize.
-    /// - Returns: A tuple containing two arrays: one with evaluated names and one with not evaluated names.
-    private func categorizeNames(_ names: [Name]) -> ([Name], [Name]) {
-        var evaluatedNames: [Name] = []
-        var notEvaluatedNames: [Name] = []
-        
-        names.forEach { name in
-            name.evaluated > 0 ? evaluatedNames.append(name) : notEvaluatedNames.append(name)
-        }
-        
-        return (evaluatedNames, notEvaluatedNames)
+    
+    private func calculateStandardDeviation(_ squaredDiffs: [Double]) -> Double {
+        sqrt(Double(squaredDiffs.reduce(0, +)) / Double(squaredDiffs.count))
     }
-
-    /// Splits the evaluated names into two groups: below the median and above the median.
-    ///
-    /// - Parameter evaluatedNames: The list of evaluated names sorted by affinity rating.
-    /// - Returns: A tuple containing two arrays: one with names below the median and one with names above the median.
-    private func splitByMedian(_ evaluatedNames: [Name]) -> ([Name], [Name]) {
-        let medianIndex = evaluatedNames.count / 2
-        let belowMedianNames = evaluatedNames.prefix(medianIndex)
-        let aboveMedianNames = evaluatedNames.suffix(from: medianIndex)
-        
-        return (Array(belowMedianNames), Array(aboveMedianNames))
+    
+    
+    private func calculateSquaredDifferences(_ names: [Name], mean: Double) -> [Double] {
+        names.map { pow(Double($0.affinityRating) - mean, 2) }
     }
-
-    /// Calculates the count of names that represent the top 20% of a list.
-    ///
-    /// - Parameter names: The list of names from which to calculate the top 20% count.
-    /// - Returns: The number of names representing the top 20% of the list, with a minimum of 1.
-    private func calculateTop20PercentCount(for names: [Name]) -> Int {
-        return max(1, Int(Double(names.count) * 0.2))
-    }
-
-    /// Determines the names to show based on the evaluated status and affinity ratings.
-    ///
-    /// - Parameters:
-    ///   - belowMedianNames: The list of names below the median affinity rating.
-    ///   - aboveMedianNames: The list of names above the median affinity rating.
-    ///   - notEvaluatedNames: The list of names that have not been evaluated.
-    ///   - top20PercentCount: The count of names representing the top 20% of the above median list.
-    /// - Returns: An array of names selected according to the specified rules, shuffled before being returned.
-    private func determineNamesToShow(from belowMedianNames: [Name], aboveMedianNames: [Name], notEvaluatedNames: [Name], top20PercentCount: Int) -> [Name] {
-        var namesToShow: [Name] = []
-        
-        if notEvaluatedNames.isEmpty { // All names have been evaluated.
-            namesToShow.append(contentsOf: belowMedianNames.shuffled().prefix(1))
-            namesToShow.append(contentsOf: aboveMedianNames.suffix(top20PercentCount).shuffled().prefix(3))
-            namesToShow.append(contentsOf: aboveMedianNames.dropLast(top20PercentCount).shuffled().prefix(6))
-        } else { // Some names still need evaluated.
-            namesToShow.append(contentsOf: aboveMedianNames.suffix(top20PercentCount).shuffled().prefix(2))
-            namesToShow.append(contentsOf: notEvaluatedNames.shuffled().prefix(8))
-        }
-        
-        return namesToShow
+    
+    private func calculateMeanAffinityRating(_ names: [Name]) -> Double {
+        names.map { Double($0.affinityRating) }.reduce(0.0, +) / Double(names.count)
     }
 }
 
