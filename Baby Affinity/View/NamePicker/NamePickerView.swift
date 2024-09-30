@@ -62,9 +62,9 @@ struct NamePickerView: View {
         }
         
         
-        // MARK: - On Appear
+        // MARK: - Task
         
-        .onAppear {
+        .task {
             withAnimation {
                 loadNames()
             }
