@@ -2,10 +2,10 @@
 A modern approach to baby naming.
 
 #### Release:
-- version 2.0.1
+- version 2.0.2
 
 #### Development:
-- version 2.0.1
+- version 2.0.3
 
 
 ## Overview
