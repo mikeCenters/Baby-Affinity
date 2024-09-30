@@ -40,8 +40,6 @@ Get ready to embark on a fun and exciting journey to find your baby’s perfect 
 
 - Name Picker View: On appear/Task is inconsistent with loading 10 names on initial launch.
 
-- Top names sometimes loads out of order when launched.
-    - Switching names back and forth will resolve the issue.
 - Favorite Animation - Expandable Names View is where the error begins. Subviews work.
 - Search and Add Names
 - Add Tags to create categories.
@@ -61,6 +59,7 @@ Get ready to embark on a fun and exciting journey to find your baby’s perfect 
         - -1 Standard Deviation: 1 name
         - +2 Standard Deviation: 2 names
         - Between -1 and +2 Standard Deviation: 7 names
+- Updated Top Names View to refresh names on purchase state change to resolve unorganized loading when purchased.
 
 ## version 2.0.1:
 - Fixed bug with Name Preview Card

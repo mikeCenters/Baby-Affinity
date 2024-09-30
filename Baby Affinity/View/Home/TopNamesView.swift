@@ -89,7 +89,9 @@ struct TopNamesView: View {
             }
         }
         
-        // MARK: - On Appear
+        
+        // MARK: - Task
+        
         .task {
             try? await Task.sleep(nanoseconds: 100_000_000) /// Sleep of 0.1 second to allow data to load.
             
@@ -104,28 +106,35 @@ struct TopNamesView: View {
         
         // MARK: - On Change
         
-        .onChange(of: selectedSex) {
+        .onChange(of: selectedSex) {    /// Handle an update when the selected sex changes
             withAnimation {
-                presentNames()              /// Recalculate the presented names when the list of seletced sex changes.
-                handleViewState()           /// Update the view state accordingly.
+                presentNames()          /// Refresh the presented names
+                handleViewState()       /// Update the view state
             }
         }
         
-        .onChange(of: maleNames) {
+        .onChange(of: isPremium) {      /// Handle an update in purchase state
+            withAnimation {
+                presentNames()          /// Refresh the presented names
+                handleViewState()       /// Update the view state
+            }
+        }
+        
+        .onChange(of: maleNames) {      /// Handle a background update of male names
             guard selectedSex == .male else { return }
             
             withAnimation {
-                presentNames()              /// Recalculate the presented names when the list of male names changes.
-                handleViewState()           /// Update the view state accordingly.
+                presentNames()          /// Refresh the presented names
+                handleViewState()       /// Update the view state
             }
         }
         
-        .onChange(of: femaleNames) {
+        .onChange(of: femaleNames) {    /// Handle a background update of female names
             guard selectedSex == .female else { return }
             
             withAnimation {
-                presentNames()              /// Recalculate the presented names when the list of male names changes.
-                handleViewState()           /// Update the view state accordingly.
+                presentNames()          /// Refresh the presented names
+                handleViewState()       /// Update the view state
             }
         }
     }
