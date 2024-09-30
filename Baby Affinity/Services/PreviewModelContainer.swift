@@ -30,6 +30,7 @@ private func insertPreviewData(context: ModelContext, names: DefaultBabyNames, w
         let n = try! Name(name, sex: .female)
         if withFavorites && n.text.contains("e") { n.toggleFavorite() }
         try! n.setAffinity((900...1500).randomElement() ?? 1200)
+        n.increaseEvaluationCount()
         context.insert(n)
     }
     
@@ -38,9 +39,11 @@ private func insertPreviewData(context: ModelContext, names: DefaultBabyNames, w
         let n = try! Name(name, sex: .male)
         if withFavorites && n.text.contains("e") { n.toggleFavorite() }
         try! n.setAffinity((900...1500).randomElement() ?? 1200)
+        n.increaseEvaluationCount()
         context.insert(n)
     }
 }
+
 
 // MARK: - Preview Model Containers
 
