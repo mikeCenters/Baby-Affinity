@@ -72,14 +72,16 @@ struct OnboardingView: View, NamePersistenceController_Admin {
             .padding(.horizontal)
         }
         
+        
         // MARK: - Animation
         
         .transition(.move(edge: .bottom))
         .animation(.easeInOut, value: isShown)
         
-        // MARK: - On Appear
         
-        .onAppear {
+        // MARK: - Task
+        
+        .task {
             loadData()
         }
     }
