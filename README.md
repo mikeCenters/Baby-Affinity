@@ -38,12 +38,8 @@ Get ready to embark on a fun and exciting journey to find your baby’s perfect 
 
 ## ToDo:
 
-- Update codebase and previews.
+- Name Picker View: On appear/Task is inconsistent with loading 10 names on initial launch.
 
-- Name Picker View needs refactored and cleaned. On appear is inconsistent with loading names.
-
-- Update algorithm to present all unseen names first, then filter the bottom ones out to provide better names to choose.
-    - Example: After all names, 1 bottom half, 3 top 20%, 6 median to to top 20%.
 - Top names sometimes loads out of order when launched.
     - Switching names back and forth will resolve the issue.
 - Favorite Animation - Expandable Names View is where the error begins. Subviews work.
@@ -59,6 +55,12 @@ Get ready to embark on a fun and exciting journey to find your baby’s perfect 
 - Updated Views and other objects to utilize the Store and SystemLogger packages.
 - Updated Views to use the `@ProductStatus` macro for monitoring status.
 - Updated Codebase and previews.
+- Updated algorhythm that presents names.
+    - Now, the user is forced to see all names once.
+    - After all names have been seen, the algo presents:
+        - -1 Standard Deviation: 1 name
+        - +2 Standard Deviation: 2 names
+        - Between -1 and +2 Standard Deviation: 7 names
 
 ## version 2.0.1:
 - Fixed bug with Name Preview Card
