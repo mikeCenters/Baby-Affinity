@@ -195,7 +195,16 @@ extension NamePickerView: NamePersistenceController_Admin {
         }
     }
     
-    
+    /// This function loads names for presentation based on certain criteria.
+    /// It resets the names, fetches them from a data source, filters based on evaluation status,
+    /// and then presents either random unevaluated names or selects names based on statistical analysis.
+    ///
+    /// The function follows these steps:
+    /// - Resets existing name lists.
+    /// - Fetches names from the data source based on the selected sex.
+    /// - Filters names that have not been evaluated (`evaluated == 0`).
+    /// - If no unevaluated names exist, selects names based on affinity rating statistics.
+    /// - Otherwise, presents 10 random unevaluated names.
     private func loadNames() {
         do {
             // Step 1: Clear the arrays before loading new names
@@ -209,20 +218,27 @@ extension NamePickerView: NamePersistenceController_Admin {
             
             // Step 4: Present Names
             if unEvaluatedNames.isEmpty {
+                // If no unevaluated names, find names to present based on statistical analysis
                 findNamesToPresent(with: names)
-            
-            // Step 3: Show 10 random unevaluated names.
             } else {
+                // Present 10 random unevaluated names
                 presentedNames = unEvaluatedNames.randomElements(count: 10)
             }
             
         } catch {
-            // Log critical error if name fetching fails
+            // Log a critical error if name fetching fails
             SystemLogger.main.logCritical("Unable to fetch names for name picker view to load: \(error.localizedDescription)")
         }
     }
-    
-    
+
+    /// This function selects names for presentation based on their statistical distribution of affinity ratings.
+    /// It uses the mean and standard deviation to select names with high, low, and average affinity ratings.
+    /// Specifically, it picks:
+    /// - 2 names with affinity ratings higher than the mean by 2 standard deviations or more.
+    /// - 1 name with an affinity rating lower than the mean by more than 1 standard deviation.
+    /// - 7 names with affinity ratings within 1 standard deviation of the mean.
+    ///
+    /// - Parameter names: An array of `Name` objects representing the names to filter and present.
     private func findNamesToPresent(with names: [Name]) {
         // Calculate mean and standard deviation for names based on Affinity Rating
         let mean: Double = calculateMeanAffinityRating(names)
@@ -236,25 +252,37 @@ extension NamePickerView: NamePersistenceController_Admin {
             Double($0.affinityRating) >= mean - standardDeviation && Double($0.affinityRating) < mean + 2 * standardDeviation
         }
         
-        // Pick the appropriate number of names for each category
+        // Select 2 names with high deviation, 1 with low deviation, and 7 remaining names
         let selectedHighDeviationNames = Array(highDeviationNames.randomElements(count: 2))
         let selectedLowDeviationName = Array(lowDeviationNames.randomElements(count: 1))
         let selectedRemainingNames = Array(remainingNames.randomElements(count: 7))
         
-        // Combine the names into the presentedNames array
+        // Combine the selected names into the presentedNames array
         presentedNames = selectedHighDeviationNames + selectedLowDeviationName + selectedRemainingNames
     }
-    
-    
+
+    /// This function calculates the standard deviation based on an array of squared differences.
+    ///
+    /// - Parameter squaredDiffs: An array of squared differences between each affinity rating and the mean.
+    /// - Returns: The standard deviation of the affinity ratings.
     private func calculateStandardDeviation(_ squaredDiffs: [Double]) -> Double {
         sqrt(Double(squaredDiffs.reduce(0, +)) / Double(squaredDiffs.count))
     }
-    
-    
+
+    /// This function calculates the squared differences between each affinity rating and the mean.
+    ///
+    /// - Parameters:
+    ///   - names: An array of `Name` objects representing the names to calculate squared differences for.
+    ///   - mean: The mean of the affinity ratings.
+    /// - Returns: An array of squared differences between the affinity ratings and the mean.
     private func calculateSquaredDifferences(_ names: [Name], mean: Double) -> [Double] {
         names.map { pow(Double($0.affinityRating) - mean, 2) }
     }
-    
+
+    /// This function calculates the mean (average) affinity rating for an array of names.
+    ///
+    /// - Parameter names: An array of `Name` objects representing the names to calculate the mean affinity rating for.
+    /// - Returns: The mean of the affinity ratings for the provided names.
     private func calculateMeanAffinityRating(_ names: [Name]) -> Double {
         names.map { Double($0.affinityRating) }.reduce(0.0, +) / Double(names.count)
     }
