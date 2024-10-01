@@ -51,7 +51,7 @@ Get ready to embark on a fun and exciting journey to find your baby’s perfect 
 - Updated Views and other objects to utilize the Store and SystemLogger packages.
 - Updated Views to use the `@ProductStatus` macro for monitoring status.
 - Updated Codebase and previews.
-- Updated algorhythm that presents names.
+- Updated algorithm that presents names.
     - Now, the user is forced to see all names once.
     - After all names have been seen, the algo presents:
         - -1 Standard Deviation: 1 name
