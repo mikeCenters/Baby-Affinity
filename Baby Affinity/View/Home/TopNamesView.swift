@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import SystemLogger
+import Store
 
 /// `TopNamesView` is a view that displays the top names based on the selected sex (male or female).
 /// The names are fetched from the model context and displayed in a ranked list, with options to show more or fewer names and toggle the favorite status of the `Name`.
